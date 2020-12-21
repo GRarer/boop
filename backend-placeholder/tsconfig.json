@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "removeComments": true,
+    "target": "ES2016",
+    "outDir": "./build_output/",
+    "rootDir": "./src/",
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "newLine": "LF"
+  },
+}
