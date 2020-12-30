@@ -16,6 +16,7 @@ export class ApiService {
   private handleError<T>(err: T): Observable<T> {
     let message = "Error";
     let description = "";
+    console.error(err);
     if (err instanceof HttpErrorResponse) {
       message = `Error ${err.status}: ${err.statusText}`;
       description = err.error;
@@ -40,7 +41,7 @@ export class ApiService {
     ));
   }
 
-  postJSON<RequestBodyT extends {}, ResponseBodyT extends {} | void>(endPointUrl: string, body: RequestBodyT): Observable<void> {
+  postJSON<RequestBodyT extends {}, ResponseBodyT extends {} | void>(endPointUrl: string, body: RequestBodyT): Observable<ResponseBodyT> {
     return this.httpClient.post<ResponseBodyT>(endPointUrl, body).pipe(
       catchError(((err) => this.handleError(err))),
     );;

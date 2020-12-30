@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { SwPush } from '@angular/service-worker';
 import { ApiService } from '../api.service';
+import { NotificationSubscriptionService } from '../notification-subscription.service';
 
 @Component({
   selector: 'app-connection-example',
@@ -7,13 +9,23 @@ import { ApiService } from '../api.service';
   styles: [
   ]
 })
+//TODO references to localhost will have to be changed when deployed to the web
 export class ConnectionExampleComponent implements OnInit {
 
   constructor(
-    private apiService: ApiService
+    private apiService: ApiService,
+    private swPush: SwPush,
+    private subscriptionService: NotificationSubscriptionService,
   ) { }
 
   ngOnInit(): void {
+    this.swPush.notificationClicks.subscribe( event =>
+      {
+        console.log(`Notification Action: ${event.action}`);
+        if (event.action === "show_app") {
+          window.open("http://localhost:8080");
+        }
+     });
   }
 
   testGet(): void {
@@ -26,5 +38,25 @@ export class ConnectionExampleComponent implements OnInit {
       baz: 42,
     };
     this.apiService.postJSON<{}, string>("http://localhost:3000/example/", body).subscribe();
+  }
+
+  unsubscribe() {
+    this.swPush.unsubscribe()
+    .then(sub => console.log("unsubscribed"))
+    .catch(err => console.error("Could not unsubscribe", err));
+  }
+
+  subscribeToNotifications() {
+    console.log("subscribe");
+    this.swPush.requestSubscription({
+        serverPublicKey: this.subscriptionService.VAPID_PUBLIC_KEY
+    })
+    .then(sub => this.subscriptionService.addPushSubscriber(sub).subscribe())
+    .catch(err => console.error("Could not subscribe to notifications", err));
+  }
+
+  broadcast() {
+    console.log("trigger broadcast");
+    this.apiService.postJSON("http://localhost:3000/push/testBroadcast", {}).subscribe();
   }
 }

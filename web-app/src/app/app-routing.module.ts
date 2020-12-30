@@ -5,7 +5,7 @@ import { ConnectionExampleComponent } from './connection-example/connection-exam
 const routes: Routes = [
   { path: '',   redirectTo: '/test', pathMatch: 'full' },
   { path: 'test', component: ConnectionExampleComponent },
-  // TODO add wildcard page { path: '**', component: 404Component },
+  { path: '**', component: ConnectionExampleComponent },
 ];
 
 @NgModule({

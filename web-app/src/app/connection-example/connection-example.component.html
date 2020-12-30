@@ -1,4 +1,14 @@
-<p>connection-example component</p>
-<button (click)="testGet()">Click to send an example get request and log the result to the console</button>
+<p>version 6</p>
+<div>
+    <p>http demo</p>
+    <button (click)="testGet()">Click to send an example get request and log the result to the console</button>
+    <button (click)="testPost()">Click to send an example post request</button>
+</div>
+<div>
+    <p>web push notifications demo</p>
+    <button (click)="unsubscribe()">Unsubscribe</button>
+    <button (click)="subscribeToNotifications()">Subscribe to notifications</button>
+    <button (click)="broadcast()">Test push notification broadcast</button>
+</div>
 
-<button (click)="testPost()">Click to send an example post request</button>
+
