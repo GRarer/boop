@@ -1,0 +1,17 @@
+# configures your editor to use consistent style for this project (see https://EditorConfig.org)
+# for some editors (e.g. Visual Studio Code), you can install an editorconfig plugin to make these take effect
+
+root = true
+
+
+[*]
+insert_final_newline = true
+trim_trailing_whitespace = true
+ # unix-style line endings on all files
+end_of_line = lf
+
+[*.{js,ts}]
+charset = utf-8
+# indent javascript/typescript files with 2 spaces
+indent_style = space
+indent_size = 2

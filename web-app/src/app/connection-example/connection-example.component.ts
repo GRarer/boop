@@ -9,7 +9,7 @@ import { NotificationSubscriptionService } from '../notification-subscription.se
   styles: [
   ]
 })
-//TODO references to localhost will have to be changed when deployed to the web
+// TODO references to localhost will have to be changed when deployed to the web
 export class ConnectionExampleComponent implements OnInit {
 
   constructor(
@@ -19,17 +19,18 @@ export class ConnectionExampleComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.swPush.notificationClicks.subscribe( event =>
-      {
-        console.log(`Notification Action: ${event.action}`);
-        if (event.action === "show_app") {
-          window.open("http://localhost:8080");
-        }
-     });
+    this.swPush.notificationClicks.subscribe( event => {
+      console.log(`Notification Action: ${event.action}`);
+      if (event.action === "show_app") {
+        window.open("http://localhost:8080");
+      }
+    });
   }
 
   testGet(): void {
-    this.apiService.getJSON<string>("http://localhost:3000/example/foobar").subscribe((result) => console.log("get result", result));
+    this.apiService.getJSON<string>("http://localhost:3000/example/foobar").subscribe(
+      (result) => console.log("get result", result)
+    );
   }
 
   testPost(): void {
@@ -40,22 +41,22 @@ export class ConnectionExampleComponent implements OnInit {
     this.apiService.postJSON<{}, string>("http://localhost:3000/example/", body).subscribe();
   }
 
-  unsubscribe() {
+  unsubscribe(): void {
     this.swPush.unsubscribe()
-    .then(sub => console.log("unsubscribed"))
-    .catch(err => console.error("Could not unsubscribe", err));
+      .then(sub => console.log("unsubscribed"))
+      .catch(err => console.error("Could not unsubscribe", err));
   }
 
-  subscribeToNotifications() {
+  subscribeToNotifications(): void {
     console.log("subscribe");
     this.swPush.requestSubscription({
-        serverPublicKey: this.subscriptionService.VAPID_PUBLIC_KEY
+      serverPublicKey: this.subscriptionService.VAPID_PUBLIC_KEY
     })
-    .then(sub => this.subscriptionService.addPushSubscriber(sub).subscribe())
-    .catch(err => console.error("Could not subscribe to notifications", err));
+      .then(sub => this.subscriptionService.addPushSubscriber(sub).subscribe())
+      .catch(err => console.error("Could not subscribe to notifications", err));
   }
 
-  broadcast() {
+  broadcast(): void {
     console.log("trigger broadcast");
     this.apiService.postJSON("http://localhost:3000/push/testBroadcast", {}).subscribe();
   }

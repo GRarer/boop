@@ -6,8 +6,7 @@ import { AppComponent } from './app.component';
 import { ConnectionExampleComponent } from './connection-example/connection-example.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
-
+/* eslint-disable @typescript-eslint/no-extraneous-class */
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,7 +16,7 @@ import { environment } from '../environments/environment';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: true/*environment.production*/ }),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: true }),
   ],
   providers: [],
   bootstrap: [AppComponent]

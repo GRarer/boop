@@ -5,8 +5,13 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "start-pwa": "npx ng build --service-worker && npx http-server ./dist/boop-web"
+    "start-pwa": "npx ng build --service-worker && npx http-server ./dist/boop-web",
+    "lint": "npx eslint src --ext .ts"
   },
+  "eslintIgnore": [
+    "src/polyfills.ts",
+    "src/main.ts"
+  ],
   "private": true,
   "dependencies": {
     "@angular/animations": "~10.0.14",
@@ -28,6 +33,9 @@
     "@angular/cli": "~10.0.8",
     "@angular/compiler-cli": "~10.0.14",
     "@types/node": "^12.11.1",
+    "@typescript-eslint/eslint-plugin": "^4.11.1",
+    "@typescript-eslint/parser": "^4.11.1",
+    "eslint": "^7.16.0",
     "http-server": "^0.12.3",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",

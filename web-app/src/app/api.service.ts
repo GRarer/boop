@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -27,7 +27,7 @@ export class ApiService {
       alert(`${message} : ${description}`);
     }, (10));
     return throwError(err);
-  };
+  }
 
   // TODO include authentication tokens in request headers
   // TODO add support for URL query parameters
@@ -41,10 +41,13 @@ export class ApiService {
     ));
   }
 
-  postJSON<RequestBodyT extends {}, ResponseBodyT extends {} | void>(endPointUrl: string, body: RequestBodyT): Observable<ResponseBodyT> {
+  postJSON<RequestBodyT extends {}, ResponseBodyT extends {} | void>(
+    endPointUrl: string,
+    body: RequestBodyT
+  ): Observable<ResponseBodyT> {
     return this.httpClient.post<ResponseBodyT>(endPointUrl, body).pipe(
       catchError(((err) => this.handleError(err))),
-    );;
+    );
   }
 
   // TODO PUT method
