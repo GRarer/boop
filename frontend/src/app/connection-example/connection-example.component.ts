@@ -6,8 +6,7 @@ import { NotificationSubscriptionService } from '../notification-subscription.se
 @Component({
   selector: 'app-connection-example',
   templateUrl: './connection-example.component.html',
-  styles: [
-  ]
+  styleUrls: ['./connection-example.component.css']
 })
 // TODO references to localhost will have to be changed when deployed to the web
 export class ConnectionExampleComponent implements OnInit {

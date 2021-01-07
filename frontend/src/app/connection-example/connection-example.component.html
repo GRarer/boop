@@ -1,14 +1,24 @@
-<p>version 6</p>
-<div>
-    <p>http demo</p>
-    <button (click)="testGet()">Click to send an example get request and log the result to the console</button>
-    <button (click)="testPost()">Click to send an example post request</button>
-</div>
-<div>
-    <p>web push notifications demo</p>
-    <button (click)="unsubscribe()">Unsubscribe</button>
-    <button (click)="subscribeToNotifications()">Subscribe to notifications</button>
-    <button (click)="broadcast()">Test push notification broadcast</button>
-</div>
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>HTTP demonstration</mat-card-title>
+        <mat-card-subtitle>Example REST API for communicating with back-end</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <button mat-raised-button color="primary" (click)="testGet()">Click to send an example get request and log the result to the console</button>
+        <button mat-raised-button color="primary" (click)="testPost()">Click to send an example post request</button>
+    </mat-card-content>
+</mat-card>
 
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Web Push demonstration</mat-card-title>
+        <mat-card-subtitle>Demonstration of push notifications API</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <button mat-raised-button color="warn" (click)="unsubscribe()">Unsubscribe</button>
+        <button mat-raised-button color="primary" (click)="subscribeToNotifications()">Subscribe to notifications</button>
+        <button mat-raised-button color="accent" (click)="broadcast()">Test push notification broadcast</button>
+        <p style="margin-top: 10px;">Note that the push API does not work if service workers are not enabled</p>
+    </mat-card-content>
+</mat-card>
 
