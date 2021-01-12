@@ -17,8 +17,29 @@
     <mat-card-content>
         <button mat-raised-button color="warn" (click)="unsubscribe()">Unsubscribe</button>
         <button mat-raised-button color="primary" (click)="subscribeToNotifications()">Subscribe to notifications</button>
-        <button mat-raised-button color="accent" (click)="broadcast()">Test push notification broadcast</button>
+        <button mat-raised-button color="accent" (click)="broadcast()">Trigger sending push notification</button>
         <p style="margin-top: 10px;">Note that the push API does not work if service workers are not enabled</p>
+    </mat-card-content>
+</mat-card>
+
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>SQL database demonstration</mat-card-title>
+        <mat-card-subtitle>Using PostgreSQL</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <mat-form-field style="margin-right: 10px;">
+            <mat-label>Value to send to database</mat-label>
+            <input matInput type="text" [(ngModel)]="newEntry">
+            <button mat-button *ngIf="newEntry" matSuffix mat-icon-button aria-label="Clear" (click)="newEntry=''">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+
+
+        <button mat-raised-button color="primary" (click)="sqlAdd()" [disabled]="!newEntry">Add entry to database</button>
+        <button mat-raised-button color="primary" (click)="sqlSelect()">Log entries from database</button>
     </mat-card-content>
 </mat-card>
 

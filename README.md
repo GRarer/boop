@@ -6,6 +6,31 @@ This project uses [NPM](https://www.npmjs.com/), the package manager for the Jav
 With NPM installed, navigate to the backend and frontend directories and run `npm install` in each to install the
 dependencies for both modules.
 
+You will also need to install [PostgreSQL](https://www.postgresql.org/download/) version 13, which provides the
+SQL relational database system used by the backend. You may need to manually add the Postgres `psql` command-line
+program to your path environment variable.
+
+## Initializing the database
+
+`init.sql` should contain the sql script that sets up the database tables. Set up or reset the database, you can run
+this script from `psql` in your terminal.
+
+```sh
+$ psql -U postgres
+<enter your postgres superuser password>
+\i init.sql
+```
+
+## Running the Node backend locally
+
+To build and run the server on localhost, run `npm run serve -- --password <your postgres superuser password>` from the
+backend directory. To run a server that automatically recompiles and restarts when you make changes, you can use
+`npm run serve-watch -- --password <your postgres superuser password>`. To compile the server without running it,
+use `npm run build` or `npm run build-watch`.
+
+If you save your postgres superuser password in an environment variable called `postgres_password`, you can skip the
+`-- --password <your postgres superuser password>` part.
+
 ## Running the Angular frontend locally
 
 First navigate your terminal to the frontend directory. Run `npx ng serve` for a dev server.
@@ -16,12 +41,6 @@ features are unavailable in this mode. To build a version with service workers i
 server, use `npm run start-pwa` and navigate to `localhost:8080/`. Note that this server will **not** automatically
 recompile and reload when you make changes. Since service workers can cache applications, you may also need to clear
 your cache or fully close the tab and re-open it for changes to take effect.
-
-## Running the Node backend locally
-
-To build and run the server on localhost, run `npm run serve` from the backend directory. To run a server that
-automatically recompiles and restarts when you make changes, you can use `npm run serve-watch`. To compile the server
-without running it, use `npm run build` or `npm run build-watch`.
 
 ## Style Checking
 

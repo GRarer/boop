@@ -59,4 +59,22 @@ export class ConnectionExampleComponent implements OnInit {
     console.log("trigger broadcast");
     this.apiService.postJSON("http://localhost:3000/push/testBroadcast", {}).subscribe();
   }
+
+  newEntry: string = "";
+
+  sqlAdd(): void {
+    console.log("sending value to database");
+    console.log(this.newEntry);
+    this.apiService.postJSON<{ entry: string; }, void>("http://localhost:3000/db_example", { entry: this.newEntry })
+      .subscribe();
+  }
+
+  sqlSelect(): void {
+    this.apiService.getJSON<{ entries: string[]; }>("http://localhost:3000/db_example")
+      .subscribe(response => {
+        console.log("database result");
+        console.log(response);
+        console.log(response.entries);
+      });
+  }
 }

@@ -2,6 +2,7 @@ mat-card {
     margin-top: 20px;
     margin-left: 20px;
     margin-right: 2in;
+    max-width: 10in;
 }
 
 
