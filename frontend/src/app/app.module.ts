@@ -11,12 +11,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // instead of importing them all to AppModule separately
 import { materialModules } from './materialDependencies';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NotFound404Component } from './not-found404/not-found404.component';
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 @NgModule({
   declarations: [
     AppComponent,
     ConnectionExampleComponent,
+    NotFound404Component,
   ],
   imports: [
     BrowserModule,
