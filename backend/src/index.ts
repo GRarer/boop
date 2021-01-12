@@ -1,10 +1,10 @@
 import express from "express";
-import { exampleRouter } from "./exampleRouter";
+import { exampleRouter } from "./routers/exampleRouter";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { subscriptionRouter } from "./pushSubscriptionRouter";
-import { database } from "./database";
-import { databaseExampleRouter } from "./databaseExampleRouter";
+import { subscriptionRouter } from "./routers/pushSubscriptionRouter";
+import { database } from "./services/database";
+import { databaseExampleRouter } from "./routers/databaseExampleRouter";
 
 const app = express();
 const port = 3000;

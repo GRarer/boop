@@ -1,5 +1,5 @@
 import express from "express";
-import { SubscriptionRequest, testNotificationPayload } from "./pushManager";
+import { SubscriptionRequest, testNotificationPayload } from "../services/pushManager";
 import webpush from "web-push";
 
 // TODO persist subscription info in a database and associate them with users

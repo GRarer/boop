@@ -1,5 +1,5 @@
 import express from "express";
-import { database } from "./database";
+import { database } from "../services/database";
 
 export const databaseExampleRouter = express.Router();
 
@@ -9,7 +9,8 @@ databaseExampleRouter.get('/', (req, res) => {
       res.send({
         entries: result
       });
-    }).catch(() => {
+    }).catch((err) => {
+      console.error(err);
       res.status(500).send('Database error');
     });
 });
@@ -20,7 +21,8 @@ databaseExampleRouter.post('/', (req, res) => {
   // database queries are asynchronous and we can't send the response until the promise is completed.
   database.addExampleValue(body.entry)
     .then(() => { res.send(); })
-    .catch(() => {
+    .catch((err) => {
+      console.error(err);
       res.status(500).send('Database error');
     });
 });
