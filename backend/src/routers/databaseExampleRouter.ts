@@ -6,9 +6,7 @@ export const databaseExampleRouter = express.Router();
 databaseExampleRouter.get('/', (req, res) => {
   database.getExampleValues()
     .then((result) => {
-      res.send({
-        entries: result
-      });
+      res.send(result);
     }).catch((err) => {
       console.error(err);
       res.status(500).send('Database error');
@@ -16,10 +14,11 @@ databaseExampleRouter.get('/', (req, res) => {
 });
 
 databaseExampleRouter.post('/', (req, res) => {
-  const body: { entry: string; } = req.body;
-  console.log(`add value: ${body.entry}`);
+  const body: string = req.body;
+  console.log(body);
+  console.log(`add value: ${body}`);
   // database queries are asynchronous and we can't send the response until the promise is completed.
-  database.addExampleValue(body.entry)
+  database.addExampleValue(body)
     .then(() => { res.send(); })
     .catch((err) => {
       console.error(err);

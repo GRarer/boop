@@ -13,6 +13,7 @@ const port = 3000;
 app.use((req, res, next) => { next(); }, cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(bodyParser.text());
 
 // routers
 app.use("/example", exampleRouter);

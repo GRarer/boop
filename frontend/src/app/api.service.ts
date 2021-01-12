@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -29,7 +29,13 @@ export class ApiService {
     return throwError(err);
   }
 
-  // TODO include authentication tokens in request headers
+
+  private getApiHeaders():  HttpHeaders {
+    return new HttpHeaders({
+      "Content-Type": "application/json",
+      // TODO include authentication tokens in request headers
+    });
+  }
   // TODO add support for URL query parameters
 
   // generic method for making http get requests
@@ -41,7 +47,7 @@ export class ApiService {
     ));
   }
 
-  postJSON<RequestBodyT extends {}, ResponseBodyT extends {} | void>(
+  postJSON<RequestBodyT, ResponseBodyT>(
     endPointUrl: string,
     body: RequestBodyT
   ): Observable<ResponseBodyT> {

@@ -1,14 +1,5 @@
 import webpush from "web-push";
 
-export type SubscriptionRequest = {
-  "endpoint": string;
-  "keys": {
-    "p256dh": string;
-    "auth": string;
-  };
-};
-
-
 // TODO keep private key secret
 // for now the prototype has the vapid keys directly in source code, but we should eventually store it securely
 // and then generate a new pair of keys that are not checked into version control

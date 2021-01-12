@@ -1,5 +1,5 @@
 import express from "express";
-import { SubscriptionRequest, testNotificationPayload } from "../services/pushManager";
+import { testNotificationPayload } from "../services/pushManager";
 import webpush from "web-push";
 
 // TODO persist subscription info in a database and associate them with users
@@ -7,7 +7,7 @@ import webpush from "web-push";
 
 export const subscriptionRouter = express.Router();
 
-let mostRecentSub: SubscriptionRequest | undefined = undefined;
+let mostRecentSub: webpush.PushSubscription | undefined = undefined;
 
 subscriptionRouter.post('/subscribe', function(req, res) {
   console.log("received push subscription information POST");
