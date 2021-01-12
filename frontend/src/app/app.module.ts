@@ -12,6 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { materialModules } from './materialDependencies';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NotFound404Component } from './not-found404/not-found404.component';
+import { LandingComponent } from './landing/landing.component';
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 @NgModule({
@@ -19,6 +20,7 @@ import { NotFound404Component } from './not-found404/not-found404.component';
     AppComponent,
     ConnectionExampleComponent,
     NotFound404Component,
+    LandingComponent,
   ],
   imports: [
     BrowserModule,
