@@ -1,20 +1,29 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
+// To learn more about this file see: https://angular.io/config/tsconfig.
 {
+  // entrypoint files
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ],
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
+    // options to prevent mistakes and errors
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    // debug info for browser console
     "sourceMap": true,
+    // do not generate d.ts type files
     "declaration": false,
-    "downlevelIteration": true,
+    // angular requires decorators
     "experimentalDecorators": true,
+    // compile to javascript es2015 (aka es6)
+    "target": "es2015",
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
     "module": "es2020",
     "lib": [
       "es2018",

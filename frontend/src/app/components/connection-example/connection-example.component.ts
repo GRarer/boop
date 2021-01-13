@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SwPush } from '@angular/service-worker';
-import { ApiService } from '../api.service';
-import { NotificationSubscriptionService } from '../notification-subscription.service';
+import { ApiService } from '../../services/api.service';
+import { NotificationSubscriptionService } from '../../services/notification-subscription.service';
 
 @Component({
   selector: 'app-connection-example',
