@@ -3,8 +3,8 @@
 ## Setup
 
 This project uses [NPM](https://www.npmjs.com/), the package manager for the JavaScript/TypeScript/Node ecosystem.
-With NPM installed, navigate to the backend and frontend directories and run `npm install` in each to install the
-dependencies for both modules.
+With NPM installed, navigate to the backend, frontend, and core directories and run `npm install` in each to install the
+dependencies.
 
 You will also need to install [PostgreSQL](https://www.postgresql.org/download/) version 13, which provides the
 SQL relational database system used by the backend. You may need to manually add the Postgres `psql` command-line
@@ -22,6 +22,13 @@ $ psql -U postgres
 <enter your postgres superuser password>
 \i init.sql
 ```
+
+## Building The Core Package
+
+The `core` package contains type definitions and utilities that are common to both the frontend and backend. It is a
+dependency for the backend and frontend, so you'll need to build the latest version of it before building frontend or
+backend. Navigate to the core directory and run `npm run build`. Alternatively, use `npm run build-watch` to continually
+run the build and recompile core when you make changes.
 
 ### Running the Node backend locally
 
@@ -55,10 +62,10 @@ the cached version.)
 
 ## Style Checking
 
-Navigate to either the frontend or backend directory and run `npm run lint` to run the eslint style checker on that
-package. Some formatting issues can be automatically fixed with `npm run lint -- --fix`. In addition to ensuring
+Navigate to either the frontend, backend, or core directory and run `npm run lint` to run the eslint style checker on
+that package. Some formatting issues can be automatically fixed with `npm run lint -- --fix`. In addition to ensuring
 consistent formatting, the linter will warn about code that may lead to errors or unintentional behavior, such as
-misused promises.
+misused promises. You can also use the `lint.sh` shell script to run linters on all three modules.
 
 You may want use the `.editorconfig` file to ensure that your editor or IDE uses 2-space indentation, removes trailing
 whitespace, etc. For Visual Studio Code, this requires installing

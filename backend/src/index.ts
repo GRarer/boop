@@ -5,6 +5,7 @@ import cors from "cors";
 import { subscriptionRouter } from "./routers/pushSubscriptionRouter";
 import { database } from "./services/database";
 import { databaseExampleRouter } from "./routers/databaseExampleRouter";
+import { accountsRouter } from "./routers/accountsRouter";
 
 const app = express();
 const port = 3000;
@@ -19,6 +20,7 @@ app.use(bodyParser.text());
 app.use("/example", exampleRouter);
 app.use("/push", subscriptionRouter);
 app.use("/db_example", databaseExampleRouter);
+app.use("/account", accountsRouter);
 
 // start ExpressJS server
 app.listen(port, () => {

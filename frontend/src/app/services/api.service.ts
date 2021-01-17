@@ -30,7 +30,7 @@ export class ApiService {
   }
 
 
-  private getApiHeaders():  HttpHeaders {
+  private getApiHeaders(): HttpHeaders {
     return new HttpHeaders({
       "Content-Type": "application/json",
       // TODO include authentication tokens in request headers
