@@ -1,5 +1,6 @@
 import pg, { Pool } from "pg";
 import parseArgs from "minimist";
+import { Gender } from "boop-core";
 
 // manages our connection to PostgreSQL database
 class Database {
@@ -32,15 +33,51 @@ class Database {
   async addExampleValue(value: string): Promise<void> {
     const timestamp: number = Date.now();
     await this.pool.query(
-      `INSERT INTO example_data(id_number, contents) VALUES($1, $2) RETURNING *`,
+      `INSERT INTO example_data(id_number, contents) VALUES($1, $2) RETURNING *;`,
       [timestamp, value]
     );
   }
 
   async getExampleValues(): Promise<string[]> {
-    const rows: { contents: string; }[] = (await this.pool.query('SELECT contents from example_data')).rows;
+    const rows: { contents: string; }[] = (await this.pool.query('SELECT contents from example_data;')).rows;
     const result = rows.map(x => x.contents);
     return result;
+  }
+
+  // information needed authenticate and log in a user
+  async getAuthInfo(username: string):
+  Promise<{userUUID: string; hash: string; isAdmin: boolean;} | "Account Not Found"> {
+    const query = 'SELECT "user_uuid", "bcrypt_hash", "is_admin" from users where username = $1;';
+    type resultRow = { user_uuid: string; bcrypt_hash: string; is_admin: boolean; };
+    const rows: resultRow[] = (await this.pool.query(query, [username])).rows;
+    if (rows.length === 0) {
+      return "Account Not Found";
+    } else if (rows.length === 1) {
+      const result = rows[0];
+      // TODO add support admin column
+      return { userUUID: result.user_uuid, hash: result.bcrypt_hash, isAdmin: result.is_admin };
+    } else {
+      throw Error("Multiple accounts with same username"); // sql uniqueness constraint should prevent this
+    }
+  }
+
+  async addAccount(values: {
+    uuid: string;
+    username: string;
+    fullName: string;
+    passwordHash: string;
+    friendlyName: string;
+    emailAddress: string;
+    birthDate: string; // ISO format date string (e.g. 2020-01-16)
+    gender: Gender;
+  }): Promise<void> {
+    // TODO handle already-reserved usernames
+    const query =
+    `INSERT INTO users
+    ("user_uuid", "username", "bcrypt_hash", "full_name", "friendly_name", "gender", "email", "birth_date", "is_admin")
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
+    await this.pool.query(query, [values.uuid, values.username, values.passwordHash, values.fullName,
+      values.friendlyName, values.gender, values.emailAddress, values.birthDate, false]);
   }
 }
 

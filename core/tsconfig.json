@@ -1,0 +1,31 @@
+// boop-core is a dependency for both frontend and backend, but it is not built on its own
+// this tsconfig is mostly here to make sure that your IDE or language server knows to use strict mode
+{
+  // entrypoint files
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "outDir": "./dist/lib",
+    // options to prevent mistakes and errors
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    // debug info for browser console
+    "sourceMap": true,
+    // core does need to generate type declarations to be used by the other packages
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    // angular requires decorators
+    "experimentalDecorators": true,
+    // compile to javascript es2015 (aka es6)
+    "target": "es2015",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "module": "commonjs",
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  },
+}
