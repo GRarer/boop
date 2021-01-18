@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npx tsc --build",
     "clean": "npx tsc --build --clean",
+    "start-node": "node .",
     "serve": "npm run clean && npm run build && node .",
     "build-watch": "npm run clean && npx tsc --build --watch",
     "serve-watch": "npm run clean && npx tsc --build && (trap 'kill 0' SIGINT ; npx tsc --build --watch & npx nodemon .)",
