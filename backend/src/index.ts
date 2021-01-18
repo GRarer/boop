@@ -6,6 +6,7 @@ import { subscriptionRouter } from "./routers/pushSubscriptionRouter";
 import { database } from "./services/database";
 import { databaseExampleRouter } from "./routers/databaseExampleRouter";
 import { accountsRouter } from "./routers/accountsRouter";
+import { promisify } from "util";
 
 const app = express();
 const port = 3000;
@@ -23,12 +24,28 @@ app.use("/db_example", databaseExampleRouter);
 app.use("/account", accountsRouter);
 
 // start ExpressJS server
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
 
-// set a cleanup callback that will execute when the server is quit
-process.on('quit', () => {
-  console.log('cleaning up connection');
-  void database.disconnect();
+// handler to shut down cleanly and free resources
+async function cleanShutdown(): Promise<void> {
+  // the express server close() function uses callback style, so we have to convert it into a promise
+  await promisify((callback?: ((err?: Error | undefined) => void)) => { server.close(callback); });
+  await database.disconnect();
+}
+
+// attach signal/event handlers to run before exiting
+["SIGINT", "SIGTERM", "SIGHUP"].forEach(signal => {
+  process.on(signal, function() {
+    console.log("shutting down...");
+    cleanShutdown().then(() => {
+      console.log("shutdown complete");
+    }).catch(reason => {
+      console.error("failed to shut down cleanly");
+      console.log(reason);
+    }).finally(() => {
+      process.exit();
+    });
+  });
 });
