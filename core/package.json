@@ -17,6 +17,10 @@
     "lint": "npx eslint . --ext .ts",
     "rollup": "npx rollup -c rollup.config.ts"
   },
+  "eslintIgnore": [
+    "dist/*",
+    "rollup.config.ts"
+  ],
   "dependencies": {},
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
