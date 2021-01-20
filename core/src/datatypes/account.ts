@@ -14,3 +14,7 @@ export type CreateAccountRequest = {
 export type Gender = "Female" | "Male" | "Nonbinary" | null;
 
 export const genderValues: Gender[] = ["Female", "Male", "Nonbinary"];
+
+export function isGender(x: unknown): x is Gender {
+  return (x === null) || (genderValues as unknown[]).includes(x);
+}
