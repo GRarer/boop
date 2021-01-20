@@ -7,6 +7,7 @@ import { database } from "./services/database";
 import { databaseExampleRouter } from "./routers/databaseExampleRouter";
 import { accountsRouter } from "./routers/accountsRouter";
 import { promisify } from "util";
+import { adminRouter } from "./routers/adminRouter";
 
 const app = express();
 const port = 3000;
@@ -22,6 +23,8 @@ app.use("/example", exampleRouter);
 app.use("/push", subscriptionRouter);
 app.use("/db_example", databaseExampleRouter);
 app.use("/account", accountsRouter);
+app.use("/admin", adminRouter);
+
 
 // start ExpressJS server
 const server = app.listen(port, () => {
