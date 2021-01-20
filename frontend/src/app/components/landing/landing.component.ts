@@ -49,7 +49,6 @@ export class LandingComponent implements OnInit {
     this.apiService.getJSON<boolean>("http://localhost:3000/account/exists", { username })
       .toPromise()
       .then(accountExists => {
-        console.log(accountExists);
         if (accountExists) {
           this.snackBar.open("That username is already taken.", "Dismiss", { "duration": 5000 });
         } else {

@@ -53,9 +53,5 @@ export function isAdminSession(token: string): boolean {
 export async function hashPassword(password: string): Promise<string> {
   // incrementing salt rounds number by 1 doubles the time needed to calculate a hash
   const saltRounds: number = 9;
-  const startTime = Date.now();
-  const hash = await bcrypt.hash(password, saltRounds);
-  const finishTime = Date.now();
-  console.log(`Hashing password with ${saltRounds} rounds took ${finishTime - startTime} milliseconds`);
-  return hash;
+  return await bcrypt.hash(password, saltRounds);
 }
