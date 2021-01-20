@@ -5,8 +5,9 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+// forces content into the center of the page on wide desktop screens, but should have no effect on mobile devices
 .narrow-body {
-    max-width: 8in;
+    max-width: 6in;
     margin: auto;
 
     .mat-display-1 {
