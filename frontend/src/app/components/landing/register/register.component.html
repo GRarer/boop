@@ -1,0 +1,50 @@
+<h2 style="text-align: center; margin-bottom: 0;">Register New Account</h2>
+
+<form [formGroup]="registerForm" (submit)="register()">
+    <div class="horizontal-center close-stacked-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="fullName">
+        </mat-form-field>
+    </div>
+    <div class="horizontal-center close-stacked-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Friendly Name</mat-label>
+            <input matInput formControlName="friendlyName">
+        </mat-form-field>
+    </div>
+    <div class="horizontal-center close-stacked-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Email Address</mat-label>
+            <input matInput formControlName="email">
+        </mat-form-field>
+    </div>
+    <div class="horizontal-center close-stacked-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option *ngFor="let gender of genderOptions" [value]="gender">
+                {{gender}}
+              </mat-option>
+              <mat-option [value]="">
+                Prefer Not To Say
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+    </div>
+    <div class="horizontal-center close-stacked-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Birth Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="birthDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div style="text-align: center;">
+        <button mat-flat-button color="primary" style="width: 100px; margin-right: 10px;"> Register </button>
+        <button mat-stroked-button type="button" style="width: 100px;" color="warn" (click)="cancelRegistration.emit()">Cancel</button>
+    </div>
+
+</form>
+
+
