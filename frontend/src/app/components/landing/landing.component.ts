@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { LoginRequest } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
+import { CommandsService } from 'src/app/services/commands.service';
 import { SessionService } from 'src/app/services/session.service';
 import { equalToSiblingValidator } from 'src/app/util/ngUtils';
 
@@ -23,6 +24,7 @@ export class LandingComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     private apiService: ApiService,
+    private commandService: CommandsService,
   ) { }
 
   // TODO validate username and password formats
@@ -67,6 +69,7 @@ export class LandingComponent implements OnInit {
       const password: string = value.password;
       this.sessionService.login({ username, password }).then(() => {
         // navigate to home page if login was successful
+        this.commandService.enableAdminCommands();
         void this.router.navigate(["/home"]);
       }).catch((reason: unknown) => {
         // if something went wrong, show a "snackbar" message

@@ -1,7 +1,8 @@
-import { LoginRequest, LoginResponse } from 'boop-core';
+import { LoginRequest, LoginResponse, sessionTokenHeaderName } from 'boop-core';
 import { v4 as uuidv4 } from 'uuid';
 import { database } from './database';
 import bcrypt from "bcrypt";
+import { Request } from "express";
 
 /* a user session token is a UUID that is given to the client when it logs in
  * the token is sent as a header in all requests made to the back-end in order to verify the client's identity
@@ -39,14 +40,24 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse | 
   }
 }
 
+function sessionFromReq(req: Request): Session | undefined {
+  const token: string | undefined = req.header(sessionTokenHeaderName);
+  if (typeof token === "string") {
+    return activeSessions.get(token);
+  } else {
+    return undefined;
+  }
+
+}
+
 // gets the user UUID associated with a session token, or undefined if the token does not match any active session
-export function getUserUUID(token: string): string | undefined {
-  return activeSessions.get(token)?.userUUID;
+export function getUserUUID(req: Request): string | undefined {
+  return sessionFromReq(req)?.userUUID;
 }
 
 // returns true if the session token belongs to an "admin" user
-export function isAdminSession(token: string): boolean {
-  return activeSessions.get(token)?.isAdmin ?? false;
+export function isAdminSession(req: Request): boolean {
+  return sessionFromReq(req)?.isAdmin ?? false;
 }
 
 

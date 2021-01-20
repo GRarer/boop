@@ -1,23 +1,34 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, } from '@angular/common/http';
+import { HttpClient, HttpHeaders, } from '@angular/common/http';
 import { Observable, } from 'rxjs';
+import { SessionService } from './session.service';
+import { sessionTokenHeaderName } from 'boop-core';
 
 // class that handles http requests to the back end to support a REST API
+// automatically includes the current session token in a header, so do not use this to make requests to a 3rd party
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private sessionService: SessionService,
   ) { }
 
-  // TODO add support for URL query parameters
+  private getAuthenticationHeader(): HttpHeaders | undefined {
+    const sessionToken = this.sessionService.getSessionToken();
+    if (sessionToken === undefined) {
+      return undefined;
+    }
+    return new HttpHeaders({ [sessionTokenHeaderName]: sessionToken });
+  }
 
   // generic method for making http get requests
   getJSON<ResponseT>(endPointUrl: string, queryParams?: {[param: string]: string | string[];}): Observable<ResponseT> {
     const options = {
-      params: queryParams
+      params: queryParams,
+      headers: this.getAuthenticationHeader(),
     };
     return this.httpClient.get<ResponseT>(endPointUrl, options);
   }
@@ -26,7 +37,10 @@ export class ApiService {
     endPointUrl: string,
     body: RequestBodyT
   ): Observable<ResponseBodyT> {
-    return this.httpClient.post<ResponseBodyT>(endPointUrl, body);
+    const options = {
+      headers: this.getAuthenticationHeader(),
+    };
+    return this.httpClient.post<ResponseBodyT>(endPointUrl, body, options);
   }
 
   // TODO PUT method
