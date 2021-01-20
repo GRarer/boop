@@ -27,9 +27,10 @@ export class ConnectionExampleComponent implements OnInit {
   }
 
   testGet(): void {
-    this.apiService.getJSON<string>("http://localhost:3000/example/foobar").subscribe(
+    this.apiService.getJSON<string>("http://localhost:3000/example/foobar").then(
       (result) => console.log("get result", result)
-    );
+    )
+      .catch(reason => { console.error(reason); });
   }
 
   testPost(): void {
@@ -37,7 +38,9 @@ export class ConnectionExampleComponent implements OnInit {
       foo: "bar",
       baz: 42,
     };
-    this.apiService.postJSON<{}, string>("http://localhost:3000/example/", body).subscribe();
+    this.apiService.postJSON<typeof body, unknown>("http://localhost:3000/example/", body)
+      .then(response => { console.log(response); })
+      .catch(reason => { console.error(reason); });
   }
 
   unsubscribe(): void {
@@ -46,18 +49,25 @@ export class ConnectionExampleComponent implements OnInit {
       .catch(err => console.error("Could not unsubscribe", err));
   }
 
+  private async sendNotificationSubscription(): Promise<void> {
+    const subscription = await this.swPush.requestSubscription({
+      serverPublicKey: this.subscriptionService.VAPID_PUBLIC_KEY
+    });
+    await this.subscriptionService.addPushSubscriber(subscription);
+  }
+
   subscribeToNotifications(): void {
     console.log("subscribe");
-    this.swPush.requestSubscription({
-      serverPublicKey: this.subscriptionService.VAPID_PUBLIC_KEY
-    })
-      .then(sub => this.subscriptionService.addPushSubscriber(sub).subscribe())
-      .catch(err => console.error("Could not subscribe to notifications", err));
+    this.sendNotificationSubscription()
+      .then(() => { console.log("subscribed"); })
+      .catch(reason => { console.error(reason); });
   }
 
   broadcast(): void {
     console.log("trigger broadcast");
-    this.apiService.postJSON("http://localhost:3000/push/testBroadcast", {}).subscribe();
+    this.apiService.postJSON("http://localhost:3000/push/testBroadcast", {})
+      .then()
+      .catch(reason => { console.error(reason); });
   }
 
   newEntry: string = "";
@@ -65,14 +75,17 @@ export class ConnectionExampleComponent implements OnInit {
   sqlAdd(): void {
     console.log("sending value to database");
     console.log(this.newEntry);
-    this.apiService.postJSON<string, void>("http://localhost:3000/db_example", this.newEntry).subscribe();
+    this.apiService.postJSON<string, void>("http://localhost:3000/db_example", this.newEntry)
+      .then()
+      .catch(reason => console.error(reason));
   }
 
   sqlSelect(): void {
     this.apiService.getJSON<string[]>("http://localhost:3000/db_example")
-      .subscribe(response => {
+      .then(response => {
         console.log("database result");
         console.log(response);
-      });
+      })
+      .catch(reason => console.error(reason));
   }
 }

@@ -61,7 +61,6 @@ export class LandingComponent implements OnInit {
     // check that username isn't already taken
     // TODO parameterize backend base url
     this.apiService.getJSON<boolean>("http://localhost:3000/account/exists", { username })
-      .toPromise()
       .then(accountExists => {
         if (accountExists) {
           this.snackBar.open("That username is already taken.", "Dismiss", { "duration": 5000 });
