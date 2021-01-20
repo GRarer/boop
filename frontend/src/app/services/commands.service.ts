@@ -24,7 +24,7 @@ export class CommandsService {
 
   private sendExampleCommand(): void {
     console.log("sending example admin command");
-    this.apiService.postJSON("http://localhost:3000/admin/check", undefined).toPromise()
+    this.apiService.postJSON("http://localhost:3000/admin/check", undefined)
       .then(()=>{
         console.log("Current user is admin");
       })

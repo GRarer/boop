@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, } from '@angular/common/http';
-import { Observable, } from 'rxjs';
 import { SessionService } from './session.service';
 import { sessionTokenHeaderName } from 'boop-core';
 
@@ -25,22 +24,25 @@ export class ApiService {
   }
 
   // generic method for making http get requests
-  getJSON<ResponseT>(endPointUrl: string, queryParams?: {[param: string]: string | string[];}): Observable<ResponseT> {
+  async getJSON<ResponseBodyT>(
+    endPointUrl: string,
+    queryParams?: {[param: string]: string | string[];}
+  ): Promise<ResponseBodyT> {
     const options = {
       params: queryParams,
       headers: this.getAuthenticationHeader(),
     };
-    return this.httpClient.get<ResponseT>(endPointUrl, options);
+    return this.httpClient.get<ResponseBodyT>(endPointUrl, options).toPromise();
   }
 
-  postJSON<RequestBodyT, ResponseBodyT>(
+  async postJSON<RequestBodyT, ResponseBodyT>(
     endPointUrl: string,
     body: RequestBodyT
-  ): Observable<ResponseBodyT> {
+  ): Promise<ResponseBodyT> {
     const options = {
       headers: this.getAuthenticationHeader(),
     };
-    return this.httpClient.post<ResponseBodyT>(endPointUrl, body, options);
+    return this.httpClient.post<ResponseBodyT>(endPointUrl, body, options).toPromise();
   }
 
   // TODO PUT method
