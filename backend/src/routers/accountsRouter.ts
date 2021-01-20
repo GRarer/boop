@@ -1,5 +1,5 @@
 import express from "express";
-import { LoginRequest, LoginResponse } from "boop-core";
+import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse } from "boop-core";
 import { login } from "../services/auth";
 import { createAccount } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
@@ -26,6 +26,14 @@ accountsRouter.post('/login', (req, res) => {
 
 accountsRouter.post('/register', (req, res) => {
   const body: CreateAccountRequest = req.body;
+  // validate username and password
+  const passwordOrUsernameIssue: string | undefined
+    = failsUsernameRequirement(body.username) ?? failsPasswordRequirement(body.password);
+  if (passwordOrUsernameIssue) {
+    res.status(401).send(passwordOrUsernameIssue);
+    return;
+  }
+
   // validate age and gender
   try {
     const birthDate: Date = new Date(body.birthDate);

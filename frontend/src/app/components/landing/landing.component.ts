@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { LoginRequest } from 'boop-core';
+import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
 import { CommandsService } from 'src/app/services/commands.service';
 import { SessionService } from 'src/app/services/session.service';
@@ -46,6 +46,15 @@ export class LandingComponent implements OnInit {
     const value = this.startRegistrationForm.value;
     const username: string = value.username;
     const password: string = value.password;
+    // enforce username and password rules
+    const passwordOrUsernameIssue: string | undefined
+      = failsUsernameRequirement(username) ?? failsPasswordRequirement(password);
+    if (passwordOrUsernameIssue) {
+      this.snackBar.open(passwordOrUsernameIssue, "Dismiss", { "duration": 5000 });
+      return;
+    }
+
+
     // check that username isn't already taken
     // TODO parameterize backend base url
     this.apiService.getJSON<boolean>("http://localhost:3000/account/exists", { username })
