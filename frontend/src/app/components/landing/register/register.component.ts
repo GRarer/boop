@@ -9,8 +9,7 @@ import { SessionService } from 'src/app/services/session.service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styles: [
-  ]
+  styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
 
@@ -24,7 +23,7 @@ export class RegisterComponent implements OnInit {
     friendlyName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     birthDate: new FormControl('', [Validators.required]),
-    gender: new FormControl(''),
+    gender: new FormControl(),
   });
 
   constructor(
@@ -38,7 +37,8 @@ export class RegisterComponent implements OnInit {
     const fullName: string = value.fullName;
     const friendlyName: string = value.friendlyName;
     const emailAddress: string = value.friendlyName;
-    // form value for prefer-not-to-say shows as undefined, has to be converted into null
+    // form value for gender is empty string if user chose "prefer not so say", or undefined if they did not choose
+    // in either of those cases, we replace that with null
     const gender: Gender = value.gender || null;
     const birthDate = toIsoDate(value.birthDate);
     if (!minYearsAgo(value.birthDate, 13)) {

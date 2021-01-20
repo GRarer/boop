@@ -11,7 +11,7 @@ import { equalToSiblingValidator } from 'src/app/util/ngUtils';
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
-  styles: [],
+  styleUrls: ['./landing.component.scss'],
 })
 export class LandingComponent implements OnInit {
 
