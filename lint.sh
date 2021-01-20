@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # runs linters for backend, frontend, and core packages
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P)"
 
