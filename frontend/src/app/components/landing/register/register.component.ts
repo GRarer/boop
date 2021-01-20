@@ -1,10 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { CreateAccountRequest, Gender, genderValues, LoginRequest, toIsoDate, minYearsAgo } from 'boop-core';
 import { SessionService } from 'src/app/services/session.service';
+import { PrivacyPolicyDialogComponent } from './privacy-policy-dialog/privacy-policy-dialog.component';
+import { TermsDialogComponent } from './terms-dialog/terms-dialog.component';
 
 @Component({
   selector: 'app-register',
@@ -24,12 +27,14 @@ export class RegisterComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     birthDate: new FormControl('', [Validators.required]),
     gender: new FormControl(),
+    agreeToTerms: new FormControl(false, [Validators.requiredTrue]),
   });
 
   constructor(
     private sessionService: SessionService,
     private snackBar: MatSnackBar,
     private router: Router,
+    public dialog: MatDialog,
   ) { }
 
   register(): void {
@@ -70,6 +75,14 @@ export class RegisterComponent implements OnInit {
       }
       this.snackBar.open(message, "Dismiss", { duration: 5000 });
     });
+  }
+
+  showTermsAndConditions(): void {
+    this.dialog.open(TermsDialogComponent);
+  }
+
+  showPrivacyPolicy(): void {
+    this.dialog.open(PrivacyPolicyDialogComponent);
   }
 
   ngOnInit(): void {

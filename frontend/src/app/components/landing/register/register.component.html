@@ -42,6 +42,17 @@
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
     </div>
+    <div class="horizontal-center">
+        <div style="width: 80%; display: flex; flex-direction: row; margin-top: 2px;">
+            <mat-checkbox color="primary" formControlName="agreeToTerms"></mat-checkbox>
+            <p style="margin-left: 10px; line-height: 0.9;">I have read and agree to the
+                <button mat-button type="button" class="inline-button" color="primary" (click)="showPrivacyPolicy()">Privacy Policy</button>
+                and
+                <button mat-button type="button" class="inline-button" color="primary" (click)="showTermsAndConditions()">User Agreement</button>
+            </p>
+        </div>
+
+    </div>
     <div style="text-align: center;">
         <button mat-stroked-button type="button" style="width: calc(40% - 5px); margin-right: 10px;" color="warn"
             (click)="cancelRegistration.emit()">Back</button>

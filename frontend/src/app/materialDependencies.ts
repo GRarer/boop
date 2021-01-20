@@ -6,6 +6,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // include all of the material component modules that we use here to avoid cluttering the main AppModule
 export const materialModules = [
@@ -16,6 +18,8 @@ export const materialModules = [
   MatSnackBarModule,
   MatDatepickerModule,
   MatSelectModule,
-  MatNativeDateModule
+  MatNativeDateModule,
+  MatCheckboxModule,
+  MatDialogModule,
 ];
 
