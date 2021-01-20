@@ -63,7 +63,6 @@ accountsRouter.get('/exists', (req, res) => {
   }
   database.getAuthInfo(username).then(result => {
     if (result === "Account Not Found") {
-      console.log(`account not found ${username}`);
       res.send(false);
     } else {
       res.send(true);
