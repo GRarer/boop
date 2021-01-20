@@ -25,7 +25,11 @@ export class LandingComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private commandService: CommandsService,
-  ) { }
+  ) {
+    this.startRegistrationForm.controls.password.valueChanges.subscribe(() => {
+      this.startRegistrationForm.controls.confirmPassword.updateValueAndValidity();
+    });
+  }
 
   // TODO validate username and password formats
   startRegistrationForm: FormGroup = new FormGroup({
@@ -53,7 +57,6 @@ export class LandingComponent implements OnInit {
       this.snackBar.open(passwordOrUsernameIssue, "Dismiss", { "duration": 5000 });
       return;
     }
-
 
     // check that username isn't already taken
     // TODO parameterize backend base url

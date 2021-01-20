@@ -15,6 +15,9 @@ import { LandingComponent } from './components/landing/landing.component';
 import { ConnectionExampleComponent } from './components/connection-example/connection-example.component';
 import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/landing/register/register.component';
+import { TermsDialogComponent } from './components/landing/register/terms-dialog/terms-dialog.component';
+import { PrivacyPolicyDialogComponent }
+  from './components/landing/register/privacy-policy-dialog/privacy-policy-dialog.component';
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 @NgModule({
@@ -25,6 +28,8 @@ import { RegisterComponent } from './components/landing/register/register.compon
     LandingComponent,
     HomeComponent,
     RegisterComponent,
+    TermsDialogComponent,
+    PrivacyPolicyDialogComponent,
   ],
   imports: [
     BrowserModule,

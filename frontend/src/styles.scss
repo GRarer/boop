@@ -27,3 +27,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .close-stacked-input {
     margin-bottom: -15px;
 }
+
+.mat-button.inline-button {
+    padding-left: 1px;
+    padding-right: 1px;
+    padding-top: 0;
+    padding-bottom: 0;
+    max-height: 2em;
+    margin-top: -0.5em;
+}
