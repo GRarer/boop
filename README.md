@@ -14,6 +14,10 @@ program to your path environment variable.
 
 ### Initializing the database
 
+The Postgres installer for Windows creates a superuser named "postgres"; this is also the user that the Boop backend
+server will use to connect to the database. If you are on a different platform, you will need to create a postgres user
+named "postgres" and use it when initializing the Boop database.
+
 `init.sql` should contain the sql script that sets up the database tables. To set up or reset the database, you can run
 this script from `psql` in your terminal.
 
