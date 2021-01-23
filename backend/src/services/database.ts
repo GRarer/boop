@@ -16,12 +16,22 @@ class Database {
     const passwordArgument: string | undefined = parseArgs(process.argv.slice(2))["password"];
     const passwordEnvironmentVariable: string | undefined = process.env["postgres_password"];
 
+    const usernameArgument: string | undefined = parseArgs(process.argv.slice(2))["sqlUser"];
+
     this.pool = new Pool({
-      user: 'postgres',
+      user: usernameArgument ?? 'postgres',
       database: 'boop',
       password: passwordArgument ?? passwordEnvironmentVariable,
       port: 5432,
     });
+  }
+
+  // throws an exception if the database is not connected or cannot authenticate.
+  async checkConnection(): Promise<void> {
+    {
+      await this.pool.query('SELECT * from users limit 1;');
+      return;
+    }
   }
 
   // this should be called when the server exits, and at no other time
@@ -83,3 +93,10 @@ class Database {
 
 // we export a single instance of database since we should not have more than one connection pool
 export const database: Database = new Database();
+
+// check connection and quit if database authentication fails (e.g. wrong postgres password)
+database.checkConnection()
+  .catch((reason: unknown) => {
+    console.error(reason);
+    database.disconnect().finally(() => { process.exit(); });
+  });

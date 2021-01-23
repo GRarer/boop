@@ -14,10 +14,6 @@ program to your path environment variable.
 
 ### Initializing the database
 
-The Postgres installer for Windows creates a superuser named "postgres"; this is also the user that the Boop backend
-server will use to connect to the database. If you are on a different platform, you will need to create a postgres user
-named "postgres" and use it when initializing the Boop database.
-
 `init.sql` should contain the sql script that sets up the database tables. To set up or reset the database, you can run
 this script from `psql` in your terminal.
 
@@ -42,7 +38,12 @@ backend directory. To run a server that automatically recompiles and restarts wh
 use `npm run build` or `npm run build-watch`.
 
 If you save your postgres superuser password in an environment variable called `postgres_password`, you can skip the
-`-- --password <your postgres superuser password>` part.
+`-- --password <your postgres password>` part.
+
+By default, the backend will try to connect to postgres as the
+user "postgres". On Windows, this user is created during installation. On other platforms, you can either create
+a user named "postgres" or start the backend with the `--sqlUser --<your postgres username>` argument to have the
+server connect as a different postgres username.
 
 ### Running the Angular frontend locally
 
