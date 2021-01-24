@@ -10,12 +10,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     max-width: 6in;
     margin: auto;
 
-    .mat-display-1 {
+    .menu-paragraph {
         text-align: center;
-        font-size: 42px;
-        margin-top: 20px;
-        margin-bottom: 20px;
+        max-width: 80%;
+        margin: auto;
     }
+}
+
+.boop-header.mat-display-1 {
+    text-align: center;
+    font-size: 42px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .horizontal-center {
