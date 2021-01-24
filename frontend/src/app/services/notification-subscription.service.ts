@@ -10,8 +10,6 @@ export class NotificationSubscriptionService {
     private apiService: ApiService,
   ) { }
 
-  readonly VAPID_PUBLIC_KEY = "BHFciY9_wuokC43Tkd7g4bPYctnTFlqc1rHzKgShdTxE2_AJFAvSJz1q3QXf4OQKDp0CcrDM4CK8mIPfG17iv78";
-
   async addPushSubscriber(sub: PushSubscription): Promise<void> {
     console.log("making subscription");
     console.log(sub);

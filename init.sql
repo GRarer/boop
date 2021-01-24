@@ -19,7 +19,7 @@ CREATE TABLE example_data(
 );
 
 CREATE TABLE users(
-    user_uuid UUID NOT NULL,
+    user_uuid UUID PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
     bcrypt_hash TEXT NOT NULL, -- bcrypt "hashes" actually contain both the password hash and salt as one string
     full_name TEXT NOT NULL,
@@ -27,8 +27,7 @@ CREATE TABLE users(
     gender GENDER_IDENTITY, -- allowed to be null for users who prefer not to state a gender
     email TEXT NOT NULL,
     birth_date TEXT NOT NULL, -- date in ISO format
-    is_admin BOOLEAN,
-    PRIMARY KEY (user_uuid)
+    is_admin BOOLEAN
 );
 
 -- create special admin account for demonstrations
@@ -37,3 +36,12 @@ INSERT INTO users
 ("user_uuid", "username", "bcrypt_hash", "full_name", "friendly_name", "gender", "email", "birth_date", "is_admin")
 VALUES ('689b90d7-41ed-4257-a2a1-ca6d608d28f7', 'admin', '$2b$09$6Xjk49GbCZTjoognkzPk2.pyblewRbaiHLGap0PjETNNX924or4xS',
 'Boop Administrator', 'Administrator', null, 'example@example.com', '2000-01-15', TRUE);
+
+-- web-push subscriptions and the associated users
+-- endpoint column ensures we don't send duplicate notifications to the same user on the same device/browser
+CREATE Table subscriptions(
+    sub_json JSON NOT NUll,
+    user_uuid UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
+    endpoint TEXT NOT NULL,
+    PRIMARY Key (endpoint, user_uuid)
+)

@@ -61,7 +61,7 @@ export class RegisterComponent implements OnInit {
       birthDate,
     };
     this.sessionService.loginNewAccount(request).then(() => {
-      void this.router.navigate(["/home"]);
+      void this.router.navigate(["/push_setup"]);
     }).catch((reason) => {
       // if something went wrong, show a "snackbar" message
       console.error(reason);

@@ -85,9 +85,18 @@ class Database {
     const query =
     `INSERT INTO users
     ("user_uuid", "username", "bcrypt_hash", "full_name", "friendly_name", "gender", "email", "birth_date", "is_admin")
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`;
     await this.pool.query(query, [values.uuid, values.username, values.passwordHash, values.fullName,
       values.friendlyName, values.gender, values.emailAddress, values.birthDate, false]);
+  }
+
+  // queries for database example demonstration
+  async addPushSubscription(subscription: PushSubscriptionJSON, userUUID: string): Promise<void> {
+    await this.pool.query(
+      `INSERT INTO subscriptions(endpoint, sub_json, user_uuid) VALUES($1, $2, $3)
+      ON CONFLICT (endpoint, user_uuid) DO UPDATE SET endpoint=$1, sub_json=$2;`,
+      [subscription.endpoint, subscription, userUUID]
+    );
   }
 }
 

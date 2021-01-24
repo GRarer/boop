@@ -1,12 +1,29 @@
 import express from "express";
 import { testNotificationPayload } from "../services/pushManager";
 import webpush from "web-push";
+import { getUserUUID } from "../services/auth";
+import { database } from "../services/database";
 
-// TODO persist subscription info in a database and associate them with users
 
 
 export const subscriptionRouter = express.Router();
 
+subscriptionRouter.post('/addSubscription', function(req, res) {
+  const subscription: PushSubscriptionJSON = req.body;
+  const userUUID = getUserUUID(req);
+  if (userUUID === undefined) {
+    res.status(401).send("cannot add subscription when not logged in");
+    return;
+  }
+  database.addPushSubscription(subscription, userUUID)
+    .then(() => { res.send(); })
+    .catch((reason) => {
+      console.error(reason);
+      res.sendStatus(500);
+    });
+});
+
+// TODO remove notification example
 let mostRecentSub: webpush.PushSubscription | undefined = undefined;
 
 subscriptionRouter.post('/subscribe', function(req, res) {
