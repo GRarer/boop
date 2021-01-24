@@ -18,14 +18,7 @@ export class ConnectionExampleComponent implements OnInit {
     private subscriptionService: NotificationSubscriptionService,
   ) { }
 
-  ngOnInit(): void {
-    this.swPush.notificationClicks.subscribe( event => {
-      console.log(`Notification Action: ${event.action}`);
-      if (event.action === "show_app") {
-        window.open("http://localhost:8080");
-      }
-    });
-  }
+  ngOnInit(): void {}
 
   testGet(): void {
     this.apiService.getJSON<string>("http://localhost:3000/example/foobar").then(

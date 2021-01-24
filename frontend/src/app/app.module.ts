@@ -39,7 +39,7 @@ import { PushSubscribeComponent } from './components/push-subscribe/push-subscri
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: true }),
+    ServiceWorkerModule.register('boop-service-worker.js', { enabled: true }),
     BrowserAnimationsModule,
     ...materialModules, // modules for angular-material components
   ],
