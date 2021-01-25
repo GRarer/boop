@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SwPush } from '@angular/service-worker';
+import { vapidKeys } from 'boop-core';
 import { ApiService } from '../../services/api.service';
 import { NotificationSubscriptionService } from '../../services/notification-subscription.service';
-import { vapidPublicKey } from 'boop-core';
 
 @Component({
   selector: 'app-connection-example',
@@ -45,7 +45,7 @@ export class ConnectionExampleComponent implements OnInit {
 
   private async sendNotificationSubscription(): Promise<void> {
     const subscription = await this.swPush.requestSubscription({
-      serverPublicKey: vapidPublicKey
+      serverPublicKey: vapidKeys.publicKey
     });
     await this.subscriptionService.addPushSubscriber(subscription);
   }

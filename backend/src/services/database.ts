@@ -98,6 +98,13 @@ class Database {
       [subscription.endpoint, subscription, userUUID]
     );
   }
+
+  async getPushByUsername(username: string): Promise<PushSubscriptionJSON[]> {
+    const query = `select sub_json from users join subscriptions using (user_uuid) where username = $1`;
+    type resultRow = {sub_json: PushSubscriptionJSON};
+    const result: resultRow[] = (await this.pool.query(query, [username])).rows;
+    return result.map(r => r.sub_json);
+  }
 }
 
 // we export a single instance of database since we should not have more than one connection pool
