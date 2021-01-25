@@ -17,7 +17,7 @@ export class CommandsService {
     const commands = ({
       // example command that just verifies that the user is an admin
       testAdminStatus: () => { this.sendExampleCommand(); },
-      manualPush: (username: string) => {this.manualPush(username)},
+      manualPush: (username: string) => { this.manualPush(username); },
     });
     (window as any).admin = commands;
     console.log("Boop admin commands enabled");
@@ -32,9 +32,9 @@ export class CommandsService {
       .catch(reason => console.error(reason));
   }
 
-  private manualPush(username: string) {
+  private manualPush(username: string): void {
     this.apiService.postJSON("http://localhost:3000/admin/push", username)
-    .then(() => console.log("sent push"))
-    .catch((reason) => console.error(reason));
+      .then(() => console.log("sent push"))
+      .catch((reason) => console.error(reason));
   }
 }
