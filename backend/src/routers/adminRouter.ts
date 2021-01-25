@@ -32,27 +32,27 @@ adminRouter.post('/push', (req, res) => {
   }
 
   database.getPushByUsername(username)
-  .then((subscriptions: PushSubscriptionJSON[]) => {
-    for (const sub of subscriptions) {
-      try {
-        const subscription: webpush.PushSubscription = {
-          endpoint: sub.endpoint!,
-          keys: {
-            p256dh: sub.keys!['p256dh'],
-            auth: sub.keys!['auth']
-          }
-        }
-        webpush.sendNotification(subscription, JSON.stringify(testNotificationPayload))
-        .catch((reason: unknown) => {
+    .then((subscriptions: PushSubscriptionJSON[]) => {
+      for (const sub of subscriptions) {
+        try {
+          const subscription: webpush.PushSubscription = {
+            endpoint: sub.endpoint!,
+            keys: {
+              p256dh: sub.keys!['p256dh'],
+              auth: sub.keys!['auth']
+            }
+          };
+          webpush.sendNotification(subscription, JSON.stringify(testNotificationPayload))
+            .catch((reason: unknown) => {
+              console.log("failed to send push notification");
+              console.log(reason);
+            });
+        } catch (reason: unknown) {
           console.log("failed to send push notification");
           console.log(reason);
-        });
-      } catch (reason: unknown) {
-        console.log("failed to send push notification");
-        console.log(reason);
+        }
       }
-    }
-  })
-  .catch(() => res.sendStatus(500));
+    })
+    .catch(() => res.sendStatus(500));
 });
 
