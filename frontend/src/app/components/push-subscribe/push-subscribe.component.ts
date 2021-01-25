@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
-import { vapidPublicKey } from 'boop-core';
+import { vapidKeys } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -50,7 +50,7 @@ export class PushSubscribeComponent implements OnInit {
 
   private async subscribe(): Promise<void> {
     const subscription = await this.swPush.requestSubscription({
-      serverPublicKey: vapidPublicKey
+      serverPublicKey: vapidKeys.publicKey
     });
     console.log(subscription);
     await this.apiService.postJSON<PushSubscriptionJSON, void>(
