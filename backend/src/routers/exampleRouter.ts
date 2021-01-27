@@ -1,8 +1,9 @@
 import express from "express";
+import { handleAsync } from "../util/handleAsync";
 
 export const exampleRouter = express.Router();
 
-exampleRouter.get('/:id', function(req, res) {
+exampleRouter.get('/:id', handleAsync(async (req, res) => {
   console.log("received GET");
   console.log(req.body);
   console.log(req.headers);
@@ -10,8 +11,8 @@ exampleRouter.get('/:id', function(req, res) {
     message: "GET request received.",
     idPath: req.params.id
   });
-});
-exampleRouter.post('/', function(req, res) {
+}));
+exampleRouter.post('/', handleAsync( async (req, res) => {
   console.log("received POST");
   console.log(req.body);
   console.log(req.headers);
@@ -19,4 +20,4 @@ exampleRouter.post('/', function(req, res) {
     message: "POST request received.",
     payload: req.body
   });
-});
+}));

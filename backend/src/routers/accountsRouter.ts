@@ -4,27 +4,27 @@ import { login } from "../services/auth";
 import { createAccount } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
 import { database } from "../services/database";
-
+import { handleAsync } from "../util/handleAsync";
 export const accountsRouter = express.Router();
 
 
-accountsRouter.post('/login', (req, res) => {
+accountsRouter.post('/login', handleAsync(async (req, res) => {
   const body: LoginRequest = req.body;
-  login(body).then(result => {
-    if (result === "User Not Found") {
-      res.status(404).send("User Not Found");
-    } else if (result === "Wrong Password") {
-      res.status(401).send("Incorrect Password");
-    } else {
-      const loginResponse: LoginResponse = result;
-      res.send(loginResponse);
-    }
-  }).catch(err => {
-    res.sendStatus(500);
-  });
-});
+  const result = await login(body);
+  if (result === "User Not Found") {
+    res.status(404).send("User Not Found");
+    return;
+  } else if (result === "Wrong Password") {
+    res.status(401).send("Incorrect Password");
+    return;
+  } else {
+    const loginResponse: LoginResponse = result;
+    res.send(loginResponse);
+    return;
+  }
+}));
 
-accountsRouter.post('/register', (req, res) => {
+accountsRouter.post('/register', handleAsync(async (req, res) => {
   const body: CreateAccountRequest = req.body;
   // validate username and password
   const passwordOrUsernameIssue: string | undefined
@@ -50,30 +50,30 @@ accountsRouter.post('/register', (req, res) => {
     return;
   }
 
-  createAccount(body).then((result: LoginResponse) => {
+  try {
+    const result = await createAccount(body);
     res.send(result);
-  }).catch(err => {
-    // check if the reason for the exception was an already-taken username
-    if (err["code"] === "23505" && err["constraint"] === "users_username_key") {
+  } catch (err) {
+    if (typeof err === "object" && err["code"] === "23505" && err["constraint"] === "users_username_key") {
       res.status(409).send(`username ${body.username} is already taken.`);
     } else {
       res.sendStatus(500);
     }
-  });
-});
+  }
+}));
 
-// returns boolean indicating whether the given username is already taken
-accountsRouter.get('/exists', (req, res) => {
+accountsRouter.get('/exists', handleAsync(async (req, res) => {
   const username: unknown = req.query.username;
   if (typeof username !== "string") {
     res.sendStatus(400);
     return;
   }
-  database.getAuthInfo(username).then(result => {
-    if (result === "Account Not Found") {
-      res.send(false);
-    } else {
-      res.send(true);
-    }
-  }).catch(() => { res.sendStatus(500); });
-});
+  const result = await database.getAuthInfo(username);
+  if (result === "Account Not Found") {
+    res.send(false);
+    return;
+  } else {
+    res.send(true);
+    return;
+  }
+}));
