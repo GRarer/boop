@@ -1,7 +1,7 @@
 import express from "express";
 import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse } from "boop-core";
 import { login } from "../services/auth";
-import { createAccount } from "../services/userAccounts";
+import { accountsManager } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
 import { database } from "../services/database";
 
@@ -50,7 +50,7 @@ accountsRouter.post('/register', (req, res) => {
     return;
   }
 
-  createAccount(body).then((result: LoginResponse) => {
+  accountsManager.createAccount(body).then((result: LoginResponse) => {
     res.send(result);
   }).catch(err => {
     // check if the reason for the exception was an already-taken username

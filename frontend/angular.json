@@ -115,5 +115,8 @@
       }
     }
   },
-  "defaultProject": "boop-web"
+  "defaultProject": "boop-web",
+  "cli": {
+    "analytics": "1013426a-8651-4f9a-9002-a34162ad4ca5"
+  }
 }

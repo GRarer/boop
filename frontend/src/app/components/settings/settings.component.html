@@ -1,0 +1,14 @@
+<form [formGroup]="updateUserForm" (submit)="updateUserInfo()">
+	<mat-form-field appearance="fill">
+	  <mat-label>Username</mat-label>
+	  <input matInput formControlName="username">
+	</mat-form-field>
+	<mat-form-field appearance="fill">
+	  <mat-label>Gender</mat-label>
+	  <mat-select formControlName="gender">
+	    <mat-option value="one">Male</mat-option>
+	    <mat-option value="two">Female</mat-option>
+	  </mat-select>
+	</mat-form-field>
+</form>
+

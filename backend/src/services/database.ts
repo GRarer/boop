@@ -90,6 +90,18 @@ class Database {
       values.friendlyName, values.gender, values.emailAddress, values.birthDate, false]);
   }
 
+  async updateAccount(values: {
+    username: string;
+    fullName: string;
+    passwordHash: string;
+    friendlyName: string;
+    emailAddress: string;
+    birthDate: string;
+  }): Promise<void> {
+    const query = 
+    ``
+  }
+
   // queries for database example demonstration
   async addPushSubscription(subscription: PushSubscriptionJSON, userUUID: string): Promise<void> {
     await this.pool.query(

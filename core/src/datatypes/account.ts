@@ -10,6 +10,16 @@ export type CreateAccountRequest = {
   gender: Gender;
 };
 
+export type UpdateAccountRequest = {
+	username: string;
+  fullName: string;
+  password: string;
+  friendlyName: string;
+  emailAddress: string;
+  birthDate: string;
+  gender: Gender;
+}
+
 // user gender options. an undefined value corresponds to "prefer not to say"
 export type Gender = "Female" | "Male" | "Nonbinary" | null;
 
