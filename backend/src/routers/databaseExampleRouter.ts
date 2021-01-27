@@ -1,27 +1,19 @@
 import express from "express";
 import { database } from "../services/database";
+import { handleAsync } from "../util/handleAsync";
 
 export const databaseExampleRouter = express.Router();
 
-databaseExampleRouter.get('/', (req, res) => {
-  database.getExampleValues()
-    .then((result) => {
-      res.send(result);
-    }).catch((err) => {
-      console.error(err);
-      res.status(500).send('Database error');
-    });
-});
+databaseExampleRouter.get('/', handleAsync(async (req, res) => {
+  const result = await database.getExampleValues();
+  res.send(result);
+}));
 
-databaseExampleRouter.post('/', (req, res) => {
+databaseExampleRouter.post('/', handleAsync(async (req, res) => {
   const body: string = req.body;
   console.log(body);
   console.log(`add value: ${body}`);
   // database queries are asynchronous and we can't send the response until the promise is completed.
-  database.addExampleValue(body)
-    .then(() => { res.send(); })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Database error');
-    });
-});
+  await database.addExampleValue(body);
+  res.send();
+}));
