@@ -8,6 +8,7 @@ import { databaseExampleRouter } from "./routers/databaseExampleRouter";
 import { accountsRouter } from "./routers/accountsRouter";
 import { promisify } from "util";
 import { adminRouter } from "./routers/adminRouter";
+import { startRepeatedJobs } from "./services/periodicJobs";
 
 const app = express();
 const port = 3000;
@@ -30,6 +31,9 @@ app.use("/admin", adminRouter);
 const server = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+
+// schedule repeated tasks
+startRepeatedJobs();
 
 // handler to shut down cleanly and free resources
 async function cleanShutdown(): Promise<void> {

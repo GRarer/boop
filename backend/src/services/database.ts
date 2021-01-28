@@ -1,7 +1,7 @@
 import pg, { Pool } from "pg";
 import parseArgs from "minimist";
 import { Gender } from "boop-core";
-import { Session } from "./auth";
+import { Session, sessionTimeoutDuration } from "./auth";
 
 // manages our connection to PostgreSQL database
 class Database {
@@ -93,6 +93,12 @@ class Database {
   async setSession(token: string, userUUID: string): Promise<void> {
     const addSessionQuery = `INSERT INTO sessions(token, user_uuid, time_last_touched) VALUES ($1, $2, $3);`;
     await this.pool.query(addSessionQuery, [token, userUUID, Date.now()]);
+  }
+
+  async removeExpiredSessions(): Promise<void> {
+    const oldestAllowedTime = Date.now() - sessionTimeoutDuration;
+    const query = `delete from sessions where time_last_touched < $1;`;
+    await this.pool.query(query, [oldestAllowedTime]);
   }
 
   async addAccount(values: {
