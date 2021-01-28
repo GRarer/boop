@@ -66,20 +66,24 @@ export class SessionService {
   }
 
   private saveSession(session: LoginResponse): void {
-    localStorage.setItem(sessionLSKey, JSON.stringify(session));
+    try {
+      localStorage.setItem(sessionLSKey, JSON.stringify(session));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   private retrieveSession(): LoginResponse | undefined {
-    const saved = localStorage.getItem(sessionLSKey);
-    if (saved !== null) {
-      try {
+    try {
+      const saved = localStorage.getItem(sessionLSKey);
+      if (saved !== null) {
         const session: unknown = JSON.parse(saved);
         if (isLoginResponse(session)) {
           return session;
         }
-      } catch {
-        return undefined;
       }
+    } catch (err) {
+      console.error(err);
     }
     return undefined;
   }
