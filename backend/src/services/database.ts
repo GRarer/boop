@@ -106,6 +106,10 @@ class Database {
     await this.pool.query(query, [oldestAllowedTime]);
   }
 
+  async removeSession(token: string): Promise<void> {
+    await this.pool.query(`delete from sessions where token = $1;`, [token]);
+  }
+
   async addAccount(values: {
     uuid: string;
     username: string;

@@ -1,5 +1,6 @@
 import express from "express";
-import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse } from "boop-core";
+import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse,
+  sessionTokenHeaderName } from "boop-core";
 import { login, LoginError, userUuidFromReq } from "../services/auth";
 import { createAccount } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
@@ -22,6 +23,14 @@ accountsRouter.post('/login', handleAsync(async (req, res) => {
     res.send(loginResponse);
     return;
   }
+}));
+
+accountsRouter.post('/logout', handleAsync(async (req, res) => {
+  const token: string | undefined = req.header(sessionTokenHeaderName);
+  if (token !== undefined) {
+    await database.removeSession(token);
+  }
+  res.send();
 }));
 
 accountsRouter.post('/register', handleAsync(async (req, res) => {
