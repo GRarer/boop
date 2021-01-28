@@ -37,9 +37,9 @@
     <div class="horizontal-center close-stacked-input">
         <mat-form-field appearance="outline">
             <mat-label>Birth Date</mat-label>
-            <input readonly matInput [matDatepicker]="picker" formControlName="birthDate" (click)="picker.open()">
+            <input readonly matInput [matDatepicker]="picker" [max]="birthdayMax" [min]="birthdayMin" formControlName="birthDate" (click)="picker.open()">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+            <mat-datepicker #picker startView="multi-year" ></mat-datepicker>
         </mat-form-field>
     </div>
     <div class="horizontal-center">
