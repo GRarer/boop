@@ -1,6 +1,7 @@
 import pg, { Pool } from "pg";
 import parseArgs from "minimist";
 import { Gender } from "boop-core";
+import { Session } from "./auth";
 
 // manages our connection to PostgreSQL database
 class Database {
@@ -69,6 +70,29 @@ class Database {
     } else {
       throw Error("Multiple accounts with same username"); // sql uniqueness constraint should prevent this
     }
+  }
+
+  // periodically TODO erase expired sessions
+
+  async getSession(token: string): Promise<Session | undefined> {
+    const updateTimeQuery = `update sessions set time_last_touched = $1 where token = $2;`;
+    await this.pool.query(updateTimeQuery, [Date.now(), token]);
+
+    const getSessionQuery =
+      `select user_uuid, is_admin
+      from users join sessions using (user_uuid) where token = $1;`;
+      type resultRow= {user_uuid: string; is_admin: boolean;};
+      const rows: resultRow[] = (await this.pool.query(getSessionQuery, [token])).rows;
+      if (rows.length === 0) {
+        return undefined;
+      }
+      const session = rows[0];
+      return { userUUID: session.user_uuid, isAdmin: session.is_admin };
+  }
+
+  async setSession(token: string, userUUID: string): Promise<void> {
+    const addSessionQuery = `INSERT INTO sessions(token, user_uuid, time_last_touched) VALUES ($1, $2, $3);`;
+    await this.pool.query(addSessionQuery, [token, userUUID, Date.now()]);
   }
 
   async addAccount(values: {

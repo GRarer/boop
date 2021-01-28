@@ -12,9 +12,10 @@ export class SessionService {
   private currentSession: LoginResponse | undefined;
 
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
   ) {
     // load existing session if one is saved
+    // TODO check with backend to make sure that session has not expired
     this.currentSession = this.retrieveSession();
   }
 
