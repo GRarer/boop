@@ -30,6 +30,10 @@ export class RegisterComponent implements OnInit {
     agreeToTerms: new FormControl(false, [Validators.requiredTrue]),
   });
 
+  readonly birthdayMax = new Date((new Date().getFullYear() - 12), 11, 31);
+  readonly birthdayMin = new Date(1903, 0, 1); // lower bound 1 day older than oldest living person at time of writing
+
+
   constructor(
     private sessionService: SessionService,
     private snackBar: MatSnackBar,
