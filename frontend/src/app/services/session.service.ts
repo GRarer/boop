@@ -60,9 +60,21 @@ export class SessionService {
   }
 
   async logout(): Promise<void> {
-    // TODO send something to the backend to tell it to remove this session
+    const token = this.currentSession?.sessionToken;
     this.currentSession = undefined;
     localStorage.removeItem(sessionLSKey);
+    if (token !== undefined) {
+      // we tell the backend that it should close the session, but we don't need to await for the response
+      this.httpClient.post(
+        "http://localhost:3000/account/logout",
+        undefined,
+        { headers: new HttpHeaders({ [sessionTokenHeaderName]: token }) }
+      ).toPromise()
+        .catch((err) => {
+          console.error("Failed to close session with backend");
+          console.log(err);
+        });
+    }
   }
 
   private saveSession(session: LoginResponse): void {
