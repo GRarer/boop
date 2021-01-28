@@ -1,9 +1,9 @@
 import express from "express";
 import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse } from "boop-core";
-import { login, userUuidFromReq } from "../services/auth";
+import { login, LoginError, userUuidFromReq } from "../services/auth";
 import { createAccount } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
-import { database } from "../services/database";
+import { database, DatabaseError } from "../services/database";
 import { handleAsync } from "../util/handleAsync";
 export const accountsRouter = express.Router();
 
@@ -11,11 +11,11 @@ export const accountsRouter = express.Router();
 accountsRouter.post('/login', handleAsync(async (req, res) => {
   const body: LoginRequest = req.body;
   const result = await login(body);
-  if (result === "User Not Found") {
-    res.status(404).send("User Not Found");
+  if (result === LoginError.UserNotFound) {
+    res.sendStatus(404);
     return;
-  } else if (result === "Wrong Password") {
-    res.status(401).send("Incorrect Password");
+  } else if (result === LoginError.WrongPassword) {
+    res.sendStatus(401);
     return;
   } else {
     const loginResponse: LoginResponse = result;
@@ -69,7 +69,7 @@ accountsRouter.get('/exists', handleAsync(async (req, res) => {
     return;
   }
   const result = await database.getAuthInfo(username);
-  if (result === "Account Not Found") {
+  if (result === DatabaseError.UserNotFound) {
     res.send(false);
     return;
   } else {

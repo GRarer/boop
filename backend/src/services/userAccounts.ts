@@ -2,7 +2,7 @@ import { CreateAccountRequest, genderValues } from "boop-core";
 import { LoginResponse } from "boop-core";
 import { database } from "./database";
 import { v4 as uuidv4 } from 'uuid';
-import { hashPassword, login } from "./auth";
+import { hashPassword, login, LoginError } from "./auth";
 
 export async function createAccount(request: CreateAccountRequest): Promise<LoginResponse> {
   const accountUUID = uuidv4();
@@ -25,7 +25,7 @@ export async function createAccount(request: CreateAccountRequest): Promise<Logi
     passwordHash: passwordHash,
   });
   const loginResult = await login({ username: request.username, password: request.password });
-  if (loginResult === "Wrong Password" || loginResult === "User Not Found") {
+  if (loginResult === LoginError.WrongPassword || loginResult === LoginError.UserNotFound) {
     // this should never happen because we just created an account using those credentials
     throw Error("failed to authenticate after creating account");
   } else {

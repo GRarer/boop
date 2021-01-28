@@ -1,6 +1,6 @@
 import { LoginRequest, LoginResponse, sessionTokenHeaderName } from 'boop-core';
 import { v4 as uuidv4 } from 'uuid';
-import { database } from './database';
+import { database, DatabaseError } from './database';
 import bcrypt from "bcrypt";
 import { Request } from "express";
 
@@ -9,11 +9,16 @@ export type Session = {userUUID: string; isAdmin: boolean;};
 // 30 days expressed in milliseconds; user sessions will be closed if left inactive for this time
 export const sessionTimeoutDuration: number = 30 * 24 * 60 * 60 * 1000;
 
+export enum LoginError {
+  UserNotFound,
+  WrongPassword
+}
+
 // validate password and create log-in session
-export async function login(credentials: LoginRequest): Promise<LoginResponse | "User Not Found" | "Wrong Password"> {
+export async function login(credentials: LoginRequest): Promise<LoginResponse | LoginError> {
   const userInfo = await database.getAuthInfo(credentials.username);
-  if (userInfo === "Account Not Found") {
-    return "User Not Found";
+  if (userInfo === DatabaseError.UserNotFound) {
+    return LoginError.UserNotFound;
   }
   // validating password with a bcrypt hash is an asynchronous operation because it is *very* slow
   if (await bcrypt.compare(credentials.password, userInfo.hash)) {
@@ -22,7 +27,7 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse | 
     await database.setSession(token, userInfo.userUUID);
     return { userUUID: userInfo.userUUID, sessionToken: token };
   } else {
-    return "Wrong Password";
+    return LoginError.WrongPassword;
   }
 }
 

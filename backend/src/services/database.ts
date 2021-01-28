@@ -3,6 +3,11 @@ import parseArgs from "minimist";
 import { Gender } from "boop-core";
 import { Session, sessionTimeoutDuration } from "./auth";
 
+// value-level signals indicating when certain database queries could not succeed
+export enum DatabaseError {
+  UserNotFound
+}
+
 // manages our connection to PostgreSQL database
 class Database {
 
@@ -57,12 +62,12 @@ class Database {
 
   // information needed authenticate and log in a user
   async getAuthInfo(username: string):
-  Promise<{userUUID: string; hash: string; isAdmin: boolean;} | "Account Not Found"> {
+  Promise<{userUUID: string; hash: string; isAdmin: boolean;} | DatabaseError.UserNotFound> {
     const query = 'SELECT "user_uuid", "bcrypt_hash", "is_admin" from users where username = $1;';
     type resultRow = { user_uuid: string; bcrypt_hash: string; is_admin: boolean; };
     const rows: resultRow[] = (await this.pool.query(query, [username])).rows;
     if (rows.length === 0) {
-      return "Account Not Found";
+      return DatabaseError.UserNotFound;
     } else if (rows.length === 1) {
       const result = rows[0];
       // TODO add support admin column
