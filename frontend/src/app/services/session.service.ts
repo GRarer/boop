@@ -29,6 +29,7 @@ export class SessionService {
     this.currentSession = (await this.httpClient.post<LoginResponse>(
       "http://localhost:3000/account/register", request
     ).toPromise());
+    this.saveSession(this.currentSession);
   }
 
   // attempts to load saved session if it exists, returns false if it doesn't or it has expired.
