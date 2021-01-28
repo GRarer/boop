@@ -35,12 +35,12 @@ async function sessionFromReq(req: Request): Promise<Session | undefined> {
 }
 
 // gets the user UUID associated with a session token, or undefined if the token does not match any active session
-export async function getUserUUID(req: Request): Promise<string | undefined> {
+export async function userUuidFromReq(req: Request): Promise<string | undefined> {
   return (await sessionFromReq(req))?.userUUID;
 }
 
 // returns true if the session token belongs to an "admin" user
-export async function isAdminSession(req: Request): Promise<boolean> {
+export async function isAdminSessionFromReq(req: Request): Promise<boolean> {
   return (await sessionFromReq(req))?.isAdmin ?? false;
 }
 

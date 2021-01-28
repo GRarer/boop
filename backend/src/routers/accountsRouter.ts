@@ -1,6 +1,6 @@
 import express from "express";
 import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse } from "boop-core";
-import { login } from "../services/auth";
+import { login, userUuidFromReq } from "../services/auth";
 import { createAccount } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
 import { database } from "../services/database";
@@ -76,4 +76,10 @@ accountsRouter.get('/exists', handleAsync(async (req, res) => {
     res.send(true);
     return;
   }
+}));
+
+// tells whether the session header corresponds to a valid session
+accountsRouter.get('/sessionValid', handleAsync(async (req, res) => {
+  const session = await userUuidFromReq(req);
+  res.send((session !== undefined));
 }));

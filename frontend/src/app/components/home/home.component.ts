@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
     // return user to the landing page if they are not logged in
     // TODO make sure this still behaves correctly after the session service can remember logins between sessions
     if (this.sessionService.getSessionToken() === undefined) {
-      void this.router.navigate(["/"]);
+      void this.router.navigate(["/welcome"]);
     }
     // attach admin debug commands to browser console
     this.commandService.enableAdminCommands();
@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
 
   logout(): void {
     this.sessionService.logout().then(
-      () => { void this.router.navigate(["/"]); }
+      () => { void this.router.navigate(["/welcome"]); }
     ).catch((reason) => {
       console.error(reason);
       this.snackBar.open("Something went wrong when trying to log out.", "Dismiss", { "duration": 5000 });
