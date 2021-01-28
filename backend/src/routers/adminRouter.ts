@@ -12,8 +12,8 @@ export const adminRouter = express.Router();
 
 // example endpoint that verifies that the current user is an admin, returns error 403 otherwise
 adminRouter.post('/check', handleAsync(async (req, res) => {
-  if (isAdminSession(req)) {
-    console.log(`test action by admin user ${getUserUUID(req)}`);
+  if (await isAdminSession(req)) {
+    console.log(`test action by admin user ${await getUserUUID(req)}`);
     res.send();
   } else {
     res.sendStatus(403);
@@ -22,7 +22,7 @@ adminRouter.post('/check', handleAsync(async (req, res) => {
 
 // triggers a push notification to the given username
 adminRouter.post('/push', handleAsync(async (req, res) => {
-  if (!isAdminSession(req)) {
+  if (! (await isAdminSession(req))) {
     res.sendStatus(403);
     return;
   }

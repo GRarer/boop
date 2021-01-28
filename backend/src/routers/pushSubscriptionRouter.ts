@@ -11,7 +11,7 @@ export const subscriptionRouter = express.Router();
 
 subscriptionRouter.post('/addSubscription', handleAsync(async (req, res) => {
   const subscription: PushSubscriptionJSON = req.body;
-  const userUUID = getUserUUID(req);
+  const userUUID = await getUserUUID(req);
   if (userUUID === undefined) {
     res.status(401).send("cannot add subscription when not logged in");
     return;

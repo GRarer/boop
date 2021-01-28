@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { CommandsService } from 'src/app/services/commands.service';
 import { SessionService } from 'src/app/services/session.service';
 
 @Component({
@@ -15,6 +16,7 @@ export class HomeComponent implements OnInit {
     private sessionService: SessionService,
     private router: Router,
     private snackBar: MatSnackBar,
+    private commandService: CommandsService
   ) { }
 
   getUserID(): string | undefined {
@@ -27,6 +29,8 @@ export class HomeComponent implements OnInit {
     if (this.sessionService.getSessionToken() === undefined) {
       void this.router.navigate(["/"]);
     }
+    // attach admin debug commands to browser console
+    this.commandService.enableAdminCommands();
   }
 
   logout(): void {
