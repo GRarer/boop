@@ -23,13 +23,8 @@ export class LandingComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     private apiService: ApiService,
-  ) {
-    this.startRegistrationForm.controls.password.valueChanges.subscribe(() => {
-      this.startRegistrationForm.controls.confirmPassword.updateValueAndValidity();
-    });
-  }
+  ) { }
 
-  // TODO validate username and password formats
   startRegistrationForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
@@ -40,6 +35,14 @@ export class LandingComponent implements OnInit {
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   });
+
+  // re-checks whether confirm password matches password and updates control's appearance
+  checkConfirmPassword(): void {
+    const confirmPassword = this.startRegistrationForm.controls.confirmPassword;
+    confirmPassword.updateValueAndValidity();
+    confirmPassword.markAsDirty();
+    confirmPassword.markAsTouched();
+  }
 
   ngOnInit(): void {
   }
