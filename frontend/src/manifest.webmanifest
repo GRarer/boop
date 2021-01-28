@@ -1,6 +1,6 @@
 {
-  "name": "boop-web",
-  "short_name": "boop-web",
+  "name": "Boop",
+  "short_name": "Boop",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
