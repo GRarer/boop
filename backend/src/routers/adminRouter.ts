@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserUUID, isAdminSession } from "../services/auth";
+import { userUuidFromReq, isAdminSessionFromReq } from "../services/auth";
 import { database } from "../services/database";
 import webpush from "web-push";
 import { testNotificationPayload } from "../services/pushManager";
@@ -12,8 +12,8 @@ export const adminRouter = express.Router();
 
 // example endpoint that verifies that the current user is an admin, returns error 403 otherwise
 adminRouter.post('/check', handleAsync(async (req, res) => {
-  if (await isAdminSession(req)) {
-    console.log(`test action by admin user ${await getUserUUID(req)}`);
+  if (await isAdminSessionFromReq(req)) {
+    console.log(`test action by admin user ${await userUuidFromReq(req)}`);
     res.send();
   } else {
     res.sendStatus(403);
@@ -22,7 +22,7 @@ adminRouter.post('/check', handleAsync(async (req, res) => {
 
 // triggers a push notification to the given username
 adminRouter.post('/push', handleAsync(async (req, res) => {
-  if (! (await isAdminSession(req))) {
+  if (! (await isAdminSessionFromReq(req))) {
     res.sendStatus(403);
     return;
   }

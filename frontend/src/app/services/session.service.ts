@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CreateAccountRequest, isLoginResponse, LoginRequest, LoginResponse } from 'boop-core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CreateAccountRequest, isLoginResponse, LoginRequest, LoginResponse, sessionTokenHeaderName } from 'boop-core';
 
 const sessionLSKey = "boop-session"; // key for storing sessions in local storage
 
@@ -13,11 +14,8 @@ export class SessionService {
 
   constructor(
     private httpClient: HttpClient,
-  ) {
-    // load existing session if one is saved
-    // TODO check with backend to make sure that session has not expired
-    this.currentSession = this.retrieveSession();
-  }
+    private snackBar: MatSnackBar,
+  ) { }
 
   async login(credentials: LoginRequest): Promise<void> {
     // TODO parameterize backend domain instead of specifying localhost
@@ -31,6 +29,27 @@ export class SessionService {
     this.currentSession = (await this.httpClient.post<LoginResponse>(
       "http://localhost:3000/account/register", request
     ).toPromise());
+  }
+
+  // attempts to load saved session if it exists, returns false if it doesn't or it has expired.
+  async loadSavedSession(): Promise<boolean> {
+    // load existing session if one is saved
+    // TODO check with backend to make sure that session has not expired
+    const savedSession = this.retrieveSession();
+    if (savedSession === undefined) {
+      return false;
+    }
+    const isValidSession = await this.httpClient.get<boolean>(
+      "http://localhost:3000/account/sessionValid",
+      { headers: new HttpHeaders({ [sessionTokenHeaderName]: savedSession.sessionToken }) }
+    ).toPromise();
+    if (isValidSession) {
+      this.currentSession = savedSession;
+      return true;
+    } else {
+      this.snackBar.open("Your previous session has timed out.", "Dismiss", { "duration": 5000 });
+      return false;
+    }
   }
 
   getSessionToken(): string | undefined {

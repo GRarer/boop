@@ -7,7 +7,7 @@ import { NotFound404Component } from './components/not-found404/not-found404.com
 import { PushSubscribeComponent } from './components/push-subscribe/push-subscribe.component';
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 const routes: Routes = [
-  { path: '', redirectTo: '/welcome', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'welcome', component: LandingComponent },
   { path: 'home', component: HomeComponent },
   { path: 'push_setup', component: PushSubscribeComponent },
