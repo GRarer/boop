@@ -93,13 +93,49 @@ class Database {
   async updateAccount(values: {
     username: string;
     fullName: string;
-    passwordHash: string;
     friendlyName: string;
     emailAddress: string;
     birthDate: string;
-  }): Promise<void> {
-    const query = 
-    ``
+    gender: Gender;
+    uuid: string;
+  }): Promise<pg.QueryResult> {
+    const query =
+    `UPDATE users SET username=$1, full_name=$2, friendly_name=$3, gender=$4, email=$5, birth_date=$6
+    WHERE user_uuid=$7;`;
+    const result = await this.pool.query(query, [values.username, values.fullName,
+      values.friendlyName, values.emailAddress, values.birthDate, values.gender, values.uuid]);
+
+    return result;
+  }
+
+  async getUserAccount(uuid: string): Promise<{ username: string; fullName: string; friendlyName: string; 
+    emailAddress: string; birthDate: string; gender: Gender; } | undefined> {
+    const query = `SELECT "username", "full_name", "friendly_name", "email", "birth_date", "gender"
+     FROM users WHERE user_uuid=$1`;
+    type userRow = { 
+      username: string;
+      full_name: string; 
+      friendly_name: string; 
+      email_address: string;
+      birth_date: string;
+      gender: Gender;
+    };
+
+    const rows: userRow[] = (await this.pool.query(query, [uuid])).rows;
+
+    if (rows.length > 0) {
+      const result = rows[0];
+      return {
+        username: result.username,
+        fullName: result.full_name,
+        friendlyName: result.friendly_name,
+        emailAddress: result.email_address,
+        birthDate: result.birth_date,
+        gender: result.gender
+      }
+    }
+
+    return undefined;
   }
 
   // queries for database example demonstration

@@ -4,6 +4,20 @@
 	  <input matInput formControlName="username">
 	</mat-form-field>
 	<mat-form-field appearance="fill">
+	  <mat-label>Full Name</mat-label>
+	  <input matInput formControlName="fullname">
+	</mat-form-field>
+	<mat-form-field appearance="outline">
+    <mat-label>Email Address</mat-label>
+    <input matInput formControlName="email" placeholder="e.g. jdoe@example.com">
+  </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Birth Date</mat-label>
+      <input readonly matInput [matDatepicker]="picker" formControlName="birthDate" (click)="picker.open()">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+	<mat-form-field appearance="fill">
 	  <mat-label>Gender</mat-label>
 	  <mat-select formControlName="gender">
 	    <mat-option value="one">Male</mat-option>

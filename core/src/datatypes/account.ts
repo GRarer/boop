@@ -13,7 +13,15 @@ export type CreateAccountRequest = {
 export type UpdateAccountRequest = {
 	username: string;
   fullName: string;
-  password: string;
+  friendlyName: string;
+  emailAddress: string;
+  birthDate: string;
+  gender: Gender;
+}
+
+export type UserAccountResponse = {
+  username: string;
+  fullName: string;
   friendlyName: string;
   emailAddress: string;
   birthDate: string;

@@ -1,5 +1,5 @@
 import { CreateAccountRequest, genderValues, UpdateAccountRequest } from "boop-core";
-import { LoginResponse } from "boop-core";
+import { LoginResponse, UserAccountResponse } from "boop-core";
 import { database } from "./database";
 import { v4 as uuidv4 } from 'uuid';
 import { hashPassword, login } from "./auth";
@@ -38,9 +38,32 @@ class AccountsManager {
     }
   }
 
-  // async updateAccount(request: UpdateAccountRequest): Promise<LoginResponse> { // TODO change the login response
+  async updateAccount(request: UpdateAccountRequest, uuid: string): Promise<void> { // TODO change the login response
+    if (request.gender !== null && !genderValues.includes(request.gender)) {
+      throw Error("unexpected format of gender string");
+    }
 
-  // }
+    const updateResult = await database.updateAccount({
+      uuid: uuid,
+      username: request.username,
+      friendlyName: request.friendlyName,
+      fullName: request.fullName,
+      emailAddress: request.emailAddress,
+      birthDate: request.birthDate,
+      gender: request.gender
+    });
+
+    console.log(updateResult.rows);
+  }
+
+  async getAccount(uuid: string): Promise<UserAccountResponse | "no user found matching uuid"> {
+    const userAccountInfo = await database.getUserAccount(uuid);
+    if (userAccountInfo !== undefined) {
+      return userAccountInfo;
+    }
+
+    return "no user found matching uuid"
+  }
 }
 
 export const accountsManager: AccountsManager = new AccountsManager();

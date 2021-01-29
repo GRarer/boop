@@ -1,8 +1,8 @@
 import express from "express";
 import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse } from "boop-core";
-import { login } from "../services/auth";
+import { login, getUserUUID } from "../services/auth";
 import { accountsManager } from "../services/userAccounts";
-import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
+import { CreateAccountRequest, minYearsAgo, isGender, UpdateAccountRequest } from "boop-core";
 import { database } from "../services/database";
 
 export const accountsRouter = express.Router();
@@ -59,6 +59,58 @@ accountsRouter.post('/register', (req, res) => {
     } else {
       res.sendStatus(500);
     }
+  });
+});
+
+accountsRouter.get('/info', (req, res) => { // TODO make this a query string
+  const uuid = getUserUUID(req);
+  if (uuid === undefined) {
+    res.status(401).send('unauthorized user');
+    return;
+  }
+
+  accountsManager.getAccount(uuid).then((result) => {
+    if (result === "no user found matching uuid") {
+      res.status(404).send(result);
+      return;
+    }
+
+    res.send(result);
+  })
+});
+
+accountsRouter.put('/edit', (req, res) => {
+  const body: UpdateAccountRequest = req.body
+
+  const usernameIssue: string | undefined = failsUsernameRequirement(body.username)
+  if (usernameIssue) {
+    res.status(401).send(usernameIssue);
+    return;
+  }
+
+  const uuid = getUserUUID(req);
+  if (uuid === undefined) {
+    res.status(401).send('unauthorized user');
+    return;
+  }
+
+  try {
+    const birthDate: Date = new Date(body.birthDate);
+    if (!minYearsAgo(birthDate, 13)) {
+      res.status(403).send("age must be at least 13 years");
+      return;
+    }
+  } catch (reason) {
+    res.status(400).send("invalid date format");
+    return;
+  }
+  if (!isGender(body.gender)) {
+    res.status(400).send("invalid gender format");
+    return;
+  }
+
+  accountsManager.updateAccount(body, uuid).then(() => {
+    res.send('update successful');
   });
 });
 

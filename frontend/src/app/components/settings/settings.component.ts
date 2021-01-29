@@ -19,7 +19,11 @@ export class SettingsComponent implements OnInit {
 
   updateUserForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
-    gender: new FormControl('', [Validators.required]),
+    gender: new FormControl(),
+    fullName: new FormControl('', [Validators.required]),
+    friendlyName: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    birthDate: new FormControl('', [Validators.required]),
   });
 
   getUserID(): string | undefined {
@@ -30,6 +34,7 @@ export class SettingsComponent implements OnInit {
   }
 
   updateUserInfo(): void {
-
+    const value = this.updateUserForm.value;
+    console.log(value);
   }
 }
