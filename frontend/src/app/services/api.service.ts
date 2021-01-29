@@ -15,15 +15,6 @@ export class ApiService {
     private sessionService: SessionService,
   ) { }
 
-  private getAuthenticationHeader(): HttpHeaders | undefined {
-    const sessionToken = this.sessionService.getSessionToken();
-    if (sessionToken === undefined) {
-      return undefined;
-    }
-    return new HttpHeaders({ [sessionTokenHeaderName]: sessionToken });
-  }
-
-  // generic method for making http get requests
   async getJSON<ResponseBodyT>(
     endPointUrl: string,
     queryParams?: {[param: string]: string | string[];}
@@ -45,6 +36,32 @@ export class ApiService {
     return this.httpClient.post<ResponseBodyT>(endPointUrl, body, options).toPromise();
   }
 
-  // TODO PUT method
-  // TODO DELETE method
+  async putJSON<RequestBodyT, ResponseBodyT>(
+    endPointUrl: string,
+    body: RequestBodyT
+  ): Promise<ResponseBodyT> {
+    const options = {
+      headers: this.getAuthenticationHeader(),
+    };
+    return this.httpClient.put<ResponseBodyT>(endPointUrl, body, options).toPromise();
+  }
+
+  async deleteJSON<ResponseBodyT>(
+    endPointUrl: string,
+    queryParams?: {[param: string]: string | string[];}
+  ): Promise<ResponseBodyT> {
+    const options = {
+      params: queryParams,
+      headers: this.getAuthenticationHeader(),
+    };
+    return this.httpClient.delete<ResponseBodyT>(endPointUrl, options).toPromise();
+  }
+
+  private getAuthenticationHeader(): HttpHeaders | undefined {
+    const sessionToken = this.sessionService.getSessionToken();
+    if (sessionToken === undefined) {
+      return undefined;
+    }
+    return new HttpHeaders({ [sessionTokenHeaderName]: sessionToken });
+  }
 }
