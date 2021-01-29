@@ -111,7 +111,7 @@ accountsRouter.put('/edit', (req, res) => {
 
   accountsManager.updateAccount(body, uuid).then(() => {
     res.send('update successful');
-  });
+  }).catch(() => { res.sendStatus(500); });
 });
 
 // returns boolean indicating whether the given username is already taken

@@ -43,7 +43,7 @@ class AccountsManager {
       throw Error("unexpected format of gender string");
     }
 
-    const updateResult = await database.updateAccount({
+    await database.updateAccount({
       uuid: uuid,
       username: request.username,
       friendlyName: request.friendlyName,
@@ -52,8 +52,6 @@ class AccountsManager {
       birthDate: request.birthDate,
       gender: request.gender
     });
-
-    console.log(updateResult.rows);
   }
 
   async getAccount(uuid: string): Promise<UserAccountResponse | "no user found matching uuid"> {
