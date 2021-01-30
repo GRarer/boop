@@ -24,7 +24,7 @@ jobs:
     - uses: bahmutov/npm-install@v1.6.2
       with:
         working-directory: ./backend
-    - name: build-backend
+    - name: build-core
       run: npm run build
       working-directory: ./backend
     # build frontend package
