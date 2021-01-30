@@ -19,6 +19,8 @@ export class AppComponent implements OnInit {
 
   initialLoading: boolean = true;
 
+  invalidVariable: string = 42;
+
   constructor(
     private sessionService: SessionService,
     private router: Router,
