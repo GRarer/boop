@@ -49,6 +49,11 @@ export class SessionService {
       return true;
     } else {
       this.snackBar.open("Your previous session has timed out.", "Dismiss", { "duration": 5000 });
+      try {
+        localStorage.removeItem(sessionLSKey);
+      } catch (err) {
+        console.error(err);
+      }
       return false;
     }
   }
