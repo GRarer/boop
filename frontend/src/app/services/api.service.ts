@@ -45,6 +45,16 @@ export class ApiService {
     return this.httpClient.post<ResponseBodyT>(endPointUrl, body, options).toPromise();
   }
 
+  async putJSON<RequestBodyT, ResponseBodyT>(
+    endPointUrl: string,
+    body: RequestBodyT
+  ): Promise<ResponseBodyT> {
+    const options = {
+      headers: this.getAuthenticationHeader(),
+    };
+    return this.httpClient.put<ResponseBodyT>(endPointUrl, body, options).toPromise();
+  }
+
   // TODO PUT method
   // TODO DELETE method
 }

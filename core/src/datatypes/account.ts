@@ -11,7 +11,6 @@ export type CreateAccountRequest = {
 };
 
 export type UpdateAccountRequest = {
-  uuid: string;
 	username: string;
   fullName: string;
   friendlyName: string;

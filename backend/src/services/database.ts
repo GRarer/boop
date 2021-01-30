@@ -103,7 +103,7 @@ class Database {
     `UPDATE users SET username=$1, full_name=$2, friendly_name=$3, gender=$4, email=$5, birth_date=$6
     WHERE user_uuid=$7;`;
     const result = await this.pool.query(query, [values.username, values.fullName,
-      values.friendlyName, values.emailAddress, values.birthDate, values.gender, values.uuid]);
+      values.friendlyName, values.gender, values.emailAddress, values.birthDate, values.uuid]);
 
     return result;
   }

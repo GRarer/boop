@@ -5,7 +5,7 @@
 	</mat-form-field>
 	<mat-form-field appearance="fill">
 	  <mat-label>Full Name</mat-label>
-	  <input matInput formControlName="fullname">
+	  <input matInput formControlName="fullName">
 	</mat-form-field>
 	<mat-form-field appearance="outline">
     <mat-label>Email Address</mat-label>
@@ -20,9 +20,10 @@
 	<mat-form-field appearance="fill">
 	  <mat-label>Gender</mat-label>
 	  <mat-select formControlName="gender">
-	    <mat-option value="one">Male</mat-option>
-	    <mat-option value="two">Female</mat-option>
+	    <mat-option value="Male">Male</mat-option>
+	    <mat-option value="Female">Female</mat-option>
 	  </mat-select>
 	</mat-form-field>
+    <button mat-flat-button color="primary" style="width: 60%" [disabled]="!updateUserForm.valid">Update</button>	
 </form>
 
