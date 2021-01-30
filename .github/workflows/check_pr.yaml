@@ -1,0 +1,46 @@
+# check pull requests by automatically building and linting all 3 packages
+name: Check PR
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+
+jobs:
+  build-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    # build core package
+    - uses: bahmutov/npm-install@v1.6.2
+      with:
+        working-directory: ./core
+    - name: build-core
+      run: npm run build
+      working-directory: ./core
+    # build backend package
+    - uses: bahmutov/npm-install@v1.6.2
+      with:
+        working-directory: ./backend
+    - name: build-backend
+      run: npm run build
+      working-directory: ./backend
+    # build frontend package
+    - uses: bahmutov/npm-install@v1.6.2
+      with:
+        working-directory: ./frontend
+    - name: build-frontend
+      run: npm run build-pwa
+      working-directory: ./frontend
+    # lint all 3 packages
+    - name: lint-core
+      run: npm run lint
+      working-directory: ./core
+    - name: lint-backend
+      run: npm run lint
+      working-directory: ./backend
+    - name: lint-frontend
+      run: npm run lint
+      working-directory: ./frontend
