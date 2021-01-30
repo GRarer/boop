@@ -53,7 +53,7 @@ export class RegisterComponent implements OnInit {
     if (!minYearsAgo(value.birthDate, 13)) {
       this.snackBar.open("You must be at least 13 years old.", "Dismiss", { duration: 5000 });
       return;
-    }
+    };
 
     const request: CreateAccountRequest = {
       username: this.credentials!.username,
