@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserAccountResponse, UpdateAccountRequest } from 'boop-core'
+import { UserAccountResponse, UpdateAccountRequest, genderValues, Gender} from 'boop-core'
 import { SessionService } from 'src/app/services/session.service';
 import { ApiService } from 'src/app/services/api.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -19,6 +19,8 @@ export class SettingsComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
   ) {}
+
+  genderOptions: Gender[] = genderValues;
 
   userFormData = {
     username: new FormControl('', [Validators.required]),
