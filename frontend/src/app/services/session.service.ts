@@ -35,7 +35,6 @@ export class SessionService {
   // attempts to load saved session if it exists, returns false if it doesn't or it has expired.
   async loadSavedSession(): Promise<boolean> {
     // load existing session if one is saved
-    // TODO check with backend to make sure that session has not expired
     const savedSession = this.retrieveSession();
     if (savedSession === undefined) {
       return false;

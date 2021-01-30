@@ -70,14 +70,11 @@ class Database {
       return DatabaseError.UserNotFound;
     } else if (rows.length === 1) {
       const result = rows[0];
-      // TODO add support admin column
       return { userUUID: result.user_uuid, hash: result.bcrypt_hash, isAdmin: result.is_admin };
     } else {
       throw Error("Multiple accounts with same username"); // sql uniqueness constraint should prevent this
     }
   }
-
-  // periodically TODO erase expired sessions
 
   async getSession(token: string): Promise<Session | undefined> {
     const updateTimeQuery = `update sessions set time_last_touched = $1 where token = $2;`;
