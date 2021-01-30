@@ -36,11 +36,11 @@ jobs:
       working-directory: ./frontend
     # lint all 3 packages
     - name: lint-core
-      run: npm run lint
+      run: npm run lint -- --max-warnings 0
       working-directory: ./core
     - name: lint-backend
-      run: npm run lint
+      run: npm run lint -- --max-warnings 0
       working-directory: ./backend
     - name: lint-frontend
-      run: npm run lint
+      run: npm run lint -- --max-warnings 0
       working-directory: ./frontend
