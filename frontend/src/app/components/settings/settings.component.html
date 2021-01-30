@@ -1,33 +1,38 @@
-<form [formGroup]="updateUserForm" (submit)="updateUserInfo()">
-	<mat-form-field appearance="fill">
-	  <mat-label>Username</mat-label>
-	  <input matInput formControlName="username">
-	</mat-form-field>
-	<mat-form-field appearance="fill">
-	  <mat-label>Full Name</mat-label>
-	  <input matInput formControlName="fullName">
-	</mat-form-field>
-	<mat-form-field appearance="outline">
-    <mat-label>Email Address</mat-label>
-    <input matInput formControlName="email" placeholder="e.g. jdoe@example.com">
-  </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Birth Date</mat-label>
-      <input readonly matInput [matDatepicker]="picker" formControlName="birthDate" (click)="picker.open()">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-	<mat-form-field appearance="fill">
-	  <mat-label>Gender</mat-label>
-	  <mat-select formControlName="gender">
-	    <mat-option *ngFor="let gender of genderOptions" [value]="gender">
-	        {{gender}}
-        </mat-option>
-        <mat-option value="">
-            Prefer Not To Say
-        </mat-option>
-	  </mat-select>
-	</mat-form-field>
-    <button mat-flat-button color="primary" style="width: 60%" [disabled]="!updateUserForm.valid">Update</button>	
-</form>
-
+<div style="text-align: center;">
+	<div style="padding-right: 30%; padding-left: 30%">
+		<form [formGroup]="updateUserForm" (submit)="updateUserInfo()">
+			<mat-form-field appearance="fill">
+			  <mat-label>Username</mat-label>
+			  <input matInput formControlName="username">
+			</mat-form-field>
+			<mat-form-field appearance="fill">
+			  <mat-label>Full Name</mat-label>
+			  <input matInput formControlName="fullName">
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+		    <mat-label>Email Address</mat-label>
+		    <input matInput formControlName="email" placeholder="e.g. jdoe@example.com">
+		  </mat-form-field>
+		    <mat-form-field appearance="outline">
+		      <mat-label>Birth Date</mat-label>
+		      <input readonly matInput [matDatepicker]="picker" formControlName="birthDate" (click)="picker.open()">
+		      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+		      <mat-datepicker #picker></mat-datepicker>
+		    </mat-form-field>
+			<mat-form-field appearance="fill">
+			  <mat-label>Gender</mat-label>
+			  <mat-select formControlName="gender">
+			    <mat-option *ngFor="let gender of genderOptions" [value]="gender">
+			        {{gender}}
+		        </mat-option>
+		        <mat-option value="">
+		            Prefer Not To Say
+		        </mat-option>
+			  </mat-select>
+			</mat-form-field>
+		    <button mat-flat-button color="primary" style="width: 60%" [disabled]="!updateUserForm.valid">Update</button>	
+        <button mat-stroked-button type="button" style="width: calc(40% - 5px); margin-right: 10px;" color="warn"
+            (click)="cancelRegistration.emit()">Back</button>
+		</form>
+	</div>
+</div>

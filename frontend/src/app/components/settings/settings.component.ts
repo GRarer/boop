@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserAccountResponse, UpdateAccountRequest, genderValues, Gender} from 'boop-core'
 import { SessionService } from 'src/app/services/session.service';
@@ -9,8 +9,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styles: [
-  ]
+  styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
 
@@ -19,6 +18,8 @@ export class SettingsComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
   ) {}
+
+  @Output() cancelRegistration = new EventEmitter<void>();
 
   genderOptions: Gender[] = genderValues;
 
