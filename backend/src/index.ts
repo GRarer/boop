@@ -9,6 +9,7 @@ import { accountsRouter } from "./routers/accountsRouter";
 import { promisify } from "util";
 import { adminRouter } from "./routers/adminRouter";
 import { startRepeatedJobs } from "./services/periodicJobs";
+import { userInfoRouter } from "./routers/userInfoRouter";
 
 const app = express();
 const port = 3000;
@@ -25,6 +26,7 @@ app.use("/push", subscriptionRouter);
 app.use("/db_example", databaseExampleRouter);
 app.use("/account", accountsRouter);
 app.use("/admin", adminRouter);
+app.use("/user_info", userInfoRouter);
 
 
 // start ExpressJS server

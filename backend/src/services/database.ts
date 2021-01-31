@@ -141,6 +141,18 @@ class Database {
     const result: resultRow[] = (await this.pool.query(query, [username])).rows;
     return result.map(r => r.sub_json);
   }
+
+  // TODO this will probably be redundant with a different query introduced by the account settings feature
+  async getFriendlyName(userUUID: string): Promise<string | DatabaseError.UserNotFound> {
+    const query = `select friendly_name from users where user_uuid = $1`;
+    type resultRow = {friendly_name: string;};
+    const result: resultRow[] = (await this.pool.query(query, [userUUID])).rows;
+    if (result.length === 0) {
+      return DatabaseError.UserNotFound;
+    } else {
+      return result[0].friendly_name;
+    }
+  }
 }
 
 // we export a single instance of database since we should not have more than one connection pool

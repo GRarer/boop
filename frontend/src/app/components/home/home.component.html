@@ -1,8 +1,13 @@
-<p>home page placeholder</p>
-<p *ngIf="getUserID()">Logged in as user id {{getUserID()}}</p>
-<p *ngIf="!getUserID()">Not logged it</p>
-<button routerLink="/test">Go to api examples page</button>
-<button routerLink="/push_setup">Go to push setup</button>
-<button (click)="logout()">Log Out</button>
+<div *ngIf="info === undefined" class="narrow-body" style="margin-top: 50px;">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+<ng-container *ngIf="info">
+    <h2 style="text-align: center; font-size: x-large;">{{getGreeting(info!.friendlyName)}}</h2>
+    <div class="narrow-body" style="text-align: center;">
+      <button mat-stroked-button routerLink="/push_setup">Notification Setup <mat-icon>notification_add</mat-icon></button>
+      <button mat-stroked-button routerLink="/settings">Account Settings <mat-icon>manage_accounts</mat-icon></button>
+      <button mat-stroked-button color="warn" (click)="logout()">Log Out <mat-icon>logout</mat-icon></button>
+    </div>
+</ng-container>
 
 

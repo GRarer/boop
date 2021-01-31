@@ -60,9 +60,6 @@ export class SessionService {
   getSessionToken(): string | undefined {
     return this.currentSession?.sessionToken;
   }
-  getUserAccountUUID(): string | undefined {
-    return this.currentSession?.userUUID;
-  }
 
   async logout(): Promise<void> {
     const token = this.currentSession?.sessionToken;
