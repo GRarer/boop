@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { CommandsService } from './services/commands.service';
 import { SessionService } from './services/session.service';
 
 // a minimal component that acts as the root of the page
@@ -8,8 +9,8 @@ import { SessionService } from './services/session.service';
   selector: 'app-root',
   template: `
   <h1 class="boop-header mat-display-1">Boop</h1>
-  <div class="narrow-body" style="margin-top: 50px;">
-    <mat-progress-bar *ngIf="initialLoading" mode="indeterminate"></mat-progress-bar>
+  <div *ngIf="initialLoading" class="narrow-body" style="margin-top: 50px;">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   </div>
   <router-outlet *ngIf="!initialLoading"></router-outlet>
   `,
@@ -23,9 +24,13 @@ export class AppComponent implements OnInit {
     private sessionService: SessionService,
     private router: Router,
     private snackBar: MatSnackBar,
+    private commandService: CommandsService,
   ) { }
 
   ngOnInit(): void {
+    // attach admin debug commands to browser console
+    this.commandService.enableAdminCommands();
+
     this.sessionService.loadSavedSession().then(
       (savedLoaded) => {
         console.log("loaded saved session", savedLoaded);
