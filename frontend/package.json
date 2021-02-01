@@ -6,7 +6,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "start-pwa": "npx ng build --service-worker && npx http-server ./dist/boop-web",
+    "build-pwa": "npx ng build --service-worker",
+    "start-pwa": "npm run build-pwa && npx http-server ./dist/boop-web",
     "lint": "npx eslint src --ext .ts"
   },
   "eslintIgnore": [

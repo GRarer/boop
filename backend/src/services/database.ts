@@ -1,6 +1,12 @@
 import pg, { Pool } from "pg";
 import parseArgs from "minimist";
 import { Gender } from "boop-core";
+import { Session, sessionTimeoutDuration } from "./auth";
+
+// value-level signals indicating when certain database queries could not succeed
+export enum DatabaseError {
+  UserNotFound
+}
 
 // manages our connection to PostgreSQL database
 class Database {
@@ -56,19 +62,49 @@ class Database {
 
   // information needed authenticate and log in a user
   async getAuthInfo(username: string):
-  Promise<{userUUID: string; hash: string; isAdmin: boolean;} | "Account Not Found"> {
+  Promise<{userUUID: string; hash: string; isAdmin: boolean;} | DatabaseError.UserNotFound> {
     const query = 'SELECT "user_uuid", "bcrypt_hash", "is_admin" from users where username = $1;';
     type resultRow = { user_uuid: string; bcrypt_hash: string; is_admin: boolean; };
     const rows: resultRow[] = (await this.pool.query(query, [username])).rows;
     if (rows.length === 0) {
-      return "Account Not Found";
+      return DatabaseError.UserNotFound;
     } else if (rows.length === 1) {
       const result = rows[0];
-      // TODO add support admin column
       return { userUUID: result.user_uuid, hash: result.bcrypt_hash, isAdmin: result.is_admin };
     } else {
       throw Error("Multiple accounts with same username"); // sql uniqueness constraint should prevent this
     }
+  }
+
+  async getSession(token: string): Promise<Session | undefined> {
+    const updateTimeQuery = `update sessions set time_last_touched = $1 where token = $2;`;
+    await this.pool.query(updateTimeQuery, [Date.now(), token]);
+
+    const getSessionQuery =
+      `select user_uuid, is_admin
+      from users join sessions using (user_uuid) where token = $1;`;
+      type resultRow= {user_uuid: string; is_admin: boolean;};
+      const rows: resultRow[] = (await this.pool.query(getSessionQuery, [token])).rows;
+      if (rows.length === 0) {
+        return undefined;
+      }
+      const session = rows[0];
+      return { userUUID: session.user_uuid, isAdmin: session.is_admin };
+  }
+
+  async setSession(token: string, userUUID: string): Promise<void> {
+    const addSessionQuery = `INSERT INTO sessions(token, user_uuid, time_last_touched) VALUES ($1, $2, $3);`;
+    await this.pool.query(addSessionQuery, [token, userUUID, Date.now()]);
+  }
+
+  async removeExpiredSessions(): Promise<void> {
+    const oldestAllowedTime = Date.now() - sessionTimeoutDuration;
+    const query = `delete from sessions where time_last_touched < $1;`;
+    await this.pool.query(query, [oldestAllowedTime]);
+  }
+
+  async removeSession(token: string): Promise<void> {
+    await this.pool.query(`delete from sessions where token = $1;`, [token]);
   }
 
   async addAccount(values: {
@@ -152,6 +188,18 @@ class Database {
     type resultRow = {sub_json: PushSubscriptionJSON;};
     const result: resultRow[] = (await this.pool.query(query, [username])).rows;
     return result.map(r => r.sub_json);
+  }
+
+  // TODO this will probably be redundant with a different query introduced by the account settings feature
+  async getFriendlyName(userUUID: string): Promise<string | DatabaseError.UserNotFound> {
+    const query = `select friendly_name from users where user_uuid = $1`;
+    type resultRow = {friendly_name: string;};
+    const result: resultRow[] = (await this.pool.query(query, [userUUID])).rows;
+    if (result.length === 0) {
+      return DatabaseError.UserNotFound;
+    } else {
+      return result[0].friendly_name;
+    }
   }
 }
 

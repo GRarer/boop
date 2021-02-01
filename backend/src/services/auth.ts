@@ -1,65 +1,53 @@
 import { LoginRequest, LoginResponse, sessionTokenHeaderName } from 'boop-core';
 import { v4 as uuidv4 } from 'uuid';
-import { database } from './database';
+import { database, DatabaseError } from './database';
 import bcrypt from "bcrypt";
 import { Request } from "express";
 
-/* a user session token is a UUID that is given to the client when it logs in
- * the token is sent as a header in all requests made to the back-end in order to verify the client's identity
- */
-type Session = {
-  userUUID: string; // the permanent UUID for this user account, not the same as the username
-  isAdmin: boolean;
-};
+export type Session = {userUUID: string; isAdmin: boolean;};
 
-// map from auth tokens to sessions
-const activeSessions: Map<string, Session> = new Map();
+// 30 days expressed in milliseconds; user sessions will be closed if left inactive for this time
+export const sessionTimeoutDuration: number = 30 * 24 * 60 * 60 * 1000;
 
-// a prefix is included in session tokens to distinguish them from permanent user UUIDs
-function generateSessionToken(): string {
-  return `session-${uuidv4()}`;
+export enum LoginError {
+  UserNotFound,
+  WrongPassword
 }
 
 // validate password and create log-in session
-export async function login(credentials: LoginRequest): Promise<LoginResponse | "User Not Found" | "Wrong Password"> {
+export async function login(credentials: LoginRequest): Promise<LoginResponse | LoginError> {
   const userInfo = await database.getAuthInfo(credentials.username);
-  if (userInfo === "Account Not Found") {
-    return "User Not Found";
+  if (userInfo === DatabaseError.UserNotFound) {
+    return LoginError.UserNotFound;
   }
   // validating password with a bcrypt hash is an asynchronous operation because it is *very* slow
   if (await bcrypt.compare(credentials.password, userInfo.hash)) {
-    const session: Session = {
-      userUUID: userInfo.userUUID,
-      isAdmin: userInfo.isAdmin,
-    };
-    const token: string = generateSessionToken();
-    activeSessions.set(token, session);
-    return { userUUID: session.userUUID, sessionToken: token };
+    // a prefix is included in session tokens to prevent confusing them with user UUIDs
+    const token: string = `session-${uuidv4()}`;
+    await database.setSession(token, userInfo.userUUID);
+    return { userUUID: userInfo.userUUID, sessionToken: token };
   } else {
-    return "Wrong Password";
+    return LoginError.WrongPassword;
   }
 }
 
-function sessionFromReq(req: Request): Session | undefined {
+async function sessionFromReq(req: Request): Promise<Session | undefined> {
   const token: string | undefined = req.header(sessionTokenHeaderName);
-  if (typeof token === "string") {
-    return activeSessions.get(token);
-  } else {
+  if (typeof token !== "string") {
     return undefined;
   }
-
+  return await database.getSession(token);
 }
 
 // gets the user UUID associated with a session token, or undefined if the token does not match any active session
-export function getUserUUID(req: Request): string | undefined {
-  return sessionFromReq(req)?.userUUID;
+export async function userUuidFromReq(req: Request): Promise<string | undefined> {
+  return (await sessionFromReq(req))?.userUUID;
 }
 
 // returns true if the session token belongs to an "admin" user
-export function isAdminSession(req: Request): boolean {
-  return sessionFromReq(req)?.isAdmin ?? false;
+export async function isAdminSessionFromReq(req: Request): Promise<boolean> {
+  return (await sessionFromReq(req))?.isAdmin ?? false;
 }
-
 
 export async function hashPassword(password: string): Promise<string> {
   // incrementing salt rounds number by 1 doubles the time needed to calculate a hash

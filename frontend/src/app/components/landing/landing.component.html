@@ -15,13 +15,13 @@
                 <div class="horizontal-center close-stacked-input">
                     <mat-form-field appearance="outline">
                         <mat-label>Password</mat-label>
-                        <input matInput formControlName="password" type="password">
+                        <input matInput formControlName="password" type="password" (keyup)="checkConfirmPassword()">
                     </mat-form-field>
                 </div>
                 <div class="horizontal-center close-stacked-input">
                     <mat-form-field appearance="outline">
                         <mat-label>Confirm Password</mat-label>
-                        <input matInput formControlName="confirmPassword" type="password">
+                        <input matInput formControlName="confirmPassword" type="password" (keyup)="checkConfirmPassword()">
                     </mat-form-field>
                 </div>
                 <div style="text-align: center;">

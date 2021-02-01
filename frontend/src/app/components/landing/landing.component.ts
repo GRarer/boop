@@ -5,7 +5,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
-import { CommandsService } from 'src/app/services/commands.service';
 import { SessionService } from 'src/app/services/session.service';
 import { equalToSiblingValidator } from 'src/app/util/ngUtils';
 
@@ -24,14 +23,8 @@ export class LandingComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     private apiService: ApiService,
-    private commandService: CommandsService,
-  ) {
-    this.startRegistrationForm.controls.password.valueChanges.subscribe(() => {
-      this.startRegistrationForm.controls.confirmPassword.updateValueAndValidity();
-    });
-  }
+  ) { }
 
-  // TODO validate username and password formats
   startRegistrationForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
@@ -42,6 +35,14 @@ export class LandingComponent implements OnInit {
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   });
+
+  // re-checks whether confirm password matches password and updates control's appearance
+  checkConfirmPassword(): void {
+    const confirmPassword = this.startRegistrationForm.controls.confirmPassword;
+    confirmPassword.updateValueAndValidity();
+    confirmPassword.markAsDirty();
+    confirmPassword.markAsTouched();
+  }
 
   ngOnInit(): void {
   }
@@ -80,7 +81,6 @@ export class LandingComponent implements OnInit {
       const password: string = value.password;
       this.sessionService.login({ username, password }).then(() => {
         // navigate to home page if login was successful
-        this.commandService.enableAdminCommands();
         void this.router.navigate(["/home"]);
       }).catch((reason: unknown) => {
         // if something went wrong, show a "snackbar" message

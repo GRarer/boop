@@ -1,30 +1,39 @@
 import express from "express";
-import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse } from "boop-core";
-import { login, getUserUUID } from "../services/auth";
+import { sessionTokenHeaderName, failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse } from "boop-core";
+import { login, LoginError, userUuidFromReq } from "../services/auth";
 import { accountsManager } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender, UpdateAccountRequest } from "boop-core";
-import { database } from "../services/database";
+import { database, DatabaseError } from "../services/database";
+import { handleAsync } from "../util/handleAsync";
+
 
 export const accountsRouter = express.Router();
 
-
-accountsRouter.post('/login', (req, res) => {
+accountsRouter.post('/login', handleAsync(async (req, res) => {
   const body: LoginRequest = req.body;
-  login(body).then(result => {
-    if (result === "User Not Found") {
-      res.status(404).send("User Not Found");
-    } else if (result === "Wrong Password") {
-      res.status(401).send("Incorrect Password");
-    } else {
-      const loginResponse: LoginResponse = result;
-      res.send(loginResponse);
-    }
-  }).catch(err => {
-    res.sendStatus(500);
-  });
-});
+  const result = await login(body);
+  if (result === LoginError.UserNotFound) {
+    res.sendStatus(404);
+    return;
+  } else if (result === LoginError.WrongPassword) {
+    res.sendStatus(401);
+    return;
+  } else {
+    const loginResponse: LoginResponse = result;
+    res.send(loginResponse);
+    return;
+  }
+}));
 
-accountsRouter.post('/register', (req, res) => {
+accountsRouter.post('/logout', handleAsync(async (req, res) => {
+  const token: string | undefined = req.header(sessionTokenHeaderName);
+  if (token !== undefined) {
+    await database.removeSession(token);
+  }
+  res.send();
+}));
+
+accountsRouter.post('/register', handleAsync(async (req, res) => {
   const body: CreateAccountRequest = req.body;
   // validate username and password
   const passwordOrUsernameIssue: string | undefined
@@ -50,20 +59,20 @@ accountsRouter.post('/register', (req, res) => {
     return;
   }
 
-  accountsManager.createAccount(body).then((result: LoginResponse) => {
+  try {
+    const result = await accountsManager.createAccount(body);
     res.send(result);
-  }).catch(err => {
-    // check if the reason for the exception was an already-taken username
-    if (err["code"] === "23505" && err["constraint"] === "users_username_key") {
+  } catch (err) {
+    if (typeof err === "object" && err["code"] === "23505" && err["constraint"] === "users_username_key") {
       res.status(409).send(`username ${body.username} is already taken.`);
     } else {
       res.sendStatus(500);
     }
-  });
-});
+  }
+}));
 
-accountsRouter.get('/info', (req, res) => { // TODO make this a query string
-  const uuid = getUserUUID(req);
+accountsRouter.get('/info', handleAsync(async (req, res) => { // TODO make this a query string
+  const uuid = await userUuidFromReq(req);
   if (uuid === undefined) {
     res.status(401).send('unauthorized user');
     return;
@@ -77,9 +86,9 @@ accountsRouter.get('/info', (req, res) => { // TODO make this a query string
 
     res.send(result);
   })
-});
+}));
 
-accountsRouter.put('/edit', (req, res) => {
+accountsRouter.put('/edit', handleAsync(async (req, res) => {
   const body: UpdateAccountRequest = req.body
 
   const usernameIssue: string | undefined = failsUsernameRequirement(body.username)
@@ -88,7 +97,7 @@ accountsRouter.put('/edit', (req, res) => {
     return;
   }
 
-  const uuid = getUserUUID(req);
+  const uuid = await userUuidFromReq(req);
   if (uuid === undefined) {
     res.status(401).send('unauthorized user');
     return;
@@ -118,20 +127,27 @@ accountsRouter.put('/edit', (req, res) => {
       res.sendStatus(500);
     } 
   });
-});
+}));
 
 // returns boolean indicating whether the given username is already taken
-accountsRouter.get('/exists', (req, res) => {
+accountsRouter.get('/exists', handleAsync(async (req, res) => {
   const username: unknown = req.query.username;
   if (typeof username !== "string") {
     res.sendStatus(400);
     return;
   }
-  database.getAuthInfo(username).then(result => {
-    if (result === "Account Not Found") {
-      res.send(false);
-    } else {
-      res.send(true);
-    }
-  }).catch(() => { res.sendStatus(500); });
-});
+  const result = await database.getAuthInfo(username);
+  if (result === DatabaseError.UserNotFound) {
+    res.send(false);
+    return;
+  } else {
+    res.send(true);
+    return;
+  }
+}));
+
+// tells whether the session header corresponds to a valid session
+accountsRouter.get('/sessionValid', handleAsync(async (req, res) => {
+  const session = await userUuidFromReq(req);
+  res.send((session !== undefined));
+}));

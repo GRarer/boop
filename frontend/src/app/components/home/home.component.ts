@@ -1,30 +1,69 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { HomeScreenInfoResponse } from 'boop-core';
+import { ApiService } from 'src/app/services/api.service';
 import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styles: [
-  ]
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+
+  info: HomeScreenInfoResponse | undefined;
 
   constructor(
     private sessionService: SessionService,
     private router: Router,
+    private snackBar: MatSnackBar,
+    private apiService: ApiService
   ) { }
 
-  getUserID(): string | undefined {
-    return this.sessionService.getUserAccountUUID();
+  ngOnInit(): void {
+  // return user to the landing page if they are not logged in
+    if (this.sessionService.getSessionToken() === undefined) {
+      void this.router.navigate(["/welcome"]);
+      return;
+    }
+    this.loadInfo();
   }
 
-  ngOnInit(): void {
-    // return user to the landing page if they are not logged in
-    // TODO make sure this still behaves correctly after the session service can remember logins between sessions
-    if (this.sessionService.getSessionToken() === undefined) {
-      void this.router.navigate(["/"]);
+  loadInfo(): void {
+    this.apiService.getJSON<HomeScreenInfoResponse>("http://localhost:3000/user_info/home_info")
+      .then(info => {
+        this.info = info;
+      })
+      .catch(err => {
+        console.error(err);
+        this.snackBar.open(
+          "Something went wrong when trying to load your information.",
+          "Dismiss",
+          { "duration": 5000 }
+        );
+        this.logout();
+      });
+  }
+
+  logout(): void {
+    this.sessionService.logout().then(
+      () => { void this.router.navigate(["/welcome"]); }
+    ).catch((reason) => {
+      console.error(reason);
+      this.snackBar.open("Something went wrong when trying to log out.", "Dismiss", { "duration": 5000 });
+    });
+  }
+
+  // a greeting appropriate for the time of day, e.g. "Good Morning, Alice"
+  getGreeting(name: string): string {
+    const hour = (new Date()).getHours();
+    if (hour < 6 || hour >= 18) {
+      return `Good evening, ${name}`;
+    } else if (hour < 12) {
+      return `Good morning, ${name}`;
+    } else {
+      return `Good afternoon, ${name}`;
     }
   }
-
 }

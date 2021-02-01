@@ -44,4 +44,11 @@ CREATE Table subscriptions(
     user_uuid UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
     endpoint TEXT NOT NULL,
     PRIMARY Key (endpoint, user_uuid)
-)
+);
+
+-- user log-in sessions
+CREATE TABLE sessions(
+    token text PRIMARY KEY,
+    user_uuid UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
+    time_last_touched bigint NOT NULL -- time this session was last accessed, in milliseconds since epoch
+);
