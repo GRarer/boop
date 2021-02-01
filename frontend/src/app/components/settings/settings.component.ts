@@ -1,5 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';  
 import { UserAccountResponse, UpdateAccountRequest, genderValues, Gender} from 'boop-core'
 import { SessionService } from 'src/app/services/session.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -17,6 +19,7 @@ export class SettingsComponent implements OnInit {
     private sessionService: SessionService,
     private router: Router,
     private apiService: ApiService,
+    private snackBar: MatSnackBar,
   ) {}
 
   genderOptions: Gender[] = genderValues;
@@ -65,8 +68,19 @@ export class SettingsComponent implements OnInit {
       gender: gender
     };
 
-    this.apiService.putJSON("http://localhost:3000/account/edit", request).then((response) => {
-      console.log(response);
-    });
+    this.apiService.putJSON("http://localhost:3000/account/edit", request).then(() => {
+      void this.router.navigate(["/home"]);
+    }).catch((reason) => {
+      console.error(reason);
+      let message: string = reason.error; 
+      if (reason instanceof HttpErrorResponse) {
+        if (reason.status === 409) {
+          message = "Username is already taken";
+        } else if (reason.status === 500) {
+          message = "Internal Server Error";
+        }
+      }
+      this.snackBar.open(message, "Dismiss", { duration: 5000 });
+    })
   }
 }

@@ -110,8 +110,14 @@ accountsRouter.put('/edit', (req, res) => {
   }
 
   accountsManager.updateAccount(body, uuid).then(() => {
-    res.send('update successful');
-  }).catch(() => { res.sendStatus(500); });
+    res.send(body);
+  }).catch((err) => {     
+    if (err["code"] === "23505" && err["constraint"] === "users_username_key") {
+      res.status(409).send(`username ${body.username} is already taken.`);
+    } else {
+      res.sendStatus(500);
+    } 
+  });
 });
 
 // returns boolean indicating whether the given username is already taken

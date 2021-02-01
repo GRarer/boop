@@ -1,5 +1,8 @@
-<div style="text-align: center;">
-	<div style="padding-right: 30%; padding-left: 30%">
+<div style="text-align: center; display: flex; align-items: center; justify-content: center">
+	<mat-card>
+		<mat-card-header>
+			<mat-card-title>Settings</mat-card-title>
+		</mat-card-header>
 		<form [formGroup]="updateUserForm" (submit)="updateUserInfo()">
 			<mat-form-field appearance="fill">
 			  <mat-label>Username</mat-label>
@@ -30,8 +33,8 @@
 		        </mat-option>
 			  </mat-select>
 			</mat-form-field>
-		    <button mat-flat-button color="primary" style="width: 60%" [disabled]="!updateUserForm.valid">Update</button>	
-				<button mat-flat-button routerLink="/">home</button>
+		    <button mat-flat-button color="primary" style="width: 60%; margin: 10px" [disabled]="!updateUserForm.valid">Update</button>	
+			<button mat-stroked-button routerLink="/home" color="link" style="width: 60%">home</button>
 		</form>
-	</div>
+	</mat-card>
 </div>

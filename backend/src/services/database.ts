@@ -116,7 +116,7 @@ class Database {
       username: string;
       full_name: string; 
       friendly_name: string; 
-      email_address: string;
+      email: string;
       birth_date: string;
       gender: Gender;
     };
@@ -129,7 +129,7 @@ class Database {
         username: result.username,
         fullName: result.full_name,
         friendlyName: result.friendly_name,
-        emailAddress: result.email_address,
+        emailAddress: result.email,
         birthDate: result.birth_date,
         gender: result.gender
       }
