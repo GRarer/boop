@@ -144,14 +144,14 @@ class Database {
     return result;
   }
 
-  async getUserAccount(uuid: string): Promise<{ username: string; fullName: string; friendlyName: string; 
+  async getUserAccount(uuid: string): Promise<{ username: string; fullName: string; friendlyName: string;
     emailAddress: string; birthDate: string; gender: Gender; } | undefined> {
     const query = `SELECT "username", "full_name", "friendly_name", "email", "birth_date", "gender"
      FROM users WHERE user_uuid=$1`;
-    type userRow = { 
+    type userRow = {
       username: string;
-      full_name: string; 
-      friendly_name: string; 
+      full_name: string;
+      friendly_name: string;
       email: string;
       birth_date: string;
       gender: Gender;
@@ -168,7 +168,7 @@ class Database {
         emailAddress: result.email,
         birthDate: result.birth_date,
         gender: result.gender
-      }
+      };
     }
 
     return undefined;

@@ -64,7 +64,7 @@ export class SessionService {
   getUserAccountUUID(): string | undefined {
     return this.currentSession?.userUUID;
   }
-  
+
   async logout(): Promise<void> {
     const token = this.currentSession?.sessionToken;
     this.currentSession = undefined;

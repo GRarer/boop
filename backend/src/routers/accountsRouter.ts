@@ -1,5 +1,6 @@
 import express from "express";
-import { sessionTokenHeaderName, failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse } from "boop-core";
+import { sessionTokenHeaderName, failsPasswordRequirement, failsUsernameRequirement,
+  LoginRequest, LoginResponse } from "boop-core";
 import { login, LoginError, userUuidFromReq } from "../services/auth";
 import { accountsManager } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender, UpdateAccountRequest } from "boop-core";
@@ -78,20 +79,20 @@ accountsRouter.get('/info', handleAsync(async (req, res) => { // TODO make this 
     return;
   }
 
-  accountsManager.getAccount(uuid).then((result) => {
+  void accountsManager.getAccount(uuid).then((result) => {
     if (result === "no user found matching uuid") {
       res.status(404).send(result);
       return;
     }
 
     res.send(result);
-  })
+  });
 }));
 
 accountsRouter.put('/edit', handleAsync(async (req, res) => {
-  const body: UpdateAccountRequest = req.body
+  const body: UpdateAccountRequest = req.body;
 
-  const usernameIssue: string | undefined = failsUsernameRequirement(body.username)
+  const usernameIssue: string | undefined = failsUsernameRequirement(body.username);
   if (usernameIssue) {
     res.status(401).send(usernameIssue);
     return;
@@ -120,12 +121,12 @@ accountsRouter.put('/edit', handleAsync(async (req, res) => {
 
   accountsManager.updateAccount(body, uuid).then(() => {
     res.send(body);
-  }).catch((err) => {     
+  }).catch((err) => {
     if (err["code"] === "23505" && err["constraint"] === "users_username_key") {
       res.status(409).send(`username ${body.username} is already taken.`);
     } else {
       res.sendStatus(500);
-    } 
+    }
   });
 }));
 

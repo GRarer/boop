@@ -4,7 +4,7 @@ import { database } from "./database";
 import { v4 as uuidv4 } from 'uuid';
 import { hashPassword, login, LoginError } from "./auth";
 
-class AccountsManager { 
+class AccountsManager {
 
   constructor() {
   }
@@ -30,7 +30,7 @@ class AccountsManager {
       passwordHash: passwordHash,
     });
     const loginResult = await login({ username: request.username, password: request.password });
-      // this should never happen because we just created an account using those credentials
+    // this should never happen because we just created an account using those credentials
     if (loginResult === LoginError.WrongPassword || loginResult === LoginError.UserNotFound) {
       throw Error("failed to authenticate after creating account");
     } else {
@@ -60,7 +60,7 @@ class AccountsManager {
       return userAccountInfo;
     }
 
-    return "no user found matching uuid"
+    return "no user found matching uuid";
   }
 }
 

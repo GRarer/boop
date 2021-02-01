@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';  
-import { UserAccountResponse, UpdateAccountRequest, genderValues, Gender} from 'boop-core'
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserAccountResponse, UpdateAccountRequest, genderValues, Gender } from 'boop-core';
 import { SessionService } from 'src/app/services/session.service';
 import { ApiService } from 'src/app/services/api.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -30,7 +30,7 @@ export class SettingsComponent implements OnInit {
     fullName: new FormControl('', [Validators.required]),
     friendlyName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    birthDate: new FormControl('', [Validators.required]),  
+    birthDate: new FormControl('', [Validators.required]),
   };
 
   updateUserForm: FormGroup = new FormGroup(this.userFormData);
@@ -40,14 +40,14 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.apiService.getJSON("http://localhost:3000/account/info", undefined).then((response) => {
-      this.userFormData.username.setValue((<UserAccountResponse> response).username); 
-      this.userFormData.gender.setValue((<UserAccountResponse> response).gender); 
-      this.userFormData.fullName.setValue((<UserAccountResponse> response).fullName); 
-      this.userFormData.friendlyName.setValue((<UserAccountResponse> response).friendlyName); 
-      this.userFormData.email.setValue((<UserAccountResponse> response).emailAddress); 
-      this.userFormData.birthDate.setValue((<UserAccountResponse> response).birthDate); 
-    }); 
+    void this.apiService.getJSON("http://localhost:3000/account/info", undefined).then((response) => {
+      this.userFormData.username.setValue((response as UserAccountResponse).username);
+      this.userFormData.gender.setValue((response as UserAccountResponse).gender);
+      this.userFormData.fullName.setValue((response as UserAccountResponse).fullName);
+      this.userFormData.friendlyName.setValue((response as UserAccountResponse).friendlyName);
+      this.userFormData.email.setValue((response as UserAccountResponse).emailAddress);
+      this.userFormData.birthDate.setValue((response as UserAccountResponse).birthDate);
+    });
   }
 
   updateUserInfo(): void {
@@ -72,7 +72,7 @@ export class SettingsComponent implements OnInit {
       void this.router.navigate(["/home"]);
     }).catch((reason) => {
       console.error(reason);
-      let message: string = reason.error; 
+      let message: string = reason.error;
       if (reason instanceof HttpErrorResponse) {
         if (reason.status === 409) {
           message = "Username is already taken";
@@ -81,6 +81,6 @@ export class SettingsComponent implements OnInit {
         }
       }
       this.snackBar.open(message, "Dismiss", { duration: 5000 });
-    })
+    });
   }
 }
