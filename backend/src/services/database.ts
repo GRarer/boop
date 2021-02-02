@@ -134,14 +134,12 @@ class Database {
     birthDate: string;
     gender: Gender;
     uuid: string;
-  }): Promise<pg.QueryResult> {
+  }): Promise<void> {
     const query =
     `UPDATE users SET username=$1, full_name=$2, friendly_name=$3, gender=$4, email=$5, birth_date=$6
     WHERE user_uuid=$7;`;
-    const result = await this.pool.query(query, [values.username, values.fullName,
+    await this.pool.query(query, [values.username, values.fullName,
       values.friendlyName, values.gender, values.emailAddress, values.birthDate, values.uuid]);
-
-    return result;
   }
 
   async getUserAccount(uuid: string): Promise<{ username: string; fullName: string; friendlyName: string;

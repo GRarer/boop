@@ -2,7 +2,7 @@ import express from "express";
 import { sessionTokenHeaderName, failsPasswordRequirement, failsUsernameRequirement,
   LoginRequest, LoginResponse } from "boop-core";
 import { login, LoginError, userUuidFromReq } from "../services/auth";
-import { accountsManager } from "../services/userAccounts";
+import { createAccount, updateAccount, getAccount } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender, UpdateAccountRequest } from "boop-core";
 import { database, DatabaseError } from "../services/database";
 import { handleAsync } from "../util/handleAsync";
@@ -61,7 +61,7 @@ accountsRouter.post('/register', handleAsync(async (req, res) => {
   }
 
   try {
-    const result = await accountsManager.createAccount(body);
+    const result = await createAccount(body);
     res.send(result);
   } catch (err) {
     if (typeof err === "object" && err["code"] === "23505" && err["constraint"] === "users_username_key") {
@@ -79,14 +79,13 @@ accountsRouter.get('/info', handleAsync(async (req, res) => { // TODO make this 
     return;
   }
 
-  void accountsManager.getAccount(uuid).then((result) => {
-    if (result === "no user found matching uuid") {
-      res.status(404).send(result);
-      return;
-    }
+  const result = await getAccount(uuid)
+  if (result === DatabaseError.UserNotFound) {
+    res.status(404).send(result);
+    return;
+  }
 
-    res.send(result);
-  });
+  res.send(result);
 }));
 
 accountsRouter.put('/edit', handleAsync(async (req, res) => {
@@ -119,7 +118,7 @@ accountsRouter.put('/edit', handleAsync(async (req, res) => {
     return;
   }
 
-  accountsManager.updateAccount(body, uuid).then(() => {
+  updateAccount(body, uuid).then(() => {
     res.send(body);
   }).catch((err) => {
     if (err["code"] === "23505" && err["constraint"] === "users_username_key") {
