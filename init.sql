@@ -11,13 +11,6 @@ CREATE DATABASE boop
 
 CREATE TYPE GENDER_IDENTITY AS ENUM ('Female', 'Male', 'Nonbinary');
 
--- table used for the tech-stack demonstration prototype
-CREATE TABLE example_data(
-    id_number bigint NOT NULL,
-    contents text Not NULL,
-    PRIMARY KEY (id_number)
-);
-
 CREATE TABLE users(
     user_uuid UUID PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,

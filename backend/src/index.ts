@@ -1,10 +1,8 @@
 import express from "express";
-import { exampleRouter } from "./routers/exampleRouter";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { subscriptionRouter } from "./routers/pushSubscriptionRouter";
 import { database } from "./services/database";
-import { databaseExampleRouter } from "./routers/databaseExampleRouter";
 import { accountsRouter } from "./routers/accountsRouter";
 import { promisify } from "util";
 import { adminRouter } from "./routers/adminRouter";
@@ -22,9 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.text());
 
 // routers
-app.use("/example", exampleRouter);
 app.use("/push", subscriptionRouter);
-app.use("/db_example", databaseExampleRouter);
 app.use("/account", accountsRouter);
 app.use("/admin", adminRouter);
 app.use("/user_info", userInfoRouter);
