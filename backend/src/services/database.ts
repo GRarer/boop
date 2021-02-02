@@ -1,6 +1,6 @@
 import pg, { Pool } from "pg";
 import parseArgs from "minimist";
-import { Gender } from "boop-core";
+import { Gender, ProfileSummary } from "boop-core";
 import { Session, sessionTimeoutDuration } from "./auth";
 
 // value-level signals indicating when certain database queries could not succeed
@@ -157,6 +157,62 @@ class Database {
   async addFriendRequest(fromUUID: string, toUUID: string): Promise<void> {
     const query = `insert into friend_requests(from_user, to_user) values($1, $2);`;
     await this.pool.query(query, [fromUUID, toUUID]);
+  }
+
+  async removeFriendRequest(fromUUID: string, toUUID: string): Promise<void> {
+    const query = `delete from friend_requests where (from_user = $1) and (to_user = $2)`;
+    await this.pool.query(query, [fromUUID, toUUID]);
+  }
+
+  async getIncomingFriendRequests(uuid: string): Promise<ProfileSummary[]> {
+    const query =
+      `select distinct user_uuid, username, full_name from users join friend_requests
+      on user_uuid = from_user where to_user = $1;`;
+    type ResultRow = {user_uuid: string; username: string; full_name: string;};
+    const results: ResultRow[] = (await this.pool.query(query, [uuid])).rows;
+    return results.map(r => ({ uuid: r.user_uuid, username: r.username, fullName: r.full_name }));
+  }
+
+  async getFriends(uuid: string): Promise<ProfileSummary[]> {
+    const query =
+      `select distinct user_uuid, username, full_name from friends join users on user_a = user_uuid where user_b = $1;`;
+    type ResultRow = {user_uuid: string; username: string; full_name: string;};
+    const results: ResultRow[] = (await this.pool.query(query, [uuid])).rows;
+    return results.map(r => ({ uuid: r.user_uuid, username: r.username, fullName: r.full_name }));
+  }
+
+  async addFriendship(userUUID: string, friendUUID: string): Promise<void> {
+    // insert both directions of friendship as a transaction
+    const client = await this.pool.connect();
+    try {
+      const query = `INSERT INTO FRIENDS(user_a, user_b) values($1, $2)`;
+      await client.query('BEGIN');
+      await client.query(query, [userUUID, friendUUID]);
+      await client.query(query, [friendUUID, userUUID]);
+      await client.query('COMMIT');
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
+  }
+
+  async removeFriendship(userUUID: string, friendUUID: string): Promise<void> {
+    // remove both directions of friendship
+    const client = await this.pool.connect();
+    try {
+      const query = `delete from friends where (user_a = $1) and (user_b = $2)`;
+      await client.query('BEGIN');
+      await client.query(query, [userUUID, friendUUID]);
+      await client.query(query, [friendUUID, userUUID]);
+      await client.query('COMMIT');
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
   }
 }
 
