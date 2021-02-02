@@ -14,7 +14,6 @@ class Database {
   private pool: pg.Pool; // a pool of connection clients allows us to make concurrent queries
 
   constructor() {
-
     /* To connect to the database, we need to have the computer's postgres superuser password
     * The first place we look is the --password command-line argument. If that argument is not included,
     * we next look for an environment variable called "postgres_password".
@@ -43,21 +42,6 @@ class Database {
   // this should be called when the server exits, and at no other time
   async disconnect(): Promise<void> {
     await this.pool.end();
-  }
-
-  // queries for database example demonstration
-  async addExampleValue(value: string): Promise<void> {
-    const timestamp: number = Date.now();
-    await this.pool.query(
-      `INSERT INTO example_data(id_number, contents) VALUES($1, $2) RETURNING *;`,
-      [timestamp, value]
-    );
-  }
-
-  async getExampleValues(): Promise<string[]> {
-    const rows: { contents: string; }[] = (await this.pool.query('SELECT contents from example_data;')).rows;
-    const result = rows.map(x => x.contents);
-    return result;
   }
 
   // information needed authenticate and log in a user

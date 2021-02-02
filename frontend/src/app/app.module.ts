@@ -12,7 +12,6 @@ import { materialModules } from './materialDependencies';
 
 import { NotFound404Component } from './components/not-found404/not-found404.component';
 import { LandingComponent } from './components/landing/landing.component';
-import { ConnectionExampleComponent } from './components/connection-example/connection-example.component';
 import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/landing/register/register.component';
 import { TermsDialogComponent } from './components/landing/register/terms-dialog/terms-dialog.component';
@@ -25,7 +24,6 @@ import { LoadingBarComponent } from './components/common/loading-bar/loading-bar
 @NgModule({
   declarations: [
     AppComponent,
-    ConnectionExampleComponent,
     NotFound404Component,
     LandingComponent,
     HomeComponent,
