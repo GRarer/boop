@@ -57,4 +57,9 @@ CREATE TABLE sessions(
 CREATE TABLE friend_requests(
     from_user UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
     to_user UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE
-)
+);
+
+CREATE TABLE friends(
+    user_a UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
+    user_b UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE
+);

@@ -9,9 +9,7 @@ import { SessionService } from './services/session.service';
   selector: 'app-root',
   template: `
   <h1 class="boop-header mat-display-1">Boop</h1>
-  <div *ngIf="initialLoading" class="narrow-body" style="margin-top: 50px;">
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  </div>
+  <app-loading-bar *ngIf="initialLoading"></app-loading-bar>
   <router-outlet *ngIf="!initialLoading"></router-outlet>
   `,
   styles: []
