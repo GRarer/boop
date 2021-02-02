@@ -153,6 +153,11 @@ class Database {
       return result[0].friendly_name;
     }
   }
+
+  async addFriendRequest(fromUUID: string, toUUID: string): Promise<void> {
+    const query = `insert into friend_requests(from_user, to_user) values($1, $2);`;
+    await this.pool.query(query, [fromUUID, toUUID]);
+  }
 }
 
 // we export a single instance of database since we should not have more than one connection pool

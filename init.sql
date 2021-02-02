@@ -52,3 +52,9 @@ CREATE TABLE sessions(
     user_uuid UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
     time_last_touched bigint NOT NULL -- time this session was last accessed, in milliseconds since epoch
 );
+
+-- pending friend requests
+CREATE TABLE friend_requests(
+    from_user UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
+    to_user UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE
+)

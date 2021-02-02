@@ -1,0 +1,20 @@
+<div class="narrow-body">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Add Friend</mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="margin-bottom: -30px;">
+            <form [formGroup]="friendRequestForm" (submit)="sendFriendRequest()">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Friend's Username</mat-label>
+                    <input matInput formControlName="username">
+                </mat-form-field>
+            </form>
+        </mat-card-content>
+        <mat-card-actions>
+            <button [disabled]="!friendRequestForm.valid" mat-button color="primary" (click)="sendFriendRequest()">SEND FRIEND
+                REQUEST</button>
+        </mat-card-actions>
+    </mat-card>
+
+</div>
