@@ -1,10 +1,11 @@
 <div *ngIf="info === undefined" class="narrow-body" style="margin-top: 50px;">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  </div>
+</div>
 <ng-container *ngIf="info">
     <h2 style="text-align: center; font-size: x-large;">{{getGreeting(info!.friendlyName)}}</h2>
     <div class="narrow-body" style="text-align: center;">
       <button mat-stroked-button routerLink="/push_setup">Notification Setup <mat-icon>notification_add</mat-icon></button>
+      <button mat-stroked-button routerLink="/add_friends">Add Friends <mat-icon>group_add</mat-icon></button>
       <button mat-stroked-button routerLink="/settings">Account Settings <mat-icon>manage_accounts</mat-icon></button>
       <button mat-stroked-button color="warn" (click)="logout()">Log Out <mat-icon>logout</mat-icon></button>
     </div>

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { FriendsComponent } from './components/friends/friends.component';
 import { ConnectionExampleComponent } from './components/connection-example/connection-example.component';
 import { HomeComponent } from './components/home/home.component';
 import { LandingComponent } from './components/landing/landing.component';
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'welcome', component: LandingComponent },
   { path: 'home', component: HomeComponent },
   { path: 'push_setup', component: PushSubscribeComponent },
+  { path: 'add_friends', component: FriendsComponent },
   { path: 'test', component: ConnectionExampleComponent },
   { path: '**', component: NotFound404Component },
 ];

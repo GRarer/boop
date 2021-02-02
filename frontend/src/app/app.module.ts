@@ -19,7 +19,7 @@ import { TermsDialogComponent } from './components/landing/register/terms-dialog
 import { PrivacyPolicyDialogComponent }
   from './components/landing/register/privacy-policy-dialog/privacy-policy-dialog.component';
 import { PushSubscribeComponent } from './components/push-subscribe/push-subscribe.component';
-
+import { FriendsComponent } from './components/friends/friends.component';
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 @NgModule({
   declarations: [
@@ -32,6 +32,7 @@ import { PushSubscribeComponent } from './components/push-subscribe/push-subscri
     TermsDialogComponent,
     PrivacyPolicyDialogComponent,
     PushSubscribeComponent,
+    FriendsComponent,
   ],
   imports: [
     BrowserModule,
