@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -31,8 +30,7 @@ export class FriendsComponent implements OnInit {
     this.apiService.getJSON<GetFriendsResult>("http://localhost:3000/friends/my_friends")
       .then(info => { this.info = info; })
       .catch(err => {
-        console.error(err);
-        this.snackBar.open("Something went wrong.", "Dismiss", { duration: 5000 });
+        this.apiService.showErrorPopup(err);
       });
   }
 
@@ -47,25 +45,8 @@ export class FriendsComponent implements OnInit {
       .then(() => {
         this.snackBar.open(`Sent friend request to '${friendUsername}'.`, "Dismiss", { "duration": 5000 });
       })
-      .catch((reason) => {
-        console.error(reason);
-        let message: string = "Unknown Error";
-        if (reason instanceof HttpErrorResponse) {
-          if (reason.status === 401) {
-            message = "Failed to authenticate.";
-          } else if (reason.status === 400) {
-            message = "Invalid username.";
-          } else if (reason.status === 403) {
-            message = "You cannot send a friend request to yourself.";
-          } else if (reason.status === 404) {
-            message = "User not found.";
-          } else if (reason.status === 409) {
-            message = "You already sent a friend request or are already friends with this user.";
-          } else if (reason.status === 500) {
-            message = "Internal Server Error";
-          }
-        }
-        this.snackBar.open(message, "Dismiss", { duration: 5000 });
+      .catch((err) => {
+        this.apiService.showErrorPopup(err);
       });
   }
 
@@ -76,9 +57,8 @@ export class FriendsComponent implements OnInit {
     ).then(() => {
       this.loadInfo();
     })
-      .catch(() => {
-        // TODO useful error messages
-        this.snackBar.open("Something went wrong.", "Dismiss", { duration: 5000 });
+      .catch((err) => {
+        this.apiService.showErrorPopup(err);
       });
   }
 
@@ -89,9 +69,8 @@ export class FriendsComponent implements OnInit {
     ).then(() => {
       this.loadInfo();
     })
-      .catch(() => {
-        // TODO useful error messages
-        this.snackBar.open("Something went wrong.", "Dismiss", { duration: 5000 });
+      .catch((err) => {
+        this.apiService.showErrorPopup(err);
       });
   }
 

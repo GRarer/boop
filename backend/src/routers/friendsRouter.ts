@@ -2,49 +2,41 @@ import { AnswerFriendRequest, GetFriendsResult } from "boop-core";
 import express from "express";
 import { getAuthInfo } from "../queries/authQueries";
 import { getFriends, getIncomingFriendRequests, removeFriendRequest } from "../queries/friendsQueries";
-import { userUuidFromReq } from "../services/auth";
+import { authenticateUUID } from "../services/auth";
 import { database } from "../services/database";
-import { handleAsync } from "../util/handleAsync";
+import { handleAsync, throwBoopError } from "../util/handleAsync";
 export const friendsRouter = express.Router();
 
 friendsRouter.post('/send_request', handleAsync(async (req, res) => {
-  const userUUID = await userUuidFromReq(req);
-  if (userUUID === undefined) {
-    res.sendStatus(401);
-    return;
-  }
+  const userUUID = await authenticateUUID(req);
+
   const friend_username: unknown = req.body;
   if (typeof friend_username !== "string") {
-    res.sendStatus(400);
-    return;
+    throwBoopError("Malformed username", 400);
   }
   const friendInfo = await getAuthInfo(friend_username); // TODO use a more specific query
   if (friendInfo === undefined) {
-    res.sendStatus(404);
-    return;
+    throwBoopError("Specified username not found", 404);
   }
   if (userUUID === friendInfo.userUUID) {
-    res.sendStatus(403);
-    return;
+    throwBoopError("You cannot send a friend request to yourself.", 403);
   }
 
   const alreadySentRequest: boolean = (await getIncomingFriendRequests(friendInfo.userUUID))
     .map(profile => profile.uuid).includes(userUUID);
   if (alreadySentRequest) {
-    res.sendStatus(409);
-    return;
+    throwBoopError("You already sent a friend request to that user.", 409);
   }
   const reverseExists: boolean = (await getIncomingFriendRequests(userUUID))
     .map(profile => profile.uuid).includes(friendInfo.userUUID);
   if (reverseExists) {
-    res.sendStatus(409);
+    throwBoopError("That user already sent a friend request to you.", 409);
     return;
   }
   const alreadyFriends: boolean = (await getFriends(userUUID))
     .map(profile => profile.uuid).includes(friendInfo.userUUID);
   if (alreadyFriends) {
-    res.sendStatus(409);
-    return;
+    throwBoopError("You are already friends with that user.", 409);
   }
 
   const query = `insert into friend_requests(from_user, to_user) values($1, $2);`;
@@ -55,12 +47,7 @@ friendsRouter.post('/send_request', handleAsync(async (req, res) => {
 }));
 
 friendsRouter.get('/my_friends', handleAsync(async (req, res) => {
-  const userUUID = await userUuidFromReq(req);
-  if (userUUID === undefined) {
-    res.sendStatus(401);
-    return;
-  }
-
+  const userUUID = await authenticateUUID(req);
   const result: GetFriendsResult = ({
     currentFriends: (await getFriends(userUUID)),
     pendingFriendRequestsToUser: (await getIncomingFriendRequests(userUUID))
@@ -69,17 +56,12 @@ friendsRouter.get('/my_friends', handleAsync(async (req, res) => {
 }));
 
 friendsRouter.post('/answer_request', handleAsync(async (req, res) => {
-  const userUUID = await userUuidFromReq(req);
-  if (userUUID === undefined) {
-    res.sendStatus(401);
-    return;
-  }
+  const userUUID = await authenticateUUID(req);
 
   const body: AnswerFriendRequest = req.body;
   const pendingRequests = await getIncomingFriendRequests(userUUID);
   if (!pendingRequests.map(profile => profile.uuid).includes(body.friendUUID)) {
-    res.sendStatus(404);
-    return;
+    throwBoopError("Friend request not found", 404);
   }
 
   if (body.accept) {
@@ -95,11 +77,7 @@ friendsRouter.post('/answer_request', handleAsync(async (req, res) => {
 }));
 
 friendsRouter.post('/unfriend', handleAsync(async (req, res) => {
-  const userUUID = await userUuidFromReq(req);
-  if (userUUID === undefined) {
-    res.sendStatus(401);
-    return;
-  }
+  const userUUID = await authenticateUUID(req);
   const friendUUID: string = req.body;
 
   const deleteFriendshipQuery = `delete from friends where (user_a = $1) and (user_b = $2)`;

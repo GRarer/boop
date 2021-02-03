@@ -1,10 +1,10 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { CreateAccountRequest, Gender, genderValues, LoginRequest, toIsoDate, minYearsAgo } from 'boop-core';
+import { ApiService } from 'src/app/services/api.service';
 import { SessionService } from 'src/app/services/session.service';
 import { PrivacyPolicyDialogComponent } from './privacy-policy-dialog/privacy-policy-dialog.component';
 import { TermsDialogComponent } from './terms-dialog/terms-dialog.component';
@@ -39,6 +39,7 @@ export class RegisterComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     public dialog: MatDialog,
+    private apiService: ApiService
   ) { }
 
   register(): void {
@@ -67,17 +68,7 @@ export class RegisterComponent implements OnInit {
     this.sessionService.loginNewAccount(request).then(() => {
       void this.router.navigate(["/push_setup"]);
     }).catch((reason) => {
-      // if something went wrong, show a "snackbar" message
-      console.error(reason);
-      let message: string = "Unknown Error";
-      if (reason instanceof HttpErrorResponse) {
-        if (reason.status === 409) {
-          message = "Username is already taken";
-        } else if (reason.status === 500) {
-          message = "Internal Server Error";
-        }
-      }
-      this.snackBar.open(message, "Dismiss", { duration: 5000 });
+      this.apiService.showErrorPopup(reason);
     });
   }
 

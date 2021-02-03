@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -29,23 +28,22 @@ export class PushSubscribeComponent implements OnInit {
       this.snackBar.open("Your platform does not support Web Push Notifications.", "Dismiss", { duration: 5000 });
       return;
     }
-    this.subscribe().then(() => {
-      this.snackBar.open("Push Notifications Enabled", "Dismiss", { duration: 3000, });
-      void this.router.navigate(["/home"]);
-    }).catch((reason) => {
-      console.error(reason);
-      let message: string = "Something went wrong.";
-      if (reason instanceof HttpErrorResponse) {
-        if (reason.status === 401) {
-          message = "You are not logged in.";
-        } else if (reason.status === 500) {
-          message = "Internal Server Error";
+    this.subscribe()
+      .then(() => {
+        this.snackBar.open("Push Notifications Enabled", "Dismiss", { duration: 3000, });
+        void this.router.navigate(["/home"]);
+      })
+      .catch((reason) => {
+        if (reason instanceof DOMException && reason.name === "NotAllowedError") {
+          this.snackBar.open(
+            "You (or your web browser) blocked permission for push notifications.",
+            "Dismiss", { duration: 5000 }
+          );
+        } else {
+          this.apiService.showErrorPopup(reason);
         }
-      } else if (reason instanceof DOMException && reason.name === "NotAllowedError") {
-        message = "You (or your web browser) blocked permission for push notifications.";
       }
-      this.snackBar.open(message, "Dismiss", { duration: 5000 });
-    });
+      );
   }
 
   private async subscribe(): Promise<void> {
