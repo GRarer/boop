@@ -1,18 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { CommandsService } from './services/commands.service';
-import { SessionService } from './services/session.service';
+import { CommandsService } from '../../services/commands.service';
+import { SessionService } from '../../services/session.service';
 
 // a minimal component that acts as the root of the page
 @Component({
   selector: 'app-root',
-  template: `
-  <h1 class="boop-header mat-display-1">Boop</h1>
-  <app-loading-bar *ngIf="initialLoading"></app-loading-bar>
-  <router-outlet *ngIf="!initialLoading"></router-outlet>
-  `,
-  styles: []
+  templateUrl: 'app.component.html',
+  styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnInit {
 

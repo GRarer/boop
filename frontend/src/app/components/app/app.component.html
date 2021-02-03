@@ -1,0 +1,5 @@
+<div style="width: 6in; margin: auto;">
+    <h1 class="boop-header mat-display-1">Boop</h1>
+    <app-loading-bar *ngIf="initialLoading"></app-loading-bar>
+    <router-outlet *ngIf="!initialLoading"></router-outlet>
+</div>
