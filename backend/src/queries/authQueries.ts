@@ -2,6 +2,7 @@
 
 import { Session, } from "../services/auth";
 import { database, } from "../services/database";
+import { throwBoopError } from "../util/handleAsync";
 
 // information needed authenticate and log in a user
 export async function getAuthInfo(username: string):
@@ -16,7 +17,7 @@ Promise<{userUUID: string; hash: string; isAdmin: boolean;} | undefined> {
   } else if (rows.length === 0) {
     return undefined;
   } else {
-    throw Error("Multiple accounts with same username"); // sql uniqueness constraint should prevent this
+    throwBoopError("Multiple accounts with same username", 500); // sql uniqueness constraint should prevent this
   }
 }
 

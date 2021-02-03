@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from "bcrypt";
 import { Request } from "express";
 import { getAuthInfo, getSession, setSession } from '../queries/authQueries';
+import { throwBoopError } from '../util/handleAsync';
 
 export type Session = {userUUID: string; isAdmin: boolean;};
 
@@ -44,9 +45,21 @@ export async function userUuidFromReq(req: Request): Promise<string | undefined>
   return (await sessionFromReq(req))?.userUUID;
 }
 
-// returns true if the session token belongs to an "admin" user
-export async function isAdminSessionFromReq(req: Request): Promise<boolean> {
-  return (await sessionFromReq(req))?.isAdmin ?? false;
+// returns user UUID matching request's session token header, or throws an error if it cannot authenticate
+export async function authenticateUUID(req: Request): Promise<string> {
+  const uuid = (await sessionFromReq(req))?.userUUID;
+  if (uuid === undefined) {
+    throwBoopError("Not logged in.", 401);
+  }
+  return uuid;
+}
+
+// throws an error if the request does not come from a logged-in admin user
+export async function authenticateAdmin(req: Request): Promise<void> {
+  const isAdmin = (await sessionFromReq(req))?.isAdmin ?? false;
+  if (!isAdmin) {
+    throwBoopError("Not authenticated as admin user.", 403);
+  }
 }
 
 export async function hashPassword(password: string): Promise<string> {

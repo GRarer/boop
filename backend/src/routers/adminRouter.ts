@@ -1,8 +1,8 @@
 import express from "express";
-import { userUuidFromReq, isAdminSessionFromReq } from "../services/auth";
+import { authenticateAdmin, userUuidFromReq, } from "../services/auth";
 import webpush from "web-push";
 import { testNotificationPayload } from "../services/pushManager";
-import { handleAsync } from "../util/handleAsync";
+import { handleAsync, throwBoopError } from "../util/handleAsync";
 import { getPushByUsername } from "../queries/pushQueries";
 
 // endpoints for triggering special administrative commands
@@ -12,24 +12,17 @@ export const adminRouter = express.Router();
 
 // example endpoint that verifies that the current user is an admin, returns error 403 otherwise
 adminRouter.post('/check', handleAsync(async (req, res) => {
-  if (await isAdminSessionFromReq(req)) {
-    console.log(`test action by admin user ${await userUuidFromReq(req)}`);
-    res.send();
-  } else {
-    res.sendStatus(403);
-  }
+  await authenticateAdmin(req);
+  console.log(`test action by admin user ${await userUuidFromReq(req)}`);
+  res.send();
 }));
 
 // triggers a push notification to the given username
 adminRouter.post('/push', handleAsync(async (req, res) => {
-  if (! (await isAdminSessionFromReq(req))) {
-    res.sendStatus(403);
-    return;
-  }
+  await authenticateAdmin(req);
   const username = req.body;
   if (typeof username !== "string") {
-    res.sendStatus(400);
-    return;
+    throwBoopError("Malformed username body", 400);
   }
 
   const subscriptions: PushSubscriptionJSON[] = await getPushByUsername(username);
@@ -52,5 +45,6 @@ adminRouter.post('/push', handleAsync(async (req, res) => {
       console.log(reason);
     }
   }
+  res.send();
 }));
 

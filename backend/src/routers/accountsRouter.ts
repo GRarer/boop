@@ -5,7 +5,7 @@ import { login, LoginError, userUuidFromReq } from "../services/auth";
 import { createAccount } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
 import { DatabaseError } from "../services/database";
-import { handleAsync } from "../util/handleAsync";
+import { handleAsync, throwBoopError } from "../util/handleAsync";
 export const accountsRouter = express.Router();
 import { getAuthInfo, removeSession } from "../queries/authQueries";
 
@@ -13,11 +13,9 @@ accountsRouter.post('/login', handleAsync(async (req, res) => {
   const body: LoginRequest = req.body;
   const result = await login(body);
   if (result === LoginError.UserNotFound) {
-    res.sendStatus(404);
-    return;
+    throwBoopError("User Not Found.", 404);
   } else if (result === LoginError.WrongPassword) {
-    res.sendStatus(401);
-    return;
+    throwBoopError("Incorrect Password", 401);
   } else {
     const loginResponse: LoginResponse = result;
     res.send(loginResponse);
@@ -39,29 +37,25 @@ accountsRouter.post('/register', handleAsync(async (req, res) => {
   const passwordOrUsernameIssue: string | undefined
     = failsUsernameRequirement(body.username) ?? failsPasswordRequirement(body.password);
   if (passwordOrUsernameIssue) {
-    res.status(401).send(passwordOrUsernameIssue);
-    return;
+    throwBoopError(passwordOrUsernameIssue, 401);
   }
 
   // validate age and gender
   try {
     const birthDate: Date = new Date(body.birthDate);
     if (!minYearsAgo(birthDate, 13)) {
-      res.status(403).send("age must be at least 13 years");
-      return;
+      throwBoopError("Age must be at least 13 years.", 403);
     }
   } catch (reason) {
-    res.status(400).send("invalid date format");
-    return;
+    throwBoopError("Invalid date format.", 400);
   }
   if (!isGender(body.gender)) {
-    res.status(400).send("invalid gender format");
-    return;
+    throwBoopError("Invalid gender format.", 400);
   }
 
   const result = await createAccount(body);
   if (result === DatabaseError.Conflict) {
-    res.status(409).send(`username ${body.username} is already taken.`);
+    throwBoopError(`Username ${body.username} is already taken.`, 409);
   } else {
     const loginResponse: LoginResponse = result;
     res.send(loginResponse);
@@ -71,8 +65,7 @@ accountsRouter.post('/register', handleAsync(async (req, res) => {
 accountsRouter.get('/exists', handleAsync(async (req, res) => {
   const username: unknown = req.query.username;
   if (typeof username !== "string") {
-    res.sendStatus(400);
-    return;
+    throwBoopError("Error: Invalid username query.", 400);
   }
   const result = await getAuthInfo(username);
   if (result === undefined) {
