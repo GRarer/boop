@@ -5,23 +5,12 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-// forces content into the center of the page on wide desktop screens, but should have no effect on mobile devices
-.narrow-body {
-    max-width: 6in;
-    margin: auto;
-
+.mat-typography {
     .menu-paragraph {
         text-align: center;
         max-width: 80%;
         margin: auto;
     }
-}
-
-.boop-header.mat-display-1 {
-    text-align: center;
-    font-size: 42px;
-    margin-top: 20px;
-    margin-bottom: 20px;
 }
 
 .horizontal-center {

@@ -1,48 +1,45 @@
-<div class="narrow-body">
-    <app-loading-bar *ngIf="info === undefined"></app-loading-bar>
-    <ng-container *ngIf="info !== undefined">
-        <mat-card>
-            <mat-card-header>
-                <mat-card-title>Add Friend</mat-card-title>
-            </mat-card-header>
-            <mat-card-content style="margin-bottom: -30px;">
-                <form [formGroup]="friendRequestForm" (submit)="sendFriendRequest()">
-                    <mat-form-field appearance="outline" style="width: 100%;">
-                        <mat-label>Friend's Username</mat-label>
-                        <input matInput formControlName="username">
-                    </mat-form-field>
-                </form>
-            </mat-card-content>
-            <mat-card-actions>
-                <button [disabled]="!friendRequestForm.valid" mat-button color="primary" (click)="sendFriendRequest()">SEND FRIEND
-                    REQUEST</button>
-            </mat-card-actions>
-        </mat-card>
-        <ng-container *ngIf="info!.pendingFriendRequestsToUser.length > 0">
-            <h2 class="section-header">Pending Friend Requests</h2>
-            <mat-card *ngFor="let request of info!.pendingFriendRequestsToUser" style="margin-bottom: 10px;">
-                <mat-card-header>
-                  <mat-card-title>{{request.fullName}}</mat-card-title>
-                  <mat-card-subtitle style="margin-bottom: 0;">{{request.username}}</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-actions style="padding-top: 0;">
-                  <button mat-button (click)="answerFriendRequest(request, true)" color="primary">ACCEPT</button>
-                  <button mat-button (click)="answerFriendRequest(request, false)" color="warn">REJECT</button>
-                </mat-card-actions>
-              </mat-card>
-        </ng-container>
-        <ng-container *ngIf="info!.currentFriends.length > 0">
-            <h2 class="section-header">Your Friends</h2>
-            <mat-card *ngFor="let friend of info!.currentFriends" style="margin-bottom: 10px;">
-                <mat-card-header>
-                  <mat-card-title>{{friend.fullName}}</mat-card-title>
-                  <mat-card-subtitle style="margin-bottom: 0;">{{friend.username}}</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-actions style="padding-top: 0;">
-                  <button mat-button (click)="unfriend(friend.uuid)" color="warn">UNFRIEND</button>
-                </mat-card-actions>
-              </mat-card>
-        </ng-container>
-    </ng-container>
-
-</div>
+<app-loading-bar *ngIf="info === undefined"></app-loading-bar>
+<ng-container *ngIf="info !== undefined">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Add Friend</mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="margin-bottom: -30px;">
+      <form [formGroup]="friendRequestForm" (submit)="sendFriendRequest()">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Friend's Username</mat-label>
+          <input matInput formControlName="username">
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button [disabled]="!friendRequestForm.valid" mat-button color="primary" (click)="sendFriendRequest()">SEND FRIEND
+        REQUEST</button>
+    </mat-card-actions>
+  </mat-card>
+  <ng-container *ngIf="info!.pendingFriendRequestsToUser.length > 0">
+    <h2 class="section-header">Pending Friend Requests</h2>
+    <mat-card *ngFor="let request of info!.pendingFriendRequestsToUser" style="margin-bottom: 10px;">
+      <mat-card-header>
+        <mat-card-title>{{request.fullName}}</mat-card-title>
+        <mat-card-subtitle style="margin-bottom: 0;">{{request.username}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions style="padding-top: 0;">
+        <button mat-button (click)="answerFriendRequest(request, true)" color="primary">ACCEPT</button>
+        <button mat-button (click)="answerFriendRequest(request, false)" color="warn">REJECT</button>
+      </mat-card-actions>
+    </mat-card>
+  </ng-container>
+  <ng-container *ngIf="info!.currentFriends.length > 0">
+    <h2 class="section-header">Your Friends</h2>
+    <mat-card *ngFor="let friend of info!.currentFriends" style="margin-bottom: 10px;">
+      <mat-card-header>
+        <mat-card-title>{{friend.fullName}}</mat-card-title>
+        <mat-card-subtitle style="margin-bottom: 0;">{{friend.username}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions style="padding-top: 0;">
+        <button mat-button (click)="unfriend(friend.uuid)" color="warn">UNFRIEND</button>
+      </mat-card-actions>
+    </mat-card>
+  </ng-container>
+</ng-container>
