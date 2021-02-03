@@ -1,26 +1,18 @@
 import express from "express";
 import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse,
   sessionTokenHeaderName } from "boop-core";
-import { login, LoginError, userUuidFromReq } from "../services/auth";
+import { login, userUuidFromReq } from "../services/auth";
 import { createAccount } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
-import { DatabaseError } from "../services/database";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
 export const accountsRouter = express.Router();
 import { getAuthInfo, removeSession } from "../queries/authQueries";
 
 accountsRouter.post('/login', handleAsync(async (req, res) => {
   const body: LoginRequest = req.body;
-  const result = await login(body);
-  if (result === LoginError.UserNotFound) {
-    throwBoopError("User Not Found.", 404);
-  } else if (result === LoginError.WrongPassword) {
-    throwBoopError("Incorrect Password", 401);
-  } else {
-    const loginResponse: LoginResponse = result;
-    res.send(loginResponse);
-    return;
-  }
+  const loginResponse: LoginResponse = await login(body);
+  res.send(loginResponse);
+  return;
 }));
 
 accountsRouter.post('/logout', handleAsync(async (req, res) => {
@@ -33,7 +25,7 @@ accountsRouter.post('/logout', handleAsync(async (req, res) => {
 
 accountsRouter.post('/register', handleAsync(async (req, res) => {
   const body: CreateAccountRequest = req.body;
-  // validate username and password
+  // validate username and password format
   const passwordOrUsernameIssue: string | undefined
     = failsUsernameRequirement(body.username) ?? failsPasswordRequirement(body.password);
   if (passwordOrUsernameIssue) {
@@ -53,13 +45,8 @@ accountsRouter.post('/register', handleAsync(async (req, res) => {
     throwBoopError("Invalid gender format.", 400);
   }
 
-  const result = await createAccount(body);
-  if (result === DatabaseError.Conflict) {
-    throwBoopError(`Username ${body.username} is already taken.`, 409);
-  } else {
-    const loginResponse: LoginResponse = result;
-    res.send(loginResponse);
-  }
+  const loginResponse: LoginResponse = await createAccount(body);
+  res.send(loginResponse);
 }));
 
 accountsRouter.get('/exists', handleAsync(async (req, res) => {

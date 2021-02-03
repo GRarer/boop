@@ -1,11 +1,11 @@
 import { CreateAccountRequest } from "boop-core";
 import { LoginResponse } from "boop-core";
-import { database, DatabaseError } from "./database";
+import { database, } from "./database";
 import { v4 as uuidv4 } from 'uuid';
-import { hashPassword, login, LoginError } from "./auth";
+import { hashPassword, login, } from "./auth";
 import { throwBoopError } from "../util/handleAsync";
 
-export async function createAccount(request: CreateAccountRequest): Promise<LoginResponse | DatabaseError.Conflict> {
+export async function createAccount(request: CreateAccountRequest): Promise<LoginResponse> {
   const accountUUID = uuidv4();
   const passwordHash = await hashPassword(request.password);
 
@@ -20,17 +20,11 @@ export async function createAccount(request: CreateAccountRequest): Promise<Logi
     await database.query(query, params);
   } catch (err) {
     if (typeof err === "object" && err["code"] === "23505" && err["constraint"] === "users_username_key") {
-      return DatabaseError.Conflict;
+      throwBoopError(`Username '${request.username}' is already taken.`, 409);
     } else {
       throw err;
     }
   }
 
-  const loginResult = await login({ username: request.username, password: request.password });
-  if (loginResult === LoginError.WrongPassword || loginResult === LoginError.UserNotFound) {
-    // this should never happen because we just created an account using those credentials
-    throwBoopError("Error: Failed to log in after registering.", 500);
-  } else {
-    return loginResult;
-  }
+  return await login({ username: request.username, password: request.password });
 }
