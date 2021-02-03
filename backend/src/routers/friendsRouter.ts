@@ -1,7 +1,9 @@
 import { AnswerFriendRequest, GetFriendsResult } from "boop-core";
 import express from "express";
+import { getAuthInfo } from "../queries/authQueries";
+import { getFriends, getIncomingFriendRequests, removeFriendRequest } from "../queries/friendsQueries";
 import { userUuidFromReq } from "../services/auth";
-import { database, DatabaseError } from "../services/database";
+import { database } from "../services/database";
 import { handleAsync } from "../util/handleAsync";
 export const friendsRouter = express.Router();
 
@@ -16,8 +18,8 @@ friendsRouter.post('/send_request', handleAsync(async (req, res) => {
     res.sendStatus(400);
     return;
   }
-  const friendInfo = await database.getAuthInfo(friend_username);
-  if (friendInfo === DatabaseError.UserNotFound) {
+  const friendInfo = await getAuthInfo(friend_username); // TODO use a more specific query
+  if (friendInfo === undefined) {
     res.sendStatus(404);
     return;
   }
@@ -26,26 +28,28 @@ friendsRouter.post('/send_request', handleAsync(async (req, res) => {
     return;
   }
 
-  const alreadySentRequest: boolean = (await database.getIncomingFriendRequests(friendInfo.userUUID))
+  const alreadySentRequest: boolean = (await getIncomingFriendRequests(friendInfo.userUUID))
     .map(profile => profile.uuid).includes(userUUID);
   if (alreadySentRequest) {
     res.sendStatus(409);
     return;
   }
-  const reverseExists: boolean = (await database.getIncomingFriendRequests(userUUID))
+  const reverseExists: boolean = (await getIncomingFriendRequests(userUUID))
     .map(profile => profile.uuid).includes(friendInfo.userUUID);
   if (reverseExists) {
     res.sendStatus(409);
     return;
   }
-  const alreadyFriends: boolean = (await database.getFriends(userUUID))
+  const alreadyFriends: boolean = (await getFriends(userUUID))
     .map(profile => profile.uuid).includes(friendInfo.userUUID);
   if (alreadyFriends) {
     res.sendStatus(409);
     return;
   }
 
-  await database.addFriendRequest(userUUID, friendInfo.userUUID);
+  const query = `insert into friend_requests(from_user, to_user) values($1, $2);`;
+  await database.query(query, [userUUID, friendInfo.userUUID]);
+
   // TODO send a notification to the person who received the friend request
   res.send();
 }));
@@ -58,8 +62,8 @@ friendsRouter.get('/my_friends', handleAsync(async (req, res) => {
   }
 
   const result: GetFriendsResult = ({
-    currentFriends: (await database.getFriends(userUUID)),
-    pendingFriendRequestsToUser: (await database.getIncomingFriendRequests(userUUID))
+    currentFriends: (await getFriends(userUUID)),
+    pendingFriendRequestsToUser: (await getIncomingFriendRequests(userUUID))
   });
   res.send(result);
 }));
@@ -72,16 +76,20 @@ friendsRouter.post('/answer_request', handleAsync(async (req, res) => {
   }
 
   const body: AnswerFriendRequest = req.body;
-  const pendingRequests = await database.getIncomingFriendRequests(userUUID);
+  const pendingRequests = await getIncomingFriendRequests(userUUID);
   if (!pendingRequests.map(profile => profile.uuid).includes(body.friendUUID)) {
     res.sendStatus(404);
     return;
   }
 
   if (body.accept) {
-    await database.addFriendship(userUUID, body.friendUUID);
+    const addFriendshipQuery = `INSERT INTO FRIENDS(user_a, user_b) values($1, $2)`;
+    await database.doTransaction((async client => {
+      await client.query(addFriendshipQuery, [userUUID, body.friendUUID]);
+      await client.query(addFriendshipQuery, [body.friendUUID, userUUID]);
+    }));
   }
-  await database.removeFriendRequest(body.friendUUID, userUUID);
+  await removeFriendRequest(userUUID, body.friendUUID);
 
   res.send();
 }));
@@ -93,7 +101,12 @@ friendsRouter.post('/unfriend', handleAsync(async (req, res) => {
     return;
   }
   const friendUUID: string = req.body;
-  await database.removeFriendship(userUUID, friendUUID);
+
+  const deleteFriendshipQuery = `delete from friends where (user_a = $1) and (user_b = $2)`;
+  await database.doTransaction(async (client) => {
+    await client.query(deleteFriendshipQuery, [userUUID, friendUUID]);
+    await client.query(deleteFriendshipQuery, [friendUUID, userUUID]);
+  });
   res.send();
 }));
 

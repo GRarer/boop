@@ -1,9 +1,9 @@
 import express from "express";
 import { userUuidFromReq, isAdminSessionFromReq } from "../services/auth";
-import { database } from "../services/database";
 import webpush from "web-push";
 import { testNotificationPayload } from "../services/pushManager";
 import { handleAsync } from "../util/handleAsync";
+import { getPushByUsername } from "../queries/pushQueries";
 
 // endpoints for triggering special administrative commands
 // these endpoints should return error 403 unless the client provides a session token that matches an admin account
@@ -32,7 +32,7 @@ adminRouter.post('/push', handleAsync(async (req, res) => {
     return;
   }
 
-  const subscriptions: PushSubscriptionJSON[] = await database.getPushByUsername(username);
+  const subscriptions: PushSubscriptionJSON[] = await getPushByUsername(username);
   for (const sub of subscriptions) {
     try {
       const subscription: webpush.PushSubscription = {
