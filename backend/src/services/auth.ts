@@ -1,8 +1,8 @@
 import { LoginRequest, LoginResponse, sessionTokenHeaderName } from 'boop-core';
 import { v4 as uuidv4 } from 'uuid';
-import { database, DatabaseError } from './database';
 import bcrypt from "bcrypt";
 import { Request } from "express";
+import { getAuthInfo, getSession, setSession } from '../queries/authQueries';
 
 export type Session = {userUUID: string; isAdmin: boolean;};
 
@@ -16,15 +16,15 @@ export enum LoginError {
 
 // validate password and create log-in session
 export async function login(credentials: LoginRequest): Promise<LoginResponse | LoginError> {
-  const userInfo = await database.getAuthInfo(credentials.username);
-  if (userInfo === DatabaseError.UserNotFound) {
+  const userInfo = await getAuthInfo(credentials.username);
+  if (userInfo === undefined) {
     return LoginError.UserNotFound;
   }
   // validating password with a bcrypt hash is an asynchronous operation because it is *very* slow
   if (await bcrypt.compare(credentials.password, userInfo.hash)) {
     // a prefix is included in session tokens to prevent confusing them with user UUIDs
     const token: string = `session-${uuidv4()}`;
-    await database.setSession(token, userInfo.userUUID);
+    await setSession(token, userInfo.userUUID);
     return { userUUID: userInfo.userUUID, sessionToken: token };
   } else {
     return LoginError.WrongPassword;
@@ -36,7 +36,7 @@ async function sessionFromReq(req: Request): Promise<Session | undefined> {
   if (typeof token !== "string") {
     return undefined;
   }
-  return await database.getSession(token);
+  return await getSession(token);
 }
 
 // gets the user UUID associated with a session token, or undefined if the token does not match any active session

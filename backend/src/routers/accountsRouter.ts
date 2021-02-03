@@ -4,10 +4,10 @@ import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, Login
 import { login, LoginError, userUuidFromReq } from "../services/auth";
 import { createAccount } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
-import { database, DatabaseError } from "../services/database";
+import { DatabaseError } from "../services/database";
 import { handleAsync } from "../util/handleAsync";
 export const accountsRouter = express.Router();
-
+import { getAuthInfo, removeSession } from "../queries/authQueries";
 
 accountsRouter.post('/login', handleAsync(async (req, res) => {
   const body: LoginRequest = req.body;
@@ -28,7 +28,7 @@ accountsRouter.post('/login', handleAsync(async (req, res) => {
 accountsRouter.post('/logout', handleAsync(async (req, res) => {
   const token: string | undefined = req.header(sessionTokenHeaderName);
   if (token !== undefined) {
-    await database.removeSession(token);
+    await removeSession(token);
   }
   res.send();
 }));
@@ -59,15 +59,12 @@ accountsRouter.post('/register', handleAsync(async (req, res) => {
     return;
   }
 
-  try {
-    const result = await createAccount(body);
-    res.send(result);
-  } catch (err) {
-    if (typeof err === "object" && err["code"] === "23505" && err["constraint"] === "users_username_key") {
-      res.status(409).send(`username ${body.username} is already taken.`);
-    } else {
-      res.sendStatus(500);
-    }
+  const result = await createAccount(body);
+  if (result === DatabaseError.Conflict) {
+    res.status(409).send(`username ${body.username} is already taken.`);
+  } else {
+    const loginResponse: LoginResponse = result;
+    res.send(loginResponse);
   }
 }));
 
@@ -77,8 +74,8 @@ accountsRouter.get('/exists', handleAsync(async (req, res) => {
     res.sendStatus(400);
     return;
   }
-  const result = await database.getAuthInfo(username);
-  if (result === DatabaseError.UserNotFound) {
+  const result = await getAuthInfo(username);
+  if (result === undefined) {
     res.send(false);
     return;
   } else {
