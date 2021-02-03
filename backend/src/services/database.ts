@@ -1,13 +1,6 @@
 import pg, { Pool } from "pg";
 import parseArgs from "minimist";
 
-// TODO replace with a uniform error handling system
-// value-level signals indicating when certain database queries could not succeed
-export enum DatabaseError {
-  UserNotFound,
-  Conflict,
-}
-
 // manages our connection to PostgreSQL database
 class Database {
 

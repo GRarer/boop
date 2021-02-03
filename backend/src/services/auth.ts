@@ -10,16 +10,11 @@ export type Session = {userUUID: string; isAdmin: boolean;};
 // 30 days expressed in milliseconds; user sessions will be closed if left inactive for this time
 export const sessionTimeoutDuration: number = 30 * 24 * 60 * 60 * 1000;
 
-export enum LoginError {
-  UserNotFound,
-  WrongPassword
-}
-
 // validate password and create log-in session
-export async function login(credentials: LoginRequest): Promise<LoginResponse | LoginError> {
+export async function login(credentials: LoginRequest): Promise<LoginResponse> {
   const userInfo = await getAuthInfo(credentials.username);
   if (userInfo === undefined) {
-    return LoginError.UserNotFound;
+    throwBoopError("User not found", 404);
   }
   // validating password with a bcrypt hash is an asynchronous operation because it is *very* slow
   if (await bcrypt.compare(credentials.password, userInfo.hash)) {
@@ -28,7 +23,7 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse | 
     await setSession(token, userInfo.userUUID);
     return { userUUID: userInfo.userUUID, sessionToken: token };
   } else {
-    return LoginError.WrongPassword;
+    throwBoopError("Incorrect password", 403);
   }
 }
 
