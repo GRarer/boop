@@ -76,12 +76,12 @@ class Database {
     }
   }
 
-  async getPasswordHash(uuid: string): Promise<{hash: string} | DatabaseError.UserNotFound> {
+  async getPasswordHash(uuid: string): Promise<{hash: string;} | DatabaseError.UserNotFound> {
     const query = 'SELECT "bcrypt_hash" from users where user_uuid=$1';
     type resultRow = { bcrypt_hash: string; };
     const rows: resultRow[] = (await this.pool.query(query, [uuid])).rows;
     if (rows.length === 0) {
-      return DatabaseError.UserNotFound
+      return DatabaseError.UserNotFound;
     }
     return { hash: rows[0].bcrypt_hash };
   }

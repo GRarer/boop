@@ -61,7 +61,7 @@ export class SettingsComponent implements OnInit {
       );
     });
   }
-  
+
   updatePassword(): void {
     const value = this.changePasswordForm.value;
     const newPassword = value.newPassword;
@@ -82,7 +82,7 @@ export class SettingsComponent implements OnInit {
       this.snackBar.open("Password updated", "Dismiss", { duration: 5000 });
     }).catch((error) => {
       this.snackBar.open(error.message, "Dismiss", { duration: 5000 });
-    })
+    });
   }
 
   updateUserInfo(): void {

@@ -59,7 +59,7 @@ export class SessionService {
 
   getSessionToken(): string | undefined {
     return this.currentSession?.sessionToken;
-  }  
+  }
 
   async logout(): Promise<void> {
     const token = this.currentSession?.sessionToken;

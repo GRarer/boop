@@ -1,7 +1,7 @@
 import express from "express";
 import { sessionTokenHeaderName, failsPasswordRequirement, failsUsernameRequirement,
   LoginRequest, LoginResponse } from "boop-core";
-import { verifyPassword, login, LoginError, userUuidFromReq, hashPassword } from "../services/auth";
+import { verifyPassword, login, LoginError, userUuidFromReq } from "../services/auth";
 import { changePassword, createAccount, updateAccount, getAccount } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, UpdatePasswordRequest, isGender, UpdateAccountRequest } from "boop-core";
 import { database, DatabaseError } from "../services/database";
@@ -79,7 +79,7 @@ accountsRouter.get('/info', handleAsync(async (req, res) => { // TODO make this 
     return;
   }
 
-  const result = await getAccount(uuid)
+  const result = await getAccount(uuid);
   if (result === DatabaseError.UserNotFound) {
     res.status(404).send(result);
     return;
@@ -138,7 +138,7 @@ accountsRouter.put('/password', handleAsync(async (req, res) => {
   }
 
   const uuid = await userUuidFromReq(req);
-  if (uuid == undefined) {
+  if (uuid === undefined) {
     res.status(401).send('unauthorized user');
     return;
   }
@@ -150,7 +150,7 @@ accountsRouter.put('/password', handleAsync(async (req, res) => {
   }
 
   changePassword(body.newPassword, uuid).then(() => {
-    res.send({'status': 'password updated'});
+    res.send({ 'status': 'password updated' });
   }).catch((err) => {
     res.sendStatus(500);
   });

@@ -1,4 +1,4 @@
-import { CreateAccountRequest, genderValues, UpdatePasswordRequest, UpdateAccountRequest } from "boop-core";
+import { CreateAccountRequest, genderValues, UpdateAccountRequest } from "boop-core";
 import { LoginResponse, UserAccountResponse } from "boop-core";
 import { database, DatabaseError } from "./database";
 import { v4 as uuidv4 } from 'uuid';
@@ -34,7 +34,8 @@ export async function createAccount(request: CreateAccountRequest): Promise<Logi
   }
 }
 
-export async function updateAccount(request: UpdateAccountRequest, uuid: string): Promise<void> { // TODO change the login response
+export async function updateAccount(request: UpdateAccountRequest,
+  uuid: string): Promise<void> { // TODO change the login response
   if (request.gender !== null && !genderValues.includes(request.gender)) {
     throw Error("unexpected format of gender string");
   }
@@ -49,7 +50,7 @@ export async function updateAccount(request: UpdateAccountRequest, uuid: string)
     gender: request.gender
   });
 }
-
+ 
 export async function getAccount(uuid: string): Promise<UserAccountResponse | DatabaseError.UserNotFound> {
   const userAccountInfo = await database.getUserAccount(uuid);
   if (userAccountInfo !== undefined) {
