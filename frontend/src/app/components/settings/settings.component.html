@@ -1,16 +1,43 @@
-<div style="text-align: center; display: flex; align-items: center; justify-content: center">
+<div *ngIf="isLoading === true" class="narrow-body" style="margin-top: 50px; width: 100%; align-items: center; justify-content: center">
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<div style="text-align: center; display: flex; align-items: center; justify-content: center" *ngIf="isLoading === false">
 	<mat-card>
 		<mat-card-header>
-			<mat-card-title>Settings</mat-card-title>
+			<mat-card-title>Password</mat-card-title>
+		</mat-card-header>
+		<form [formGroup]="changePasswordForm" (submit)="updatePassword()">
+			<mat-form-field appearance="outline">
+			  <mat-label>Old Password</mat-label>
+			  <input matInput formControlName="oldPassword">
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+			  <mat-label>New Password</mat-label>
+			  <input matInput formControlName="newPassword">
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+		    <mat-label>Confirm New Password</mat-label>
+		    <input matInput formControlName="confirmNewPassword">
+		  </mat-form-field>
+	    <button mat-flat-button color="primary" style="font-size: x-large; width: 100%;" [disabled]="!changePasswordForm.valid">Update Password</button>	
+		</form>
+	</mat-card>
+	<mat-card>
+		<mat-card-header>
+			<mat-card-title>User Info</mat-card-title>
 		</mat-card-header>
 		<form [formGroup]="updateUserForm" (submit)="updateUserInfo()">
-			<mat-form-field appearance="fill">
+			<mat-form-field appearance="outline">
 			  <mat-label>Username</mat-label>
 			  <input matInput formControlName="username">
 			</mat-form-field>
-			<mat-form-field appearance="fill">
+			<mat-form-field appearance="outline">
 			  <mat-label>Full Name</mat-label>
 			  <input matInput formControlName="fullName">
+			</mat-form-field>
+			<mat-form-field appearance="outline">
+			  <mat-label>Friendly Name</mat-label>
+			  <input matInput formControlName="friendlyName">
 			</mat-form-field>
 			<mat-form-field appearance="outline">
 		    <mat-label>Email Address</mat-label>

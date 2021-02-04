@@ -1,4 +1,4 @@
-import { CreateAccountRequest, genderValues, UpdateAccountRequest } from "boop-core";
+import { CreateAccountRequest, genderValues, UpdatePasswordRequest, UpdateAccountRequest } from "boop-core";
 import { LoginResponse, UserAccountResponse } from "boop-core";
 import { database, DatabaseError } from "./database";
 import { v4 as uuidv4 } from 'uuid';
@@ -57,4 +57,9 @@ export async function getAccount(uuid: string): Promise<UserAccountResponse | Da
   }
 
   return DatabaseError.UserNotFound;
+}
+
+export async function changePassword(password: string, uuid: string): Promise<void> {
+  const passwordHash = await hashPassword(password);
+  await database.updatePasswordHash(uuid, passwordHash);
 }

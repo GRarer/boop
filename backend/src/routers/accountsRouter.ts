@@ -1,9 +1,9 @@
 import express from "express";
 import { sessionTokenHeaderName, failsPasswordRequirement, failsUsernameRequirement,
   LoginRequest, LoginResponse } from "boop-core";
-import { login, LoginError, userUuidFromReq } from "../services/auth";
-import { createAccount, updateAccount, getAccount } from "../services/userAccounts";
-import { CreateAccountRequest, minYearsAgo, isGender, UpdateAccountRequest } from "boop-core";
+import { verifyPassword, login, LoginError, userUuidFromReq, hashPassword } from "../services/auth";
+import { changePassword, createAccount, updateAccount, getAccount } from "../services/userAccounts";
+import { CreateAccountRequest, minYearsAgo, UpdatePasswordRequest, isGender, UpdateAccountRequest } from "boop-core";
 import { database, DatabaseError } from "../services/database";
 import { handleAsync } from "../util/handleAsync";
 
@@ -126,6 +126,33 @@ accountsRouter.put('/edit', handleAsync(async (req, res) => {
     } else {
       res.sendStatus(500);
     }
+  });
+}));
+
+accountsRouter.put('/password', handleAsync(async (req, res) => {
+  const body: UpdatePasswordRequest = req.body;
+  const passwordIssue = failsPasswordRequirement(body.newPassword);
+  if (passwordIssue) {
+    res.status(401).send(passwordIssue);
+    return;
+  }
+
+  const uuid = await userUuidFromReq(req);
+  if (uuid == undefined) {
+    res.status(401).send('unauthorized user');
+    return;
+  }
+
+  const result = await verifyPassword(body.oldPassword, uuid);
+  if (!result) {
+    res.sendStatus(401);
+    return;
+  }
+
+  changePassword(body.newPassword, uuid).then(() => {
+    res.send({'status': 'password updated'});
+  }).catch((err) => {
+    res.sendStatus(500);
   });
 }));
 

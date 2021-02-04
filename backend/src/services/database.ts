@@ -76,6 +76,21 @@ class Database {
     }
   }
 
+  async getPasswordHash(uuid: string): Promise<{hash: string} | DatabaseError.UserNotFound> {
+    const query = 'SELECT "bcrypt_hash" from users where user_uuid=$1';
+    type resultRow = { bcrypt_hash: string; };
+    const rows: resultRow[] = (await this.pool.query(query, [uuid])).rows;
+    if (rows.length === 0) {
+      return DatabaseError.UserNotFound
+    }
+    return { hash: rows[0].bcrypt_hash };
+  }
+
+  async updatePasswordHash(uuid: string, hash: string): Promise<void> {
+    const query = 'UPDATE users SET bcrypt_hash=$1 WHERE user_uuid=$2;';
+    await this.pool.query(query, [hash, uuid]);
+  }
+
   async getSession(token: string): Promise<Session | undefined> {
     const updateTimeQuery = `update sessions set time_last_touched = $1 where token = $2;`;
     await this.pool.query(updateTimeQuery, [Date.now(), token]);

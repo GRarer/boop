@@ -28,6 +28,11 @@ export type UserAccountResponse = {
   gender: Gender;
 };
 
+export type UpdatePasswordRequest = {
+  oldPassword: string;
+  newPassword: string; 
+}
+
 // user gender options. an undefined value corresponds to "prefer not to say"
 export type Gender = "Female" | "Male" | "Nonbinary" | null;
 

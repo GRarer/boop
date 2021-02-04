@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserAccountResponse, UpdateAccountRequest, genderValues, Gender } from 'boop-core';
+import { UpdatePasswordRequest, UserAccountResponse, UpdateAccountRequest, genderValues, Gender } from 'boop-core';
 import { SessionService } from 'src/app/services/session.service';
 import { ApiService } from 'src/app/services/api.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -33,11 +33,15 @@ export class SettingsComponent implements OnInit {
     birthDate: new FormControl('', [Validators.required]),
   };
 
-  updateUserForm: FormGroup = new FormGroup(this.userFormData);
+  passwordFormData = {
+    oldPassword: new FormControl('', [Validators.required]),
+    newPassword: new FormControl('', [Validators.required]),
+    confirmNewPassword: new FormControl('', [Validators.required])
+  };
 
-  getUserID(): string | undefined {
-    return this.sessionService.getUserAccountUUID();
-  }
+  updateUserForm: FormGroup = new FormGroup(this.userFormData);
+  changePasswordForm: FormGroup = new FormGroup(this.passwordFormData);
+  isLoading: Boolean = true;
 
   ngOnInit(): void {
     void this.apiService.getJSON("http://localhost:3000/account/info", undefined).then((response) => {
@@ -47,7 +51,38 @@ export class SettingsComponent implements OnInit {
       this.userFormData.friendlyName.setValue((response as UserAccountResponse).friendlyName);
       this.userFormData.email.setValue((response as UserAccountResponse).emailAddress);
       this.userFormData.birthDate.setValue((response as UserAccountResponse).birthDate);
+      this.isLoading = false;
+    }).catch((error) => {
+      console.error(error);
+      this.snackBar.open(
+        "Something went wrong when trying to load your information.",
+        "Dismiss",
+        { "duration": 5000 }
+      );
     });
+  }
+  
+  updatePassword(): void {
+    const value = this.changePasswordForm.value;
+    const newPassword = value.newPassword;
+    const confirmNewPassword = value.confirmNewPassword;
+    const oldPassword = value.oldPassword;
+
+    if (confirmNewPassword !== newPassword) {
+      this.snackBar.open("Passwords don't match", "Dismiss", { duration: 5000 });
+      return;
+    }
+
+    const request: UpdatePasswordRequest = {
+      oldPassword: oldPassword,
+      newPassword: newPassword
+    };
+
+    this.apiService.putJSON("http://localhost:3000/account/password", request).then(() => {
+      this.snackBar.open("Password updated", "Dismiss", { duration: 5000 });
+    }).catch((error) => {
+      this.snackBar.open(error.message, "Dismiss", { duration: 5000 });
+    })
   }
 
   updateUserInfo(): void {

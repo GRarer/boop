@@ -31,6 +31,15 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse | 
   }
 }
 
+export async function verifyPassword(password: string, uuid: string): Promise<boolean | LoginError> {
+  const passwordHash = await hashPassword(password);
+  const userHash = await database.getPasswordHash(uuid);
+  if (userHash === DatabaseError.UserNotFound) {
+    return LoginError.UserNotFound;
+  }
+  return await bcrypt.compare(password, userHash.hash);
+}
+
 async function sessionFromReq(req: Request): Promise<Session | undefined> {
   const token: string | undefined = req.header(sessionTokenHeaderName);
   if (typeof token !== "string") {
