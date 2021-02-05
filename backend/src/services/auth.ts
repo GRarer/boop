@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { Request } from "express";
 import { getAuthInfo, getSession, setSession } from '../queries/authQueries';
 import { throwBoopError } from '../util/handleAsync';
+import { database } from './database';
 
 export type Session = {userUUID: string; isAdmin: boolean;};
 
@@ -25,6 +26,14 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse> {
   } else {
     throwBoopError("Incorrect password", 403);
   }
+}
+
+export async function verifyPassword(password: string, uuid: string): Promise<boolean | undefined> {
+  const userHash = await database.getPasswordHash(uuid);
+  if (userHash === undefined) {
+    return undefined;
+  }
+  return await bcrypt.compare(password, userHash.hash);
 }
 
 async function sessionFromReq(req: Request): Promise<Session | undefined> {

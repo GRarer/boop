@@ -18,8 +18,10 @@ import { TermsDialogComponent } from './components/landing/register/terms-dialog
 import { PrivacyPolicyDialogComponent }
   from './components/landing/register/privacy-policy-dialog/privacy-policy-dialog.component';
 import { PushSubscribeComponent } from './components/push-subscribe/push-subscribe.component';
+import { SettingsComponent } from './components/settings/settings.component';
 import { FriendsComponent } from './components/friends/friends.component';
 import { LoadingBarComponent } from './components/common/loading-bar/loading-bar.component';
+
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import { LoadingBarComponent } from './components/common/loading-bar/loading-bar
     TermsDialogComponent,
     PrivacyPolicyDialogComponent,
     PushSubscribeComponent,
+    SettingsComponent,
     FriendsComponent,
     LoadingBarComponent,
   ],

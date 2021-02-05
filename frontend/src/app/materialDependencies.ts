@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 // include all of the material component modules that we use here to avoid cluttering the main AppModule
@@ -22,6 +23,7 @@ export const materialModules = [
   MatNativeDateModule,
   MatCheckboxModule,
   MatDialogModule,
+  MatFormFieldModule,
   MatProgressBarModule,
 ];
 

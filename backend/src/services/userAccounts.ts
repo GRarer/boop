@@ -1,9 +1,10 @@
-import { CreateAccountRequest } from "boop-core";
-import { LoginResponse } from "boop-core";
+import { CreateAccountRequest, UserAccountResponse, UpdateAccountRequest } from "boop-core";
+import { LoginResponse, genderValues } from "boop-core";
 import { database, } from "./database";
 import { v4 as uuidv4 } from 'uuid';
 import { hashPassword, login, } from "./auth";
 import { throwBoopError } from "../util/handleAsync";
+
 
 export async function createAccount(request: CreateAccountRequest): Promise<LoginResponse> {
   const accountUUID = uuidv4();
@@ -27,4 +28,31 @@ export async function createAccount(request: CreateAccountRequest): Promise<Logi
   }
 
   return await login({ username: request.username, password: request.password });
+}
+
+export async function updateAccount(request: UpdateAccountRequest,
+  uuid: string): Promise<void> { // TODO change the login response
+  if (request.gender !== null && !genderValues.includes(request.gender)) {
+    throw Error("unexpected format of gender string");
+  }
+
+  await database.updateAccount({
+    uuid: uuid,
+    username: request.username,
+    friendlyName: request.friendlyName,
+    fullName: request.fullName,
+    emailAddress: request.emailAddress,
+    birthDate: request.birthDate,
+    gender: request.gender
+  });
+}
+
+export async function getAccount(uuid: string): Promise<UserAccountResponse | undefined> {
+  const userAccountInfo = await database.getUserAccount(uuid);
+  return userAccountInfo;
+}
+
+export async function changePassword(password: string, uuid: string): Promise<void> {
+  const passwordHash = await hashPassword(password);
+  await database.updatePasswordHash(uuid, passwordHash);
 }

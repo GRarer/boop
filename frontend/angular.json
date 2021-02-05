@@ -115,5 +115,8 @@
       }
     }
   },
-  "defaultProject": "boop-web"
+  "defaultProject": "boop-web",
+  "cli": {
+    "analytics": false
+  }
 }
