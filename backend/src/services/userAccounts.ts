@@ -46,7 +46,7 @@ export async function updateAccount(request: UpdateAccountRequest,
     gender: request.gender
   });
 }
- 
+
 export async function getAccount(uuid: string): Promise<UserAccountResponse | undefined> {
   const userAccountInfo = await database.getUserAccount(uuid);
   return userAccountInfo;
