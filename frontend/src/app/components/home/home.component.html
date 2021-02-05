@@ -1,11 +1,10 @@
-<div *ngIf="info === undefined" class="narrow-body" style="margin-top: 50px;">
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  </div>
+<app-loading-bar *ngIf="info === undefined"></app-loading-bar>
 <ng-container *ngIf="info">
     <h2 style="text-align: center; font-size: x-large;">{{getGreeting(info!.friendlyName)}}</h2>
-    <div class="narrow-body" style="text-align: center;">
-      <button mat-stroked-button routerLink="/push_setup">Notification Setup <mat-icon>notification_add</mat-icon></button>
-      <button mat-stroked-button routerLink="/settings">Account Settings <mat-icon>manage_accounts</mat-icon></button>
-      <button mat-stroked-button color="warn" (click)="logout()">Log Out <mat-icon>logout</mat-icon></button>
+    <div style="text-align: center; width: 4in; margin: auto;">
+      <button mat-stroked-button routerLink="/add_friends"><mat-icon>group</mat-icon> Friends</button>
+      <button mat-stroked-button routerLink="/push_setup"><mat-icon>notification_add</mat-icon> Notification Setup</button>
+      <button mat-stroked-button routerLink="/settings"><mat-icon>manage_accounts</mat-icon> Account Settings</button>
+      <button mat-stroked-button color="warn" (click)="logout()"><mat-icon>logout</mat-icon> Log Out</button>
     </div>
 </ng-container>

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, } from '@angular/common/http';
 import { SessionService } from './session.service';
-import { sessionTokenHeaderName } from 'boop-core';
+import { isBoopError, sessionTokenHeaderName } from 'boop-core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // class that handles http requests to the back end to support a REST API
 // automatically includes the current session token in a header, so do not use this to make requests to a 3rd party
@@ -13,6 +14,7 @@ export class ApiService {
   constructor(
     private httpClient: HttpClient,
     private sessionService: SessionService,
+    private snackBar: MatSnackBar,
   ) { }
 
   async getJSON<ResponseBodyT>(
@@ -55,6 +57,27 @@ export class ApiService {
       headers: this.getAuthenticationHeader(),
     };
     return this.httpClient.delete<ResponseBodyT>(endPointUrl, options).toPromise();
+  }
+
+  // shows a snackbar message for an error thrown by the backend
+  showErrorPopup(err: unknown): void {
+    if (err instanceof HttpErrorResponse) {
+      console.error(err.error);
+    } else {
+      console.error(err);
+    }
+    this.snackBar.open(this.getErrorDescription(err), "Dismiss", { duration: 5000 });
+  }
+
+  private getErrorDescription(err: unknown): string {
+    if (!(err instanceof HttpErrorResponse)) {
+      return "Something went wrong.";
+    }
+    const error: unknown = err.error;
+    if (!isBoopError(error)) {
+      return "Something went wrong.";
+    }
+    return error.errorMessage;
   }
 
   private getAuthenticationHeader(): HttpHeaders | undefined {

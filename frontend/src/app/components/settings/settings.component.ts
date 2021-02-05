@@ -80,8 +80,9 @@ export class SettingsComponent implements OnInit {
 
     this.apiService.putJSON("http://localhost:3000/account/password", request).then(() => {
       this.snackBar.open("Password updated", "Dismiss", { duration: 5000 });
+      this.changePasswordForm.reset();
     }).catch((error) => {
-      this.snackBar.open(error.message, "Dismiss", { duration: 5000 });
+      this.snackBar.open(error.error.errorMessage, "Dismiss", { duration: 5000 });
     });
   }
 

@@ -11,13 +11,6 @@ CREATE DATABASE boop
 
 CREATE TYPE GENDER_IDENTITY AS ENUM ('Female', 'Male', 'Nonbinary');
 
--- table used for the tech-stack demonstration prototype
-CREATE TABLE example_data(
-    id_number bigint NOT NULL,
-    contents text Not NULL,
-    PRIMARY KEY (id_number)
-);
-
 CREATE TABLE users(
     user_uuid UUID PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
@@ -51,4 +44,15 @@ CREATE TABLE sessions(
     token text PRIMARY KEY,
     user_uuid UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
     time_last_touched bigint NOT NULL -- time this session was last accessed, in milliseconds since epoch
+);
+
+-- pending friend requests
+CREATE TABLE friend_requests(
+    from_user UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
+    to_user UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE
+);
+
+CREATE TABLE friends(
+    user_a UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
+    user_b UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE
 );

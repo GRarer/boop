@@ -36,12 +36,7 @@ export class HomeComponent implements OnInit {
         this.info = info;
       })
       .catch(err => {
-        console.error(err);
-        this.snackBar.open(
-          "Something went wrong when trying to load your information.",
-          "Dismiss",
-          { "duration": 5000 }
-        );
+        this.apiService.showErrorPopup(err);
         this.logout();
       });
   }
@@ -50,8 +45,7 @@ export class HomeComponent implements OnInit {
     this.sessionService.logout().then(
       () => { void this.router.navigate(["/welcome"]); }
     ).catch((reason) => {
-      console.error(reason);
-      this.snackBar.open("Something went wrong when trying to log out.", "Dismiss", { "duration": 5000 });
+      this.apiService.showErrorPopup(reason);
     });
   }
 

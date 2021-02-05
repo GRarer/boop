@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -69,8 +68,8 @@ export class LandingComponent implements OnInit {
           // causes registration screen to be shown
           this.inProgressRegistration = { username, password };
         }
-      }).catch(() => {
-        this.snackBar.open("Something went wrong.", "Dismiss", { "duration": 5000 });
+      }).catch((err) => {
+        this.apiService.showErrorPopup(err);
       });
   }
 
@@ -83,19 +82,7 @@ export class LandingComponent implements OnInit {
         // navigate to home page if login was successful
         void this.router.navigate(["/home"]);
       }).catch((reason: unknown) => {
-        // if something went wrong, show a "snackbar" message
-        console.error(reason);
-        let message: string = "Unknown Error";
-        if (reason instanceof HttpErrorResponse) {
-          if (reason.status === 401) {
-            message = "Incorrect Password";
-          } else if (reason.status === 404) {
-            message = `Account with username '${username}' not found`;
-          } else if (reason.status === 500) {
-            message = "Internal Server Error";
-          }
-        }
-        this.snackBar.open(message, "Dismiss", { duration: 5000 });
+        this.apiService.showErrorPopup(reason);
       });
     }
   }
