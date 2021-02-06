@@ -1,69 +1,67 @@
-<div *ngIf="isLoading === true" class="narrow-body" style="margin-top: 50px; width: 100%; align-items: center; justify-content: center">
-	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
-</div>
-<div *ngIf="isLoading === false" style="text-align: center;">
-	<div style="text-align: center; display: flex; align-items: center; justify-content: center" >
-		<mat-card>
-			<mat-card-header>
-				<mat-card-title>Password</mat-card-title>
-			</mat-card-header>
-			<form [formGroup]="changePasswordForm" (submit)="updatePassword(); passwordForm.resetForm()" #passwordForm="ngForm">
-				<mat-form-field appearance="outline">
-				  <mat-label>Old Password</mat-label>
-				  <input matInput type="password" formControlName="oldPassword">
-				</mat-form-field>
-				<mat-form-field appearance="outline">
-				  <mat-label>New Password</mat-label>
-				  <input matInput type="password" formControlName="newPassword" (keyup)="checkConfirmPassword()">
-				</mat-form-field>
-				<mat-form-field appearance="outline">
-			    <mat-label>Confirm New Password</mat-label>
-			    <input matInput type="password" formControlName="confirmNewPassword" (keyup)="checkConfirmPassword()">
-			  </mat-form-field>
-		    <button mat-flat-button color="primary" style="font-size: x-large; width: 100%;" [disabled]="!changePasswordForm.valid">Update</button>
-			</form>
-		</mat-card>
-		<mat-card>
-			<mat-card-header>
-				<mat-card-title>User Info</mat-card-title>
-			</mat-card-header>
-			<form [formGroup]="updateUserForm" (submit)="updateUserInfo()">
-				<mat-form-field appearance="outline">
-				  <mat-label>Username</mat-label>
-				  <input matInput formControlName="username">
-				</mat-form-field>
-				<mat-form-field appearance="outline">
-				  <mat-label>Full Name</mat-label>
-				  <input matInput formControlName="fullName">
-				</mat-form-field>
-				<mat-form-field appearance="outline">
-				  <mat-label>Friendly Name</mat-label>
-				  <input matInput formControlName="friendlyName">
-				</mat-form-field>
-				<mat-form-field appearance="outline">
-			    <mat-label>Email Address</mat-label>
-			    <input matInput formControlName="email" placeholder="e.g. jdoe@example.com">
-			  </mat-form-field>
-			    <mat-form-field appearance="outline">
-			      <mat-label>Birth Date</mat-label>
-			      <input readonly matInput [matDatepicker]="picker" formControlName="birthDate" (click)="picker.open()">
-			      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-			      <mat-datepicker #picker></mat-datepicker>
-			    </mat-form-field>
-				<mat-form-field appearance="outline">
-				  <mat-label>Gender</mat-label>
-				  <mat-select formControlName="gender">
-				    <mat-option *ngFor="let gender of genderOptions" [value]="gender">
-				        {{gender}}
-			        </mat-option>
-			        <mat-option value="">
-			            Prefer Not To Say
-			        </mat-option>
-				  </mat-select>
-				</mat-form-field>
-		    	<button mat-flat-button color="primary" style="font-size: x-large; width: 100%; margin: 10px" [disabled]="!updateUserForm.valid || updateUserForm.pristine">Update</button>
-			</form>
-		</mat-card>
-	</div>
-	<button mat-stroked-button routerLink="/home" style="width: 50%; margin-top: 40px; font-size: x-large;">home</button>
+<app-loading-bar *ngIf="isLoading"></app-loading-bar>
+<div *ngIf="!isLoading" style="padding-bottom: 10px;">
+	<mat-card style="margin-bottom: 30px;">
+		<mat-card-header>
+			<mat-card-title>User Info</mat-card-title>
+		</mat-card-header>
+		<form [formGroup]="updateUserForm" (submit)="updateUserInfo()">
+			<mat-form-field appearance="outline" class="close-stacked-input">
+				<mat-label>Username</mat-label>
+				<input matInput formControlName="username">
+			</mat-form-field>
+			<mat-form-field appearance="outline" class="close-stacked-input">
+				<mat-label>Full Name</mat-label>
+				<input matInput formControlName="fullName">
+			</mat-form-field>
+			<mat-form-field appearance="outline" class="close-stacked-input">
+				<mat-label>Friendly Name</mat-label>
+				<input matInput formControlName="friendlyName">
+			</mat-form-field>
+			<mat-form-field appearance="outline" class="close-stacked-input">
+				<mat-label>Email Address</mat-label>
+				<input matInput formControlName="email" placeholder="e.g. jdoe@example.com">
+			</mat-form-field>
+			<mat-form-field appearance="outline" class="close-stacked-input">
+				<mat-label>Birth Date</mat-label>
+				<input readonly matInput [matDatepicker]="picker" formControlName="birthDate" (click)="picker.open()">
+				<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+				<mat-datepicker #picker></mat-datepicker>
+			</mat-form-field>
+			<mat-form-field appearance="outline" class="close-stacked-input">
+				<mat-label>Gender</mat-label>
+				<mat-select formControlName="gender">
+					<mat-option *ngFor="let gender of genderOptions" [value]="gender">
+						{{gender}}
+					</mat-option>
+					<mat-option value="">
+						Prefer Not To Say
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<button mat-flat-button color="primary" class="update-button"
+				[disabled]="!updateUserForm.valid || updateUserForm.pristine">Update</button>
+		</form>
+	</mat-card>
+	<mat-card>
+		<mat-card-header>
+			<mat-card-title>Change Password</mat-card-title>
+		</mat-card-header>
+		<form [formGroup]="changePasswordForm" (submit)="updatePassword(); passwordForm.resetForm()"
+			#passwordForm="ngForm">
+			<mat-form-field appearance="outline" class="close-stacked-input">
+				<mat-label>Old Password</mat-label>
+				<input matInput type="password" formControlName="oldPassword">
+			</mat-form-field>
+			<mat-form-field appearance="outline" class="close-stacked-input">
+				<mat-label>New Password</mat-label>
+				<input matInput type="password" formControlName="newPassword" (keyup)="checkConfirmPassword()">
+			</mat-form-field>
+			<mat-form-field appearance="outline" class="close-stacked-input">
+				<mat-label>Confirm New Password</mat-label>
+				<input matInput type="password" formControlName="confirmNewPassword" (keyup)="checkConfirmPassword()">
+			</mat-form-field>
+			<button mat-flat-button color="primary" class="update-button"
+				[disabled]="!changePasswordForm.valid">Update</button>
+		</form>
+	</mat-card>
 </div>

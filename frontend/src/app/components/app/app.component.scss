@@ -1,6 +1,27 @@
+.header-link-area {
+    max-width: 2in;
+    margin: auto;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+
+    cursor: pointer;
+
+    &:active, &:focus {
+        outline: 0;
+        border: none;
+        -moz-outline-style: none;
+        outline-style: none;
+    }
+}
+
+.header-link-area:focus {
+    outline: 0;
+}
+
 .boop-header.mat-display-1 {
     text-align: center;
     font-size: 42px;
     padding-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
+
