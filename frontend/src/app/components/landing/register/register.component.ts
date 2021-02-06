@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
     const value = this.registerForm.value;
     const fullName: string = value.fullName;
     const friendlyName: string = value.friendlyName;
-    const emailAddress: string = value.friendlyName;
+    const emailAddress: string = value.email;
     // form value for gender is empty string if user chose "prefer not so say", or undefined if they did not choose
     // in either of those cases, we replace that with null
     const gender: Gender = value.gender || null;
