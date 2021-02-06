@@ -1,11 +1,12 @@
 import express from "express";
 import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse,
   sessionTokenHeaderName, UpdatePasswordRequest, UpdateAccountRequest } from "boop-core";
-import { authenticateUUID, login, userUuidFromReq, verifyPassword } from "../services/auth";
-import { createAccount, changePassword, updateAccount, getAccount } from "../services/userAccounts";
+import { authenticateUUID, login, userUuidFromReq } from "../services/auth";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
-import { getAuthInfo, removeSession } from "../queries/authQueries";
+import { getAuthInfoByUsername, getPasswordHashByUuid, removeSession } from "../queries/authQueries";
+import bcrypt from "bcrypt";
+import { createAccount, getUserAccount, updateAccount, updatePassword } from "../queries/accountQueries";
 
 export const accountsRouter = express.Router();
 
@@ -56,7 +57,7 @@ accountsRouter.get('/info', handleAsync(async (req, res) => { // TODO make this 
     throwBoopError("Unauthenticated user", 401);
   }
 
-  const result = await getAccount(uuid);
+  const result = await getUserAccount(uuid);
   if (result === undefined) {
     throwBoopError("User not found", 404);
   }
@@ -86,15 +87,8 @@ accountsRouter.put('/edit', handleAsync(async (req, res) => {
     throwBoopError("Invalid gender format", 400);
   }
 
-  updateAccount(body, uuid).then(() => {
-    res.send(body);
-  }).catch((err) => {
-    if (err["code"] === "23505" && err["constraint"] === "users_username_key") {
-      throwBoopError(`username ${body.username} is already taken.`, 409);
-    } else {
-      throw err;
-    }
-  });
+  await updateAccount(body, uuid);
+  res.send();
 }));
 
 accountsRouter.put('/password', handleAsync(async (req, res) => {
@@ -109,13 +103,14 @@ accountsRouter.put('/password', handleAsync(async (req, res) => {
     throwBoopError('User not authorized', 401);
   }
 
-  const result = await verifyPassword(body.oldPassword, uuid);
-  if (!result) {
+  const userHash = await getPasswordHashByUuid(uuid);
+  const oldPasswordValid = await bcrypt.compare(body.oldPassword, userHash);
+  if (!oldPasswordValid) {
     throwBoopError('Password incorrect', 401);
   }
 
-  await changePassword(body.newPassword, uuid);
-  res.send({ 'status': 'password updated' });
+  await updatePassword(uuid, body.newPassword);
+  res.send();
 }));
 
 // returns boolean indicating whether the given username is already taken
@@ -124,7 +119,7 @@ accountsRouter.get('/exists', handleAsync(async (req, res) => {
   if (typeof username !== "string") {
     throwBoopError("Error: Invalid username query.", 400);
   }
-  const result = await getAuthInfo(username);
+  const result = await getAuthInfoByUsername(username);
   if (result === undefined) {
     res.send(false);
     return;

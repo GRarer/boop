@@ -5,7 +5,7 @@ import { database, } from "../services/database";
 import { throwBoopError } from "../util/handleAsync";
 
 // information needed authenticate and log in a user
-export async function getAuthInfo(username: string):
+export async function getAuthInfoByUsername(username: string):
 Promise<{userUUID: string; hash: string; isAdmin: boolean;} | undefined> {
   const query = 'SELECT "user_uuid", "bcrypt_hash", "is_admin" from users where username = $1;';
   type ResultRow = { user_uuid: string; bcrypt_hash: string; is_admin: boolean; };
@@ -19,6 +19,15 @@ Promise<{userUUID: string; hash: string; isAdmin: boolean;} | undefined> {
   } else {
     throwBoopError("Multiple accounts with same username", 500); // sql uniqueness constraint should prevent this
   }
+}
+
+export async function getPasswordHashByUuid(uuid: string): Promise<string> {
+  const query = 'SELECT "bcrypt_hash" from users where user_uuid=$1';
+  const rows: { bcrypt_hash: string; }[] = (await database.query(query, [uuid]));
+  if (rows.length === 0) {
+    throwBoopError("Account not found", 404);
+  }
+  return rows[0].bcrypt_hash;
 }
 
 // get the session matching a given session token
