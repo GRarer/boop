@@ -1,7 +1,7 @@
 import express from "express";
 import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse,
   sessionTokenHeaderName, UpdatePasswordRequest, UpdateAccountRequest } from "boop-core";
-import { login, userUuidFromReq, verifyPassword } from "../services/auth";
+import { authenticateUUID, login, userUuidFromReq, verifyPassword } from "../services/auth";
 import { createAccount, changePassword, updateAccount, getAccount } from "../services/userAccounts";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
@@ -53,14 +53,12 @@ accountsRouter.post('/register', handleAsync(async (req, res) => {
 accountsRouter.get('/info', handleAsync(async (req, res) => { // TODO make this a query string
   const uuid = await userUuidFromReq(req);
   if (uuid === undefined) {
-    res.status(401).send('unauthorized user');
-    return;
+    throwBoopError("Unauthenticated user", 401);
   }
 
   const result = await getAccount(uuid);
   if (result === undefined) {
     throwBoopError("User not found", 404);
-    return;
   }
 
   res.send(result);
@@ -71,38 +69,30 @@ accountsRouter.put('/edit', handleAsync(async (req, res) => {
 
   const usernameIssue: string | undefined = failsUsernameRequirement(body.username);
   if (usernameIssue) {
-    res.status(401).send(usernameIssue);
-    return;
+    throwBoopError(usernameIssue, 401);
   }
 
-  const uuid = await userUuidFromReq(req);
-  if (uuid === undefined) {
-    res.status(401).send('unauthorized user');
-    return;
-  }
+  const uuid = await authenticateUUID(req);
 
   try {
     const birthDate: Date = new Date(body.birthDate);
     if (!minYearsAgo(birthDate, 13)) {
-      res.status(403).send("age must be at least 13 years");
-      return;
+      throwBoopError("Age must be at least 13 years", 403);
     }
   } catch (reason) {
-    res.status(400).send("invalid date format");
-    return;
+    throwBoopError("Invalid date format", 400);
   }
   if (!isGender(body.gender)) {
-    res.status(400).send("invalid gender format");
-    return;
+    throwBoopError("Invalid gender format", 400);
   }
 
   updateAccount(body, uuid).then(() => {
     res.send(body);
   }).catch((err) => {
     if (err["code"] === "23505" && err["constraint"] === "users_username_key") {
-      res.status(409).send(`username ${body.username} is already taken.`);
+      throwBoopError(`username ${body.username} is already taken.`, 409);
     } else {
-      res.sendStatus(500);
+      throw err;
     }
   });
 }));
@@ -112,26 +102,20 @@ accountsRouter.put('/password', handleAsync(async (req, res) => {
   const passwordIssue = failsPasswordRequirement(body.newPassword);
   if (passwordIssue) {
     throwBoopError('Password invalid', 401);
-    return;
   }
 
   const uuid = await userUuidFromReq(req);
   if (uuid === undefined) {
     throwBoopError('User not authorized', 401);
-    return;
   }
 
   const result = await verifyPassword(body.oldPassword, uuid);
   if (!result) {
     throwBoopError('Password incorrect', 401);
-    return;
   }
 
-  changePassword(body.newPassword, uuid).then(() => {
-    res.send({ 'status': 'password updated' });
-  }).catch((err) => {
-    res.sendStatus(500);
-  });
+  await changePassword(body.newPassword, uuid);
+  res.send({ 'status': 'password updated' });
 }));
 
 // returns boolean indicating whether the given username is already taken
