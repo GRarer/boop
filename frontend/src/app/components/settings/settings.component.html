@@ -7,20 +7,20 @@
 			<mat-card-header>
 				<mat-card-title>Password</mat-card-title>
 			</mat-card-header>
-			<form [formGroup]="changePasswordForm" (submit)="updatePassword()">
+			<form [formGroup]="changePasswordForm" (submit)="updatePassword(); passwordForm.resetForm()" #passwordForm="ngForm">
 				<mat-form-field appearance="outline">
 				  <mat-label>Old Password</mat-label>
 				  <input matInput type="password" formControlName="oldPassword">
 				</mat-form-field>
 				<mat-form-field appearance="outline">
 				  <mat-label>New Password</mat-label>
-				  <input matInput type="password" formControlName="newPassword">
+				  <input matInput type="password" formControlName="newPassword" (keyup)="checkConfirmPassword()">
 				</mat-form-field>
 				<mat-form-field appearance="outline">
 			    <mat-label>Confirm New Password</mat-label>
-			    <input matInput type="password" formControlName="confirmNewPassword">
+			    <input matInput type="password" formControlName="confirmNewPassword" (keyup)="checkConfirmPassword()">
 			  </mat-form-field>
-		    <button mat-flat-button color="primary" style="font-size: x-large; width: 100%;" [disabled]="!changePasswordForm.valid">Update</button>	
+		    <button mat-flat-button color="primary" style="font-size: x-large; width: 100%;" [disabled]="!changePasswordForm.valid">Update</button>
 			</form>
 		</mat-card>
 		<mat-card>
@@ -61,7 +61,7 @@
 			        </mat-option>
 				  </mat-select>
 				</mat-form-field>
-		    <button mat-flat-button color="primary" style="font-size: x-large; width: 100%; margin: 10px" [disabled]="!updateUserForm.valid">Update</button>	
+		    	<button mat-flat-button color="primary" style="font-size: x-large; width: 100%; margin: 10px" [disabled]="!updateUserForm.valid || updateUserForm.pristine">Update</button>
 			</form>
 		</mat-card>
 	</div>
