@@ -11,7 +11,7 @@ try {
     if (action === "show_app") {
       console.log("navigating");
       event.notification.close();
-      event.waitUntil(clients.openWindow("http://localhost:8080/test"));
+      event.waitUntil(clients.openWindow("http://localhost:8080/home"));
     }
   });
 } catch (err) {
