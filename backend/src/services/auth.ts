@@ -2,9 +2,8 @@ import { LoginRequest, LoginResponse, sessionTokenHeaderName } from 'boop-core';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from "bcrypt";
 import { Request } from "express";
-import { getAuthInfo, getSession, setSession } from '../queries/authQueries';
+import { getAuthInfoByUsername, getSession, setSession } from '../queries/authQueries';
 import { throwBoopError } from '../util/handleAsync';
-import { database } from './database';
 
 export type Session = {userUUID: string; isAdmin: boolean;};
 
@@ -13,7 +12,7 @@ export const sessionTimeoutDuration: number = 30 * 24 * 60 * 60 * 1000;
 
 // validate password and create log-in session
 export async function login(credentials: LoginRequest): Promise<LoginResponse> {
-  const userInfo = await getAuthInfo(credentials.username);
+  const userInfo = await getAuthInfoByUsername(credentials.username);
   if (userInfo === undefined) {
     throwBoopError("User not found", 404);
   }
@@ -28,25 +27,12 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse> {
   }
 }
 
-export async function verifyPassword(password: string, uuid: string): Promise<boolean | undefined> {
-  const userHash = await database.getPasswordHash(uuid);
-  if (userHash === undefined) {
-    return undefined;
-  }
-  return await bcrypt.compare(password, userHash.hash);
-}
-
 async function sessionFromReq(req: Request): Promise<Session | undefined> {
   const token: string | undefined = req.header(sessionTokenHeaderName);
   if (typeof token !== "string") {
     return undefined;
   }
   return await getSession(token);
-}
-
-// gets the user UUID associated with a session token, or undefined if the token does not match any active session
-export async function userUuidFromReq(req: Request): Promise<string | undefined> {
-  return (await sessionFromReq(req))?.userUUID;
 }
 
 // returns user UUID matching request's session token header, or throws an error if it cannot authenticate
@@ -56,6 +42,12 @@ export async function authenticateUUID(req: Request): Promise<string> {
     throwBoopError("Not logged in.", 401);
   }
   return uuid;
+}
+
+// gets the user UUID associated with a session token, or undefined if the token does not match any active session
+// in most cases you should use authenticateUUID instead
+export async function userUuidFromReq(req: Request): Promise<string | undefined> {
+  return (await sessionFromReq(req))?.userUUID;
 }
 
 // throws an error if the request does not come from a logged-in admin user

@@ -1,6 +1,6 @@
 import { AnswerFriendRequest, GetFriendsResult } from "boop-core";
 import express from "express";
-import { getAuthInfo } from "../queries/authQueries";
+import { getAuthInfoByUsername } from "../queries/authQueries";
 import { getFriends, getIncomingFriendRequests, removeFriendRequest } from "../queries/friendsQueries";
 import { authenticateUUID } from "../services/auth";
 import { database } from "../services/database";
@@ -14,7 +14,7 @@ friendsRouter.post('/send_request', handleAsync(async (req, res) => {
   if (typeof friend_username !== "string") {
     throwBoopError("Malformed username", 400);
   }
-  const friendInfo = await getAuthInfo(friend_username); // TODO use a more specific query
+  const friendInfo = await getAuthInfoByUsername(friend_username); // TODO use a more specific query
   if (friendInfo === undefined) {
     throwBoopError("Specified username not found", 404);
   }
