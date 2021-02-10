@@ -20,7 +20,7 @@ this script from `psql` in your terminal.
 ```sh
 $ psql -U postgres
 <enter your postgres superuser password>
-\i init.sql
+\i sql/init.sql
 ```
 
 ## Building The Core Package
