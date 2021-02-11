@@ -21,6 +21,7 @@ import { PushSubscribeComponent } from './components/push-subscribe/push-subscri
 import { SettingsComponent } from './components/settings/settings.component';
 import { FriendsComponent } from './components/friends/friends.component';
 import { LoadingBarComponent } from './components/common/loading-bar/loading-bar.component';
+import { EditContactInfoComponent } from './components/edit-contact-info/edit-contact-info.component';
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 @NgModule({
@@ -36,6 +37,7 @@ import { LoadingBarComponent } from './components/common/loading-bar/loading-bar
     SettingsComponent,
     FriendsComponent,
     LoadingBarComponent,
+    EditContactInfoComponent,
   ],
   imports: [
     BrowserModule,

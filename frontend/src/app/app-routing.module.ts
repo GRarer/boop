@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { EditContactInfoComponent } from './components/edit-contact-info/edit-contact-info.component';
 import { FriendsComponent } from './components/friends/friends.component';
 import { HomeComponent } from './components/home/home.component';
 import { LandingComponent } from './components/landing/landing.component';
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'push_setup', component: PushSubscribeComponent },
   { path: 'settings', component: SettingsComponent },
+  { path: 'edit_contact_info', component: EditContactInfoComponent },
   { path: 'add_friends', component: FriendsComponent },
   { path: '**', component: NotFound404Component },
 ];

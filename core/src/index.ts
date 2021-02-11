@@ -1,5 +1,6 @@
 export * from "./datatypes/account";
 export * from "./datatypes/authentication";
+export * from "./datatypes/contacts";
 export * from "./datatypes/info";
 export * from "./datatypes/profile";
 export * from "./datatypes/errorHandling";
