@@ -1,9 +1,11 @@
-<div style = "max-width: 6in; margin: auto; height: 100%; display: flex; flex-direction: column;">
+<div style = "height: 100%; display: flex; flex-direction: column;">
     <div class="header-link-area" routerLink="/">
         <h1 class="boop-header mat-display-1">Boop</h1>
     </div>
     <app-loading-bar *ngIf="initialLoading"></app-loading-bar>
     <div style="flex-grow: 1; overflow: auto;">
-        <router-outlet *ngIf="!initialLoading"></router-outlet>
+        <div style="max-width: 6in; height: 100%; margin: auto;">
+            <router-outlet *ngIf="!initialLoading"></router-outlet>
+        </div>
     </div>
 </div>
