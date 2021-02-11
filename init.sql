@@ -52,7 +52,14 @@ CREATE TABLE friend_requests(
     to_user UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE
 );
 
+-- each friendship is represented as two rows, one for each direction
 CREATE TABLE friends(
     user_a UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
     user_b UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE
+);
+
+CREATE TABLE contact_methods(
+    user_uuid UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
+    platform TEXT NOT NULL,
+    contact_id TEXT NOT NULL -- user's username/number/etc for that platform
 );

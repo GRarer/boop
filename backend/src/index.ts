@@ -9,6 +9,7 @@ import { adminRouter } from "./routers/adminRouter";
 import { startRepeatedJobs } from "./services/periodicJobs";
 import { userInfoRouter } from "./routers/userInfoRouter";
 import { friendsRouter } from "./routers/friendsRouter";
+import { contactRouter } from "./routers/contactRouter";
 
 const app = express();
 const port = 3000;
@@ -25,6 +26,7 @@ app.use("/account", accountsRouter);
 app.use("/admin", adminRouter);
 app.use("/user_info", userInfoRouter);
 app.use("/friends", friendsRouter);
+app.use("/contact", contactRouter);
 
 
 // start ExpressJS server
