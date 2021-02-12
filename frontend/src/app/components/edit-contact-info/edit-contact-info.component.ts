@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonPlatforms, ContactMethod } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
+import ordinal from 'ordinal';
 
 type ContactCard = {
   platformSelection: string;
@@ -40,7 +41,9 @@ export class EditContactInfoComponent implements OnInit {
             return ({ platformSelection: "Other", customPlatform: method.platform, contactID: method.contactID });
           }
         });
-        console.log(this.contacts);
+        if (this.contacts.length === 0) {
+          this.addCard();
+        }
       })
       .catch(err => {
         this.apiService.showErrorPopup(err);
@@ -80,10 +83,17 @@ export class EditContactInfoComponent implements OnInit {
       const contactID = card.contactID;
 
       if (!platform) {
-        this.snackBar.open(
-          `Cannot save changes: missing platform for card ${this.contacts.indexOf(card) + 1}`,
-          "Dismiss", { "duration": 5000 }
-        );
+        if (this.contacts.length === 1) {
+          this.snackBar.open(
+            `Cannot save changes: you must provide at least one contact method.`,
+            "Dismiss", { "duration": 5000 }
+          );
+        } else {
+          this.snackBar.open(
+            `Cannot save changes: missing platform name for ${ordinal(this.contacts.indexOf(card) + 1)} card`,
+            "Dismiss", { "duration": 5000 }
+          );
+        }
         return;
       } else if (!contactID) {
         const platformName = card.platformSelection === "Other" ? card.customPlatform! : card.platformSelection;
