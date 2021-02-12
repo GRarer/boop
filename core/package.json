@@ -5,8 +5,7 @@
   "main": "dist/index.umd.js",
   "module": "dist/index.es5.js",
   "types": "dist/types/src/index.d.ts",
-  "author": "",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "files": [
     "dist"
   ],

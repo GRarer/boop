@@ -2,6 +2,7 @@
   "name": "boop-web",
   "version": "0.0.0",
   "description": "The web-app interface for Boop, a platform for spontaneous social messaging developed as a Georgia Tech junior design project",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
