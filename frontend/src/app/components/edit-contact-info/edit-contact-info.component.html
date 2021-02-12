@@ -35,7 +35,7 @@
                         <button mat-icon-button matTooltip="Move Down" (click)="moveDown(index)" [disabled]="index === (contacts!.length - 1)">
                             <mat-icon>keyboard_arrow_down</mat-icon>
                         </button>
-                        <button mat-icon-button matTooltip="Remove" (click)="removeCard(index)">
+                        <button mat-icon-button matTooltip="Remove" (click)="removeCard(index)" [disabled]="contacts!.length < 2">
                             <mat-icon>clear</mat-icon>
                         </button>
                     </div>
