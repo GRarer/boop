@@ -2,6 +2,7 @@
   "name": "boop-node-backend",
   "version": "0.0.1",
   "description": "The backend server for Boop, a platform for spontaneous social messaging developed as a Georgia Tech junior design project",
+  "license": "MIT",
   "main": "build_output/index.js",
   "scripts": {
     "build": "npx tsc --build",
@@ -13,7 +14,6 @@
     "lint": "npx eslint src --ext .ts"
   },
   "author": "",
-  "license": "UNLICENSED",
   "dependencies": {
     "@types/web-push": "^3.3.0",
     "bcrypt": "^5.0.0",
