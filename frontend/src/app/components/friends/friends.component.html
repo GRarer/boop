@@ -1,11 +1,10 @@
 <app-loading-bar *ngIf="info === undefined"></app-loading-bar>
-<ng-container *ngIf="info !== undefined">
+<div *ngIf="info !== undefined" style="padding-bottom: 10px;">
+  <h2 class="section-header">Add Friends</h2>
   <mat-card>
-    <mat-card-header>
-      <mat-card-title>Add Friend</mat-card-title>
-    </mat-card-header>
     <mat-card-content style="margin-bottom: -30px;">
-      <form [formGroup]="friendRequestForm" (submit)="sendFriendRequest()">
+      <form [formGroup]="friendRequestForm" (submit)="sendFriendRequest(); requestForm.resetForm();"
+			#requestForm="ngForm">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Friend's Username</mat-label>
           <input matInput formControlName="username">
@@ -42,4 +41,4 @@
       </mat-card-actions>
     </mat-card>
   </ng-container>
-</ng-container>
+</div>
