@@ -1,11 +1,10 @@
 import { ProfileSummary } from "boop-core";
 import { database } from "../services/database";
 
-export async function removeFriendRequest(user1: string, user2: string): Promise<void> {
-  const queryString = `delete from friend_requests where (from_user = $1) and (to_user = $2)`;
-  await database.query(queryString, [user1, user2]);
-  await database.query(queryString, [user2, user1]);
-}
+// sql template for deleting a friend request between two users
+export const deleteFriendRequestQueryString: string =
+`delete from friend_requests where
+(((from_user = $1) and (to_user = $2)) or ((from_user = $2) and (to_user = $1)));`;
 
 export async function getIncomingFriendRequests(uuid: string): Promise<ProfileSummary[]> {
   const query =

@@ -1,7 +1,7 @@
 import { AnswerFriendRequest, GetFriendsResult } from "boop-core";
 import express from "express";
 import { getAuthInfoByUsername } from "../queries/authQueries";
-import { getFriends, getIncomingFriendRequests, removeFriendRequest } from "../queries/friendsQueries";
+import { deleteFriendRequestQueryString, getFriends, getIncomingFriendRequests } from "../queries/friendsQueries";
 import { authenticateUUID } from "../services/auth";
 import { database } from "../services/database";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
@@ -23,24 +23,26 @@ friendsRouter.post('/send_request', handleAsync(async (req, res) => {
   }
 
   const alreadySentRequest: boolean = (await getIncomingFriendRequests(friendInfo.userUUID))
-    .map(profile => profile.uuid).includes(userUUID);
+    .some(profile => profile.uuid === userUUID);
   if (alreadySentRequest) {
     throwBoopError("You already sent a friend request to that user.", 409);
   }
   const reverseExists: boolean = (await getIncomingFriendRequests(userUUID))
-    .map(profile => profile.uuid).includes(friendInfo.userUUID);
+    .some(profile => profile.uuid === friendInfo.userUUID);
   if (reverseExists) {
     throwBoopError("That user already sent a friend request to you.", 409);
     return;
   }
   const alreadyFriends: boolean = (await getFriends(userUUID))
-    .map(profile => profile.uuid).includes(friendInfo.userUUID);
+    .some(profile => profile.uuid === friendInfo.userUUID);
   if (alreadyFriends) {
     throwBoopError("You are already friends with that user.", 409);
   }
 
-  const query = `insert into friend_requests(from_user, to_user) values($1, $2);`;
-  await database.query(query, [userUUID, friendInfo.userUUID]);
+  await database.query(
+    `insert into friend_requests(from_user, to_user) values($1, $2);`,
+    [userUUID, friendInfo.userUUID]
+  );
 
   // TODO send a notification to the person who received the friend request
   res.send();
@@ -65,13 +67,17 @@ friendsRouter.post('/answer_request', handleAsync(async (req, res) => {
   }
 
   if (body.accept) {
-    const addFriendshipQuery = `INSERT INTO FRIENDS(user_a, user_b) values($1, $2)`;
     await database.doTransaction((async client => {
-      await client.query(addFriendshipQuery, [userUUID, body.friendUUID]);
-      await client.query(addFriendshipQuery, [body.friendUUID, userUUID]);
+      // remove friend request
+      await client.query(deleteFriendRequestQueryString, [userUUID, body.friendUUID]);
+      // insert both directions of friendship
+      await client.query(
+        `INSERT INTO FRIENDS(user_a, user_b) values ($1, $2), ($2, $1);`, [userUUID, body.friendUUID]);
     }));
+  } else {
+    // just remove friend request
+    await database.query(deleteFriendRequestQueryString, [userUUID, body.friendUUID]);
   }
-  await removeFriendRequest(userUUID, body.friendUUID);
 
   res.send();
 }));
@@ -79,12 +85,11 @@ friendsRouter.post('/answer_request', handleAsync(async (req, res) => {
 friendsRouter.post('/unfriend', handleAsync(async (req, res) => {
   const userUUID = await authenticateUUID(req);
   const friendUUID: string = req.body;
-
-  const deleteFriendshipQuery = `delete from friends where (user_a = $1) and (user_b = $2)`;
-  await database.doTransaction(async (client) => {
-    await client.query(deleteFriendshipQuery, [userUUID, friendUUID]);
-    await client.query(deleteFriendshipQuery, [friendUUID, userUUID]);
-  });
+  await database.query(
+    `delete from friends
+    where (((user_a = $1) and (user_b = $2)) or ((user_a = $2) and (user_b = $1)))`,
+    [userUUID, friendUUID]
+  );
   res.send();
 }));
 
