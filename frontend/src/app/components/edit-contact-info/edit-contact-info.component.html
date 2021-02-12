@@ -2,7 +2,8 @@
 <ng-container *ngIf="contacts !== undefined">
     <div style="display: flex; flex-direction: column; height: 100%;">
         <h2 style="text-align: center; margin-bottom: 0;">Which chat apps do you use?</h2>
-        <div style="flex-grow: 1;">
+        <div style="flex-grow: 1;  overflow: auto;">
+           <div style="height: 100%;">
             <mat-card *ngFor="let contact of contacts!; index as index;">
                 <mat-card-content style="margin-bottom: 0;">
                     <mat-form-field appearance="outline" class="close-stacked-input">
@@ -40,11 +41,14 @@
                     </div>
                 </mat-card-actions>
             </mat-card>
-            <button mat-raised-button style="margin: auto; display: block;" (click)="addCard()">
-                <mat-icon>add</mat-icon> ANOTHER
-            </button>
+            <div style="text-align: center; padding-bottom: 20px;">
+                <button mat-raised-button style="margin: auto;" (click)="addCard()">
+                    <mat-icon>add</mat-icon> ANOTHER
+                </button>
+            </div>
+           </div>
         </div>
-        <div style="padding-top:  30px; padding-bottom: 20px;">
+        <div style="padding-bottom: 20px;">
             <button mat-raised-button color="primary" style="width: calc(100% - 28px); margin-left: 14px;" (click)="saveChanges()">Save Changes</button>
         </div>
     </div>
