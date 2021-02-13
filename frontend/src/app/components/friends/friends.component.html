@@ -1,21 +1,7 @@
 <app-loading-bar *ngIf="info === undefined"></app-loading-bar>
 <div *ngIf="info !== undefined" style="padding-bottom: 10px;">
   <h2 class="section-header">Add Friends</h2>
-  <mat-card>
-    <mat-card-content style="margin-bottom: -30px;">
-      <form [formGroup]="friendRequestForm" (submit)="sendFriendRequest(); requestForm.resetForm();"
-			#requestForm="ngForm">
-        <mat-form-field appearance="outline" style="width: 100%;">
-          <mat-label>Friend's Username</mat-label>
-          <input matInput formControlName="username">
-        </mat-form-field>
-      </form>
-    </mat-card-content>
-    <mat-card-actions>
-      <button [disabled]="!friendRequestForm.valid" mat-button color="primary" (click)="sendFriendRequest()">SEND FRIEND
-        REQUEST</button>
-    </mat-card-actions>
-  </mat-card>
+  <app-friend-request></app-friend-request>
   <ng-container *ngIf="info!.pendingFriendRequestsToUser.length > 0">
     <h2 class="section-header">Pending Friend Requests</h2>
     <mat-card *ngFor="let request of info!.pendingFriendRequestsToUser" style="margin-bottom: 10px;">

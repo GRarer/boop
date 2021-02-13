@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
@@ -12,6 +12,9 @@ import { ApiService } from 'src/app/services/api.service';
   ]
 })
 export class PushSubscribeComponent implements OnInit {
+
+  @Input() onboardingMode: boolean = false;
+  @Output() done = new EventEmitter<void>();
 
   constructor(
     private swPush: SwPush,
@@ -31,7 +34,7 @@ export class PushSubscribeComponent implements OnInit {
     this.subscribe()
       .then(() => {
         this.snackBar.open("Push Notifications Enabled", "Dismiss", { duration: 3000, });
-        void this.router.navigate(["/home"]);
+        this.navigateToNext();
       })
       .catch((reason) => {
         if (reason instanceof DOMException && reason.name === "NotAllowedError") {
@@ -54,5 +57,14 @@ export class PushSubscribeComponent implements OnInit {
     await this.apiService.postJSON<PushSubscriptionJSON, void>(
       "http://localhost:3000/push/addSubscription", subscription.toJSON()
     );
+  }
+
+  // emit event if onboarding mode is enabled, else navigate to home
+  navigateToNext(): void {
+    if (this.onboardingMode) {
+      this.done.emit();
+    } else {
+      void this.router.navigate(["/home"]);
+    }
   }
 }

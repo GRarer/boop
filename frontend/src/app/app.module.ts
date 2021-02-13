@@ -22,6 +22,8 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { FriendsComponent } from './components/friends/friends.component';
 import { LoadingBarComponent } from './components/common/loading-bar/loading-bar.component';
 import { EditContactInfoComponent } from './components/edit-contact-info/edit-contact-info.component';
+import { OnboardingComponent } from './components/onboarding/onboarding.component';
+import { FriendRequestComponent } from './components/friends/friend-request/friend-request.component';
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 @NgModule({
@@ -38,6 +40,8 @@ import { EditContactInfoComponent } from './components/edit-contact-info/edit-co
     FriendsComponent,
     LoadingBarComponent,
     EditContactInfoComponent,
+    OnboardingComponent,
+    FriendRequestComponent,
   ],
   imports: [
     BrowserModule,
