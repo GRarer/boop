@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonPlatforms, ContactMethod } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
@@ -21,6 +21,8 @@ export class EditContactInfoComponent implements OnInit {
     private apiService: ApiService,
     private snackBar: MatSnackBar,
   ) { }
+
+  @Output() savedChanges = new EventEmitter<void>();
 
   contacts: ContactCard[] | undefined = undefined;
 
@@ -109,6 +111,7 @@ export class EditContactInfoComponent implements OnInit {
     this.apiService.putJSON<ContactMethod[], void>("http://localhost:3000/contact/my_methods", methods)
       .then(() => {
         this.snackBar.open(`Your contact info has been updated.`, "Dismiss", { "duration": 5000 });
+        this.savedChanges.emit();
         this.loadContacts();
       })
       .catch(err => { this.apiService.showErrorPopup(err); });
