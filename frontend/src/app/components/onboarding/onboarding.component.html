@@ -1,0 +1,10 @@
+<app-edit-contact-info *ngIf="step === 1" (savedChanges)="nextStep();"></app-edit-contact-info>
+<app-push-subscribe *ngIf="step === 2" (done)="nextStep()" [onboardingMode]=true></app-push-subscribe>
+<ng-container *ngIf="step === 3">
+    <h2 class="section-header" style="text-align: center; margin-bottom: 10px;">Connect With Your Friends</h2>
+    <app-friend-request (sentRequest)="sentFriendRequest = true;"></app-friend-request>
+    <div style="text-align: center; padding-top: 16px;">
+        <button *ngIf="sentFriendRequest" mat-raised-button style="min-width: 1.5in;" color="primary" (click)="nextStep()">Finish</button>
+        <button *ngIf="!sentFriendRequest" mat-raised-button style="min-width: 1.5in;" (click)="nextStep()">Skip This Step</button>
+    </div>
+</ng-container>

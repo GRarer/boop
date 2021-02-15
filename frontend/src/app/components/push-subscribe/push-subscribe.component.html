@@ -2,7 +2,7 @@
 <p class="menu-paragraph"> Boop uses push notification reminders to remind you and your friends to keep in touch.</p>
 <button mat-raised-button color="primary" style="margin: auto; display: block; margin-top: 10px;"
     (click)="activateNotifications()">Activate Notifications On This Device</button>
-<button mat-button style="margin: auto; display: block;" routerLink="/home">Skip This Step</button>
+<button mat-button style="margin: auto; display: block;" (click)="navigateToNext()">Skip This Step</button>
 
 <p style="opacity: 50%; margin-top: 20px; max-width: 2.6in;" class="menu-paragraph">Web push notifications are not
     currently supported on iOS devices.</p>
