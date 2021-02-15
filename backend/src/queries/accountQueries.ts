@@ -10,10 +10,10 @@ export async function createAccount(request: CreateAccountRequest): Promise<Logi
 
   const query =
       `INSERT INTO users
-      ("user_uuid", "username", "bcrypt_hash", "full_name", "friendly_name", "gender", "email", "birth_date",
-      "is_admin") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`;
+      ("user_uuid", "username", "bcrypt_hash", "full_name", "friendly_name", "gender", "email", "birth_date")
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`;
   const params = [accountUUID, request.username, passwordHash, request.fullName, request.friendlyName,
-    request.gender, request.emailAddress, request.birthDate, false];
+    request.gender, request.emailAddress, request.birthDate];
 
   try {
     await database.query(query, params);

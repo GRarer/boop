@@ -22,43 +22,43 @@ begin
     -- gpb (George P Burdell)
     INSERT INTO users
       ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date", "is_admin")
+      "friendly_name", "gender", "email", "birth_date")
       VALUES (georgeUUID, 'gpb', example_password_hash, 'George P. Burdell',
-      'George', 'Male', 'gburdell@gatech.edu', '1909-04-01', false);
+      'George', 'Male', 'gburdell@gatech.edu', '1909-04-01');
     -- ramonac (Ramona Cartwright Burdell)
     INSERT INTO users
       ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date", "is_admin")
+      "friendly_name", "gender", "email", "birth_date")
       VALUES (ramonaUUID, 'ramona', example_password_hash, 'Ramona Cartwright Burdell',
-      'Ramona', 'Female', 'rcartwright@agnesscott.edu', '1936-04-01', false);
+      'Ramona', 'Female', 'rcartwright@agnesscott.edu', '1936-04-01');
     -- JRainwater (John Rainwater)
     INSERT INTO users
     ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date", "is_admin")
+      "friendly_name", "gender", "email", "birth_date")
       VALUES (johnUUID, 'JRainwater', example_password_hash, 'John Rainwater',
-      'Johnny', null, 'jrainwater@washington.edu', '1952-01-01', false);
+      'Johnny', null, 'jrainwater@washington.edu', '1952-01-01');
 
     -- alice, bob, charlie, and david
     INSERT INTO users
     ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date", "is_admin")
+      "friendly_name", "gender", "email", "birth_date")
       VALUES (aliceUUID, 'alice', example_password_hash, 'Alice Exampleton',
-      'Alice', 'Female', 'alice@example.com', '1995-03-05', false);
+      'Alice', 'Female', 'alice@example.com', '1995-03-05');
     INSERT INTO users
     ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date", "is_admin")
+      "friendly_name", "gender", "email", "birth_date")
       VALUES (bobUUID, 'bob', example_password_hash, 'Robert Defacto',
-      'Bob', null, 'bob@example.com', '1999-10-20', false);
+      'Bob', null, 'bob@example.com', '1999-10-20');
     INSERT INTO users
     ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date", "is_admin")
+      "friendly_name", "gender", "email", "birth_date")
       VALUES (charlieUUID, 'charlie', example_password_hash, 'Charlie McExampleface',
-      'Charlie', 'Nonbinary', 'charlie@example.com', '2000-07-15', false);
+      'Charlie', 'Nonbinary', 'charlie@example.com', '2000-07-15');
     INSERT INTO users
     ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date", "is_admin")
+      "friendly_name", "gender", "email", "birth_date")
       VALUES (davidUUID, 'david', example_password_hash, 'David Défaut',
-      'Dave', null, 'david@example.com', '1995-03-30', false);
+      'Dave', null, 'david@example.com', '1995-03-30');
 
 
     -- friend request from John Rainwater to George P Burdell

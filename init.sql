@@ -19,16 +19,20 @@ CREATE TABLE users(
     friendly_name TEXT NOT NULL,
     gender GENDER_IDENTITY, -- allowed to be null for users who prefer not to state a gender
     email TEXT NOT NULL,
-    birth_date TEXT NOT NULL, -- date in ISO format
-    is_admin BOOLEAN
+    birth_date TEXT NOT NULL -- date in ISO format
 );
 
--- create special admin account for demonstrations
--- TODO remove this before deploying
+-- only users listed here can use admin command endpoints
+CREATE TABLE administrators(
+    admin_user_uuid UUID PRIMARY KEY REFERENCES users (user_uuid) ON DELETE CASCADE
+);
+
+-- create special admin account
 INSERT INTO users
-("user_uuid", "username", "bcrypt_hash", "full_name", "friendly_name", "gender", "email", "birth_date", "is_admin")
+("user_uuid", "username", "bcrypt_hash", "full_name", "friendly_name", "gender", "email", "birth_date")
 VALUES ('689b90d7-41ed-4257-a2a1-ca6d608d28f7', 'admin', '$2b$09$6Xjk49GbCZTjoognkzPk2.pyblewRbaiHLGap0PjETNNX924or4xS',
-'Boop Administrator', 'Administrator', null, 'example@example.com', '2000-01-15', TRUE);
+'Boop Administrator', 'Administrator', null, 'example@example.com', '2000-01-15');
+INSERT INTO administrators(admin_user_uuid) values ('689b90d7-41ed-4257-a2a1-ca6d608d28f7');
 
 -- web-push subscriptions and the associated users
 -- endpoint column ensures we don't send duplicate notifications to the same user on the same device/browser
