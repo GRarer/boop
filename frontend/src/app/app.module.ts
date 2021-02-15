@@ -24,6 +24,8 @@ import { LoadingBarComponent } from './components/common/loading-bar/loading-bar
 import { EditContactInfoComponent } from './components/edit-contact-info/edit-contact-info.component';
 import { OnboardingComponent } from './components/onboarding/onboarding.component';
 import { FriendRequestComponent } from './components/friends/friend-request/friend-request.component';
+import { Header } from './components/common/header/heading.component';
+
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 @NgModule({
@@ -42,6 +44,7 @@ import { FriendRequestComponent } from './components/friends/friend-request/frie
     EditContactInfoComponent,
     OnboardingComponent,
     FriendRequestComponent,
+    Header,
   ],
   imports: [
     BrowserModule,
