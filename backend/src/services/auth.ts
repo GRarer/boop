@@ -2,10 +2,9 @@ import { LoginRequest, LoginResponse, sessionTokenHeaderName } from 'boop-core';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from "bcrypt";
 import { Request } from "express";
-import { getAuthInfoByUsername, getSession, setSession } from '../queries/authQueries';
+import { getAuthInfoByUsername, getSessionUserUUID, setSession } from '../queries/authQueries';
 import { throwBoopError } from '../util/handleAsync';
-
-export type Session = {userUUID: string; isAdmin: boolean;};
+import { database } from './database';
 
 // 30 days expressed in milliseconds; user sessions will be closed if left inactive for this time
 export const sessionTimeoutDuration: number = 30 * 24 * 60 * 60 * 1000;
@@ -27,32 +26,38 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse> {
   }
 }
 
-async function sessionFromReq(req: Request): Promise<Session | undefined> {
+function sessionTokenFromReq(req: Request): string {
   const token: string | undefined = req.header(sessionTokenHeaderName);
   if (typeof token !== "string") {
-    return undefined;
+    throwBoopError("Missing Authentication Token", 401);
   }
-  return await getSession(token);
+  return token;
+}
+
+// gets the user UUID associated with a session token, or undefined if the token does not match any active session
+// in most cases you should use authenticateUUID instead
+export async function userUuidFromReq(req: Request): Promise<string | undefined> {
+  const token = sessionTokenFromReq(req);
+  return await getSessionUserUUID(token);
 }
 
 // returns user UUID matching request's session token header, or throws an error if it cannot authenticate
 export async function authenticateUUID(req: Request): Promise<string> {
-  const uuid = (await sessionFromReq(req))?.userUUID;
+  const uuid = await userUuidFromReq(req);
   if (uuid === undefined) {
     throwBoopError("Not logged in.", 401);
   }
   return uuid;
 }
 
-// gets the user UUID associated with a session token, or undefined if the token does not match any active session
-// in most cases you should use authenticateUUID instead
-export async function userUuidFromReq(req: Request): Promise<string | undefined> {
-  return (await sessionFromReq(req))?.userUUID;
-}
-
 // throws an error if the request does not come from a logged-in admin user
 export async function authenticateAdmin(req: Request): Promise<void> {
-  const isAdmin = (await sessionFromReq(req))?.isAdmin ?? false;
+  const token = sessionTokenFromReq(req);
+  const rows = await database.query<{admin_user_uuid: string;}>(
+    `select admin_user_uuid from administrators join sessions on admin_user_uuid = user_uuid where token = $1`,
+    [token]
+  );
+  const isAdmin = rows.length > 0;
   if (!isAdmin) {
     throwBoopError("Not authenticated as admin user.", 403);
   }

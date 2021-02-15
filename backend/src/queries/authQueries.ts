@@ -1,19 +1,18 @@
 // database queries related to login and authorization
 
-import { Session, } from "../services/auth";
 import { database, } from "../services/database";
 import { throwBoopError } from "../util/handleAsync";
 
 // information needed authenticate and log in a user
 export async function getAuthInfoByUsername(username: string):
-Promise<{userUUID: string; hash: string; isAdmin: boolean;} | undefined> {
-  const query = 'SELECT "user_uuid", "bcrypt_hash", "is_admin" from users where username = $1;';
-  type ResultRow = { user_uuid: string; bcrypt_hash: string; is_admin: boolean; };
+Promise<{userUUID: string; hash: string; } | undefined> {
+  const query = 'SELECT "user_uuid", "bcrypt_hash" from users where username = $1;';
+  type ResultRow = { user_uuid: string; bcrypt_hash: string; };
   const rows = (await database.query<ResultRow>(query, [username]));
 
   if (rows.length === 1) {
     const result = rows[0];
-    return { userUUID: result.user_uuid, hash: result.bcrypt_hash, isAdmin: result.is_admin };
+    return { userUUID: result.user_uuid, hash: result.bcrypt_hash };
   } else if (rows.length === 0) {
     return undefined;
   } else {
@@ -32,19 +31,17 @@ export async function getPasswordHashByUuid(uuid: string): Promise<string> {
 
 // get the session matching a given session token
 // time_last_touched is updated every time this is used
-export async function getSession(token: string): Promise<Session | undefined> {
-  const updateTimeQuery = `update sessions set time_last_touched = $1 where token = $2;`;
-  await database.query(updateTimeQuery, [Date.now(), token]);
+export async function getSessionUserUUID(token: string): Promise<string | undefined> {
+  // update time last touched
+  await database.query(`update sessions set time_last_touched = $1 where token = $2;`, [Date.now(), token]);
 
-  const getSessionQuery =
-    `select user_uuid, is_admin from users join sessions using (user_uuid) where token = $1;`;
-  type ResultRow= {user_uuid: string; is_admin: boolean;};
-  const rows = (await database.query<ResultRow>(getSessionQuery, [token]));
+  const rows = (await database.query<{user_uuid: string;}>(
+    `select user_uuid from sessions where token = $1;`, [token]
+  ));
   if (rows.length === 0) {
     return undefined;
   }
-  const session = rows[0];
-  return { userUUID: session.user_uuid, isAdmin: session.is_admin };
+  return rows[0].user_uuid;
 }
 
 // insert a new session into the database
