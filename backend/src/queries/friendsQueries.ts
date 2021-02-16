@@ -8,17 +8,22 @@ export const deleteFriendRequestQueryString: string =
 
 export async function getIncomingFriendRequests(uuid: string): Promise<ProfileSummary[]> {
   const query =
-    `select distinct user_uuid, username, full_name from users join friend_requests
+    `select distinct user_uuid, username, full_name, status_message from users join friend_requests
     on user_uuid = from_user where to_user = $1;`;
-  type ResultRow = {user_uuid: string; username: string; full_name: string;};
+  type ResultRow = {user_uuid: string; username: string; full_name: string; status_message: string | null;};
   const results: ResultRow[] = await database.query(query, [uuid]);
-  return results.map(r => ({ uuid: r.user_uuid, username: r.username, fullName: r.full_name }));
+  return results.map(r =>
+    ({ uuid: r.user_uuid, username: r.username, fullName: r.full_name, statusMessage: r.status_message ?? "" })
+  );
 }
 
 export async function getFriends(uuid: string): Promise<ProfileSummary[]> {
   const query =
-    `select distinct user_uuid, username, full_name from friends join users on user_a = user_uuid where user_b = $1;`;
-  type ResultRow = {user_uuid: string; username: string; full_name: string;};
+    `select distinct user_uuid, username, full_name, status_message
+    from friends join users on user_a = user_uuid where user_b = $1;`;
+  type ResultRow = {user_uuid: string; username: string; full_name: string; status_message: string | null;};
   const results: ResultRow[] = await database.query(query, [uuid]);
-  return results.map(r => ({ uuid: r.user_uuid, username: r.username, fullName: r.full_name }));
+  return results.map(r =>
+    ({ uuid: r.user_uuid, username: r.username, fullName: r.full_name, statusMessage: r.status_message ?? "" })
+  );
 }
