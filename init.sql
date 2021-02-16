@@ -19,7 +19,9 @@ CREATE TABLE users(
     friendly_name TEXT NOT NULL,
     gender GENDER_IDENTITY, -- allowed to be null for users who prefer not to state a gender
     email TEXT NOT NULL,
-    birth_date TEXT NOT NULL -- date in ISO format
+    birth_date TEXT NOT NULL, -- date in ISO format
+    status_message TEXT,
+    do_not_disturb BOOLEAN
 );
 
 -- only users listed here can use admin command endpoints

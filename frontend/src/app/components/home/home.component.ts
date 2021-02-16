@@ -31,6 +31,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadInfo(): void {
+    this.info = undefined;
     this.apiService.getJSON<HomeScreenInfoResponse>("http://localhost:3000/user_info/home_info")
       .then(info => {
         this.info = info;
@@ -39,6 +40,33 @@ export class HomeComponent implements OnInit {
         this.apiService.showErrorPopup(err);
         this.logout();
       });
+  }
+
+  updateStatus(): void {
+    this.apiService.putJSON<string, void>("http://localhost:3000/user_info/update_status", this.info!.statusMessage)
+      .then(() => {
+        const popupMessage = this.info!.statusMessage ? "Status updated" : "Status cleared";
+        this.snackBar.open(popupMessage, "Dismiss", { duration: 2500 });
+      })
+      .catch(err => {
+        this.apiService.showErrorPopup(err);
+        this.loadInfo();
+      });
+  }
+
+  updateDoNotDisturb(): void {
+    this.apiService.putJSON<boolean, void>(
+      "http://localhost:3000/user_info/update_do_not_disturb",
+      this.info!.doNotDisturb
+    ).catch(err => {
+      this.apiService.showErrorPopup(err);
+      this.loadInfo();
+    });
+  }
+
+  removeStatus(): void {
+    this.info!.statusMessage = "";
+    this.updateStatus();
   }
 
   logout(): void {
