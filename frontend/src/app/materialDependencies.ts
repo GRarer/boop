@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 // include all of the material component modules that we use here to avoid cluttering the main AppModule
 export const materialModules = [
@@ -29,5 +30,6 @@ export const materialModules = [
   MatProgressBarModule,
   MatTooltipModule,
   MatToolbarModule,
+  MatSlideToggleModule
 ];
 

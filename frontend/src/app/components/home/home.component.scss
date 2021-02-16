@@ -2,10 +2,21 @@
     font-size: x-large;
     padding-top: 5px;
     padding-bottom: 5px;
-    width: 80%;
+    width: 100%;
 }
 
 button {
     margin-bottom: 10px;
     text-align: left;
+}
+
+mat-card {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.small-card-action {
+    padding-left: 10px;
+    padding-right: 10px;
 }

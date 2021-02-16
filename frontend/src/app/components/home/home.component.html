@@ -1,11 +1,42 @@
 <app-loading-bar *ngIf="info === undefined"></app-loading-bar>
 <ng-container *ngIf="info">
     <h2 style="text-align: center; font-size: x-large;">{{getGreeting(info!.friendlyName)}}</h2>
-    <div style="text-align: center; width: 4in; margin: auto;">
-      <button mat-stroked-button routerLink="/add_friends"><mat-icon>group</mat-icon> Friends</button>
-      <button mat-stroked-button routerLink="/push_setup"><mat-icon>notification_add</mat-icon> Notification Setup</button>
-      <button mat-stroked-button routerLink="/edit_contact_info"><mat-icon>alternate_email</mat-icon> Edit Contact Info</button>
-      <button mat-stroked-button routerLink="/settings"><mat-icon>manage_accounts</mat-icon> Account Settings</button>
-      <button mat-stroked-button color="warn" (click)="logout()"><mat-icon>logout</mat-icon> Log Out</button>
+    <div style="width: 4in; margin: auto;">
+      <div style="width: 80%; margin: auto;">
+        <button mat-stroked-button routerLink="/add_friends"><mat-icon>group</mat-icon> Friends</button>
+        <button mat-stroked-button routerLink="/push_setup"><mat-icon>notification_add</mat-icon> Notification Setup</button>
+        <button mat-stroked-button routerLink="/edit_contact_info"><mat-icon>alternate_email</mat-icon> Edit Contact Info</button>
+        <button mat-stroked-button routerLink="/settings"><mat-icon>manage_accounts</mat-icon> Account Settings</button>
+
+        <mat-card>
+          <mat-card-content style="margin-bottom: 0;">
+            <mat-form-field appearance="outline" style="width: 100%; margin-bottom: -20px;">
+              <mat-label>Status Message</mat-label>
+              <input matInput [(ngModel)]="info.statusMessage" placeholder="What's up?">
+              <button mat-icon-button matSuffix (click)="removeStatus()" [disabled]="!info.statusMessage">
+                <mat-icon>clear</mat-icon>
+              </button>
+            </mat-form-field>
+          </mat-card-content>
+          <mat-card-actions style="padding-top: 0; margin-top: 0px;">
+            <button mat-button class="small-card-action" (click)="updateStatus()">Update Status</button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card>
+          <mat-card-content>
+            <span style="margin-right: 10px; position: relative; top: 5px">
+              <mat-icon *ngIf="!info.doNotDisturb">notifications_active</mat-icon>
+              <mat-icon *ngIf="info.doNotDisturb">notifications_off</mat-icon>
+            </span>
+            <mat-slide-toggle color="accent" [(ngModel)]="info.doNotDisturb" (change)="updateDoNotDisturb()">"Do Not Disturb" is {{info.doNotDisturb ? 'on' : 'off'}}.</mat-slide-toggle>
+            <div *ngIf="info.doNotDisturb" style="padding-top: 5px;">
+              <mat-hint>You won't get Boop notifications, and your friends won't get notifications about you.</mat-hint>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <button mat-stroked-button color="warn" (click)="logout()"><mat-icon>logout</mat-icon> Log Out</button>
+      </div>
     </div>
 </ng-container>
