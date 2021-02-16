@@ -4,6 +4,7 @@ export type ProfileSummary = {
   uuid: string;
   username: string;
   fullName: string;
+  statusMessage: string;
   // TODO include profile image
 };
 
