@@ -9,8 +9,5 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./heading.component.scss'],
 })
 
-export class Header implements OnInit {
-  constructor() { }
-  ngOnInit(): void {
-  }
+export class Header {
 }
