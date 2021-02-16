@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 /**
  * @title Toolbar overview
@@ -8,5 +8,9 @@ import {Component, OnInit} from '@angular/core';
   templateUrl: './heading.component.html',
 })
 
-export class Header {
+export class Header implements OnInit {
+  constructor() { }
+
+  ngOnInit(): void {
+  }
 }
