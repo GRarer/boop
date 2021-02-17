@@ -16,7 +16,7 @@ const standardScheduleParameters = {
 // substitute parameters that cause pushes to happen very frequently for testing purposes
 const testScheduleParameters = {
   cooldown: 0,
-  interval: 10000,
+  interval: 5000,
   friendProbability: 0.5,
   metafriendProbability: 0.5,
 };
