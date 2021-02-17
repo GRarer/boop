@@ -16,9 +16,10 @@ declare
   bobUUID UUID := '0000000b-0000-0000-0000-000000000000';
   charlieUUID UUID := '0000000c-0000-0000-0000-000000000000';
   davidUUID UUID := '0000000d-0000-0000-0000-000000000000';
+  eveUUID UUID := '0000000e-0000-0000-0000-000000000000';
 
 begin
-    -- add example users
+    -- add example users'
     -- gpb (George P Burdell)
     INSERT INTO users
       ("user_uuid", "username", "bcrypt_hash", "full_name",
@@ -59,6 +60,11 @@ begin
       "friendly_name", "gender", "email", "birth_date")
       VALUES (davidUUID, 'david', example_password_hash, 'David Défaut',
       'Dave', null, 'david@example.com', '1995-03-30');
+    INSERT INTO users
+    ("user_uuid", "username", "bcrypt_hash", "full_name",
+      "friendly_name", "gender", "email", "birth_date")
+      VALUES (eveUUID, 'eve', example_password_hash, 'Eve Exampleton',
+      'Eve', null, 'eve@example.com', '1996-07-17');
 
 
     -- friend request from John Rainwater to George P Burdell
@@ -74,10 +80,11 @@ begin
         (aliceUUID, charlieUUID),
         (charlieUUID, aliceUUID),
         (charlieUUID, davidUUID),
-        (davidUUID, charlieUUID);
-
-
-
+        (davidUUID, charlieUUID),
+        (aliceUUID, eveUUID),
+        (eveUUID, aliceUUID),
+        (charlieUUID, eveUUID),
+        (eveUUID, charlieUUID);
 
     -- contact methods
     INSERT INTO contact_methods (user_uuid, platform, contact_id) VALUES

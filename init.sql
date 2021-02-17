@@ -21,7 +21,8 @@ CREATE TABLE users(
     email TEXT NOT NULL,
     birth_date TEXT NOT NULL, -- date in ISO format
     status_message TEXT,
-    do_not_disturb BOOLEAN
+    do_not_disturb BOOLEAN,
+    last_push_timestamp bigint -- last time that this user was sent a spontaneous reminder, in milliseconds since epoch
 );
 
 -- only users listed here can use admin command endpoints
