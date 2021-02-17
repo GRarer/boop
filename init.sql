@@ -53,6 +53,13 @@ CREATE TABLE sessions(
     time_last_touched bigint NOT NULL -- time this session was last accessed, in milliseconds since epoch
 );
 
+-- identifies a reminder push notification and authorizes getting user info about the target friend or friend-of-friend
+CREATE TABLE push_identity_tokens(
+    token text PRIMARY KEY,
+    target_user_uuid UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
+    expiration_time bigint NOT NULL -- expiration time in milliseconds since epoch
+);
+
 -- pending friend requests
 CREATE TABLE friend_requests(
     from_user UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,

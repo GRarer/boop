@@ -1,7 +1,11 @@
 import pgFormat from "pg-format";
 import { database } from "../services/database";
-import { Pairing } from "../services/reminders";
-import { scheduleParameters } from "../services/scheduleTuning";
+import { Pairing } from "../services/reminders/reminders";
+import { scheduleParameters } from "../services/reminders/scheduleTuning";
+import { v4 as uuidV4 } from 'uuid';
+
+// tokens expire after 1 week
+const pushTokenExpirationTime = 7 * 24 * 60 * 60 * 1000;
 
 export async function selectPairs(): Promise<Pairing[]> {
   const query =
@@ -83,4 +87,15 @@ export async function selectPairs(): Promise<Pairing[]> {
       [Date.now()]
     );
     return pairings;
+}
+
+export async function createNotificationTokens(pair: Pairing): Promise<{tokenToA: string; tokenToB: string;}> {
+  const expirationTime = Date.now() + pushTokenExpirationTime;
+  const tokens = { tokenToA: `push-${uuidV4()}`, tokenToB: `push-${uuidV4()}` };
+  await database.query(
+    `insert into push_identity_tokens(token, target_user_uuid, expiration_time) values
+    ($1, $2, $5), ($3, $4, $5);`,
+    [tokens.tokenToA, pair.userB, tokens.tokenToB, pair.userA, expirationTime]
+  );
+  return tokens;
 }
