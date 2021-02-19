@@ -25,16 +25,9 @@ adminRouter.post('/push', handleAsync(async (req, res) => {
     throwBoopError("Malformed username body", 400);
   }
 
-  const subscriptions: PushSubscriptionJSON[] = await getPushByUsername(username);
-  for (const sub of subscriptions) {
+  const subscriptions: webpush.PushSubscription[] = await getPushByUsername(username);
+  for (const subscription of subscriptions) {
     try {
-      const subscription: webpush.PushSubscription = {
-        endpoint: sub.endpoint!,
-        keys: {
-          p256dh: sub.keys!['p256dh'],
-          auth: sub.keys!['auth']
-        }
-      };
       webpush.sendNotification(subscription, JSON.stringify(testNotificationPayload))
         .catch((reason: unknown) => {
           console.log("failed to send push notification");
