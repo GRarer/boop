@@ -1,6 +1,5 @@
 import { vapidKeys } from "boop-core";
 import webpush from "web-push";
-import { getPushByUUID } from "../queries/pushQueries";
 
 webpush.setVapidDetails(
   'mailto:gracerarer@gatech.edu', // TODO create an email address for boop
@@ -9,9 +8,9 @@ webpush.setVapidDetails(
 );
 
 // send a notification to all vapid endpoints associated with the given user
-export async function sendNotificationToUser(userUUID: string, payloadObject: object): Promise<void> {
+export async function sendNotificationToUser(subs: webpush.PushSubscription[], payloadObject: object): Promise<void> {
   const payloadString = JSON.stringify(payloadObject);
-  for (const subscription of await getPushByUUID(userUUID)) {
+  for (const subscription of subs) {
     // send notification but don't wait for a response from VAPID server
     webpush.sendNotification(subscription, payloadString)
       .catch((reason: unknown) => {
@@ -30,7 +29,6 @@ export async function sendNotificationToUser(userUUID: string, payloadObject: ob
           console.warn("unexpected error when sending notification");
           console.error(reason);
         }
-
       });
   }
 }
@@ -52,6 +50,3 @@ export const testNotificationPayload = {
     }]
   }
 };
-
-
-

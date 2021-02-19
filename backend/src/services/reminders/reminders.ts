@@ -1,16 +1,21 @@
+import { Gender } from "boop-core";
 import { createNotificationTokens, selectPairs } from "../../queries/reminderQueries";
 import { sendNotificationToUser } from "../pushManager";
 import { friendNotificationMessage, metafriendNotificationMessage } from "./reminderNotificationMessages";
+import webpush from "web-push";
+
+// personal info used to create notification messages
+export type NotificationIdentity = {fullName: string; friendlyName: string; gender: Gender;};
 
 export type Pairing = {
-  userA: string;
-  userB: string;
+  userA: NotificationIdentity & {uuid: string; vapidSubs: webpush.PushSubscription[];};
+  userB: NotificationIdentity & {uuid: string; vapidSubs: webpush.PushSubscription[];};
   friends: true;
 } | {
-  userA: string;
-  userB: string;
+  userA: NotificationIdentity & {uuid: string; vapidSubs: webpush.PushSubscription[];};
+  userB: NotificationIdentity & {uuid: string; vapidSubs: webpush.PushSubscription[];};
   friends: false;
-  mutualFriend: string;
+  mutualFriend: NotificationIdentity;
 };
 
 function boopNotificationPayload(message: string, token: string): {} {
@@ -41,8 +46,8 @@ async function sendReminders(pair: Pairing): Promise<void> {
   const tokens = await createNotificationTokens(pair);
 
   await Promise.all([
-    sendNotificationToUser(pair.userA, boopNotificationPayload(messageToA, tokens.tokenToA)),
-    sendNotificationToUser(pair.userB, boopNotificationPayload(messageToB, tokens.tokenToB))
+    sendNotificationToUser(pair.userA.vapidSubs, boopNotificationPayload(messageToA, tokens.tokenToA)),
+    sendNotificationToUser(pair.userB.vapidSubs, boopNotificationPayload(messageToB, tokens.tokenToB))
   ]);
 }
 
