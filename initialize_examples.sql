@@ -49,7 +49,7 @@ begin
     ("user_uuid", "username", "bcrypt_hash", "full_name",
       "friendly_name", "gender", "email", "birth_date")
       VALUES (bobUUID, 'bob', example_password_hash, 'Robert Defacto',
-      'Bob', null, 'bob@example.com', '1999-10-20');
+      'Bob', 'Male', 'bob@example.com', '1999-10-20');
     INSERT INTO users
     ("user_uuid", "username", "bcrypt_hash", "full_name",
       "friendly_name", "gender", "email", "birth_date")
@@ -64,7 +64,7 @@ begin
     ("user_uuid", "username", "bcrypt_hash", "full_name",
       "friendly_name", "gender", "email", "birth_date")
       VALUES (eveUUID, 'eve', example_password_hash, 'Eve Exampleton',
-      'Eve', null, 'eve@example.com', '1996-07-17');
+      'Eve', 'Female', 'eve@example.com', '1996-07-17');
 
 
     -- friend request from John Rainwater to George P Burdell

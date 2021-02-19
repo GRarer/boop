@@ -1,5 +1,7 @@
 // data for account creation
 
+import { Gender } from "./gender";
+
 export type CreateAccountRequest = {
   username: string;
   fullName: string;
@@ -33,11 +35,4 @@ export type UpdatePasswordRequest = {
   newPassword: string;
 };
 
-// user gender options. an undefined value corresponds to "prefer not to say"
-export type Gender = "Female" | "Male" | "Nonbinary" | null;
 
-export const genderValues: Gender[] = ["Female", "Male", "Nonbinary"];
-
-export function isGender(x: unknown): x is Gender {
-  return (x === null) || (genderValues as unknown[]).includes(x);
-}
