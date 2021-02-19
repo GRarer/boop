@@ -19,10 +19,15 @@ CREATE TABLE users(
     friendly_name TEXT NOT NULL,
     gender GENDER_IDENTITY, -- allowed to be null for users who prefer not to state a gender
     email TEXT NOT NULL,
-    birth_date TEXT NOT NULL, -- date in ISO format
-    status_message TEXT,
-    do_not_disturb BOOLEAN,
-    last_push_timestamp bigint -- last time that this user was sent a spontaneous reminder, in milliseconds since epoch
+    -- date in ISO format
+    birth_date TEXT NOT NULL,
+    status_message TEXT NOT NULL DEFAULT ''::TEXT,
+    do_not_disturb BOOLEAN NOT NULL DEFAULT false,
+    -- last time that this user was sent a spontaneous reminder, in milliseconds since epoch
+    -- note that the default value is equivilant to Jan 1 1970
+    last_push_timestamp bigint NOT NULL DEFAULT 0,
+    -- web-push/VAPID subscription objects used to send push notifications
+    vapid_subs JSONB[] NOT NULL DEFAULT '{}'::JSONB[]
 );
 
 -- only users listed here can use admin command endpoints
@@ -36,15 +41,6 @@ INSERT INTO users
 VALUES ('689b90d7-41ed-4257-a2a1-ca6d608d28f7', 'admin', '$2b$09$6Xjk49GbCZTjoognkzPk2.pyblewRbaiHLGap0PjETNNX924or4xS',
 'Boop Administrator', 'Administrator', null, 'example@example.com', '2000-01-15');
 INSERT INTO administrators(admin_user_uuid) values ('689b90d7-41ed-4257-a2a1-ca6d608d28f7');
-
--- web-push subscriptions and the associated users
--- endpoint column ensures we don't send duplicate notifications to the same user on the same device/browser
-CREATE Table subscriptions(
-    sub_json JSON NOT NUll,
-    user_uuid UUID NOT NULL REFERENCES users (user_uuid) ON DELETE CASCADE,
-    endpoint TEXT NOT NULL,
-    PRIMARY Key (endpoint, user_uuid)
-);
 
 -- user log-in sessions
 CREATE TABLE sessions(
