@@ -1,13 +1,19 @@
 import express from "express";
 import { addPushSubscription } from "../queries/pushQueries";
 import { authenticateUUID, } from "../services/auth";
-import { handleAsync } from "../util/handleAsync";
+import { isWebpushSubscription } from "../services/pushManager";
+import { handleAsync, throwBoopError } from "../util/handleAsync";
 
 export const subscriptionRouter = express.Router();
 
 subscriptionRouter.post('/addSubscription', handleAsync(async (req, res) => {
-  const subscription: PushSubscriptionJSON = req.body;
+  // angular gives us a pushSubscriptionJSON object, but this could theoretically not be a valid webpushPushSubscription
+  // because on pushSubscriptionJSON the endpoint and keys are optional
+  if (!isWebpushSubscription(req.body)) {
+    throwBoopError("Error: Your browser did not provide the expected push keys", 400);
+  }
+
   const userUUID = await authenticateUUID(req);
-  await addPushSubscription(subscription, userUUID);
+  await addPushSubscription(req.body, userUUID);
   res.send();
 }));

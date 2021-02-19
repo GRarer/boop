@@ -18,7 +18,7 @@ export type Pairing = {
   mutualFriend: NotificationIdentity;
 };
 
-function boopNotificationPayload(message: string, token: string): {} {
+function boopNotificationPayload(message: string, token: string): {notification: Object;} {
   return {
     "notification": {
       "title": "Boop!",
