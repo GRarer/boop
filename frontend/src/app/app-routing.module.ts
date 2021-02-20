@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { ChatComponent } from './components/chat/chat.component';
 import { EditContactInfoComponent } from './components/edit-contact-info/edit-contact-info.component';
 import { FriendsComponent } from './components/friends/friends.component';
 import { HomeComponent } from './components/home/home.component';
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'settings', component: SettingsComponent },
   { path: 'edit_contact_info', component: EditContactInfoComponent },
   { path: 'add_friends', component: FriendsComponent },
+  { path: 'chat', component: ChatComponent },
   { path: '**', component: NotFound404Component },
 ];
 
