@@ -36,7 +36,7 @@ function boopNotificationPayload(message: string, token: string): {notification:
   };
 }
 
-async function sendReminders(pair: Pairing): Promise<void> {
+export async function sendReminders(pair: Pairing): Promise<void> {
   const messageToA = pair.friends
     ? await friendNotificationMessage(pair.userB)
     : await metafriendNotificationMessage(pair.userB, pair.mutualFriend);

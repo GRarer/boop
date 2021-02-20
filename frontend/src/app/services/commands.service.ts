@@ -18,6 +18,9 @@ export class CommandsService {
       // example command that just verifies that the user is an admin
       testAdminStatus: () => { this.sendExampleCommand(); },
       manualPush: (username: string) => { this.manualPush(username); },
+      triggerPair: (usernameA: string, usernameB: string, mutualFriendUsername?: string) => {
+        this.manualPair(usernameA, usernameB, mutualFriendUsername);
+      }
     });
     (window as any).admin = commands;
     console.log("Boop admin commands enabled");
@@ -35,6 +38,15 @@ export class CommandsService {
   private manualPush(username: string): void {
     this.apiService.postJSON("http://localhost:3000/admin/push", username)
       .then(() => console.log("sent push"))
+      .catch((reason) => console.error(reason));
+  }
+
+  private manualPair(usernameA: string, usernameB: string, mutualFriendUsername?: string): void {
+    this.apiService.postJSON<{a: string; b: string; mutual?: string;}, void>(
+      "http://localhost:3000/admin/pair",
+      { a: usernameA, b: usernameB, mutual: mutualFriendUsername }
+    )
+      .then(() => console.log("notifications triggered"))
       .catch((reason) => console.error(reason));
   }
 }
