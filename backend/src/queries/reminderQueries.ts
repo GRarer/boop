@@ -151,10 +151,12 @@ export async function selectPairs(): Promise<Pairing[]> {
       }
     }
     // update timestamps on all selected users
-    await database.query(
-      pgFormat('UPDATE users set last_push_timestamp=$1 where user_uuid in (%L);', [...usedUsers.values()]),
-      [Date.now()]
-    );
+    if (usedUsers.size > 0) {
+      await database.query(
+        pgFormat('UPDATE users set last_push_timestamp=$1 where user_uuid in (%L);', [...usedUsers.values()]),
+        [Date.now()]
+      );
+    }
     return pairings;
 }
 
