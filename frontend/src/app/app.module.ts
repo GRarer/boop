@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 // since there will be dozens of material design component dependencies, please add them in materialDependencies.ts
 // instead of importing them all to AppModule separately
 import { materialModules } from './materialDependencies';
@@ -25,6 +26,7 @@ import { EditContactInfoComponent } from './components/edit-contact-info/edit-co
 import { OnboardingComponent } from './components/onboarding/onboarding.component';
 import { FriendRequestComponent } from './components/friends/friend-request/friend-request.component';
 import { Header } from './components/common/header/heading.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
@@ -45,6 +47,7 @@ import { Header } from './components/common/header/heading.component';
     OnboardingComponent,
     FriendRequestComponent,
     Header,
+    ChatComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +57,7 @@ import { Header } from './components/common/header/heading.component';
     ReactiveFormsModule,
     ServiceWorkerModule.register('boop-service-worker.js', { enabled: true }),
     BrowserAnimationsModule,
+    ClipboardModule,
     ...materialModules, // modules for angular-material components
   ],
   providers: [],

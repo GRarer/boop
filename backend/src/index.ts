@@ -10,6 +10,7 @@ import { startRepeatedJobs } from "./services/periodicJobs";
 import { userInfoRouter } from "./routers/userInfoRouter";
 import { friendsRouter } from "./routers/friendsRouter";
 import { contactRouter } from "./routers/contactRouter";
+import { profileRouter } from "./routers/profileRouter";
 
 const app = express();
 const port = 3000;
@@ -27,7 +28,7 @@ app.use("/admin", adminRouter);
 app.use("/user_info", userInfoRouter);
 app.use("/friends", friendsRouter);
 app.use("/contact", contactRouter);
-
+app.use("/profile", profileRouter);
 
 // start ExpressJS server
 const server = app.listen(port, () => {

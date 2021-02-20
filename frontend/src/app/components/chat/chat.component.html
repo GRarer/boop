@@ -1,0 +1,17 @@
+<app-loading-bar *ngIf="info === undefined"></app-loading-bar>
+<ng-container *ngIf="info !== undefined">
+    <div style="text-align: center;">
+        <!--TODO show this person's profile image-->
+        <h1 class="mat-headline">Start a chat with {{info!.friendlyName}}</h1>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <mat-card *ngFor="let method of info!.contactMethods">
+            <mat-card-header>
+                <mat-card-title>{{method.platform}}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: center;">
+               <button mat-button (click)="launchMethod(method)"><p style="font-size: 18pt; margin-bottom: 0;">{{method.contactID}}</p></button>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</ng-container>
