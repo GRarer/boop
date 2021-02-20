@@ -1,8 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CommonPlatforms, ContactMethod } from 'boop-core';
+import { ContactMethod } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
 import ordinal from 'ordinal';
+import { commonPlatforms } from 'src/app/util/platforms';
 
 type ContactCard = {
   platformSelection: string;
@@ -26,7 +27,8 @@ export class EditContactInfoComponent implements OnInit {
 
   contacts: ContactCard[] | undefined = undefined;
 
-  platformOptions = CommonPlatforms;
+  commonPlatforms = commonPlatforms;
+  platformOptions = Object.keys(commonPlatforms);
 
   ngOnInit(): void {
     this.loadContacts();
