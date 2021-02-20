@@ -7,7 +7,11 @@
     <div style="display: flex; flex-direction: column; align-items: center;">
         <mat-card *ngFor="let method of info!.contactMethods">
             <mat-card-header>
-                <mat-card-title>{{method.platform}}</mat-card-title>
+                <mat-card-title>
+                    <img *ngIf="commonPlatforms[method.platform] !== undefined"
+                        class="platform-icon" [src]="commonPlatforms[method.platform]!.iconUrl">
+                    {{method.platform}}
+            </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: center;">
                <button mat-button (click)="launchMethod(method)"><p style="font-size: 18pt; margin-bottom: 0;">{{method.contactID}}</p></button>

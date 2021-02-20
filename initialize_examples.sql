@@ -88,10 +88,10 @@ begin
 
     -- contact methods
     INSERT INTO contact_methods (user_uuid, platform, contact_id) VALUES
-    (georgeUUID, 'WhatsApp', '555-555-5555'),
+    (georgeUUID, 'WhatsApp', '15555555555'),
     (georgeUUID, 'Discord', 'burdell#1234'),
     (georgeUUID, 'iMessage', '555-555-5555'),
-    (ramonaUUID, 'WhatsApp', '555-555-1234'),
+    (ramonaUUID, 'WhatsApp', '15555551234'),
     (johnUUID, 'Discord', 'rainwater#1337'),
     (aliceUUID, 'Signal', '123-555-4567'),
     (aliceUUID, 'Discord', 'exampleton#5678'),

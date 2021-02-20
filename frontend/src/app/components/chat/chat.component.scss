@@ -1,7 +1,22 @@
 mat-card {
     margin-top: 10px;
     margin-left: 20px;
+    padding-top: 10px;
     margin-right: 20px;
     width: calc(100% - 40px);
     max-width: 3in;
+}
+
+.platform-icon {
+    max-height: 30px;
+    max-width: 30px;
+    margin-left: -20px;
+    position: relative;
+    top: 8px;
+}
+
+.action-button {
+    width: 100%;
+    margin-top: 20px;
+    text-align: left;
 }

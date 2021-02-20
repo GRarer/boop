@@ -27,6 +27,7 @@ import { OnboardingComponent } from './components/onboarding/onboarding.componen
 import { FriendRequestComponent } from './components/friends/friend-request/friend-request.component';
 import { Header } from './components/common/header/heading.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { ChatDialogComponent } from './components/chat/chat-dialog.component';
 
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
@@ -48,6 +49,7 @@ import { ChatComponent } from './components/chat/chat.component';
     FriendRequestComponent,
     Header,
     ChatComponent,
+    ChatDialogComponent,
   ],
   imports: [
     BrowserModule,
