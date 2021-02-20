@@ -10,7 +10,7 @@ export function isGender(x: unknown): x is Gender {
 type PronounSet = {
   subject: string;
   object: string;
-  possessiveDeterminator: string; // e.g. "I read *her* comment"
+  possessiveDeterminer: string; // e.g. "I read *her* comment"
   possessivePronoun: string; // e.g. "This comment is *hers*"
   reflexive: string;
 };
@@ -21,21 +21,21 @@ export function pronouns(gender: Gender): PronounSet {
   case "Female": return {
     subject: "she",
     object: "her",
-    possessiveDeterminator: "her",
+    possessiveDeterminer: "her",
     possessivePronoun: "hers",
     reflexive: "herself"
   };
   case "Male": return {
     subject: "he",
     object: "him",
-    possessiveDeterminator: "his",
+    possessiveDeterminer: "his",
     possessivePronoun: "his",
     reflexive: "himself"
   };
   case "Nonbinary": return {
     subject: "they",
     object: "them",
-    possessiveDeterminator: "their",
+    possessiveDeterminer: "their",
     possessivePronoun: "theirs",
     reflexive: "themself" // singular themself because it refers to a specific person
   };
