@@ -28,7 +28,9 @@ export class AppComponent implements OnInit {
     this.sessionService.loadSavedSession().then(
       (savedLoaded) => {
         console.log("loaded saved session", savedLoaded);
-        if (!savedLoaded) {
+        // do not require login to visit certain pages
+        const pathExemptFromLogin = ["/chat"].includes(window.location.pathname);
+        if (!savedLoaded && !pathExemptFromLogin) {
           void this.router.navigate(["/welcome"]).finally(() => { this.initialLoading = false; });
         } else {
           this.initialLoading = false;
