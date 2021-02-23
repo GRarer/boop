@@ -129,13 +129,13 @@ export class SettingsComponent implements OnInit {
       confirmText: 'CONFIRM',
     };
 
-    this.dialogService.open(data.title, data.body, data.cancelText, data.confirmText);
+    this.dialogService.open(data);
     const confirmed = this.dialogService.confirmed();
     if (confirmed === undefined) {
       return;
     }
 
-    confirmed.subscribe(confirmed => {
+    void confirmed.then((confirmed) => {
       if (confirmed) {
         this.apiService.deleteJSON("http://localhost:3000/account/delete").then(() => {
           this.sessionService.logout().then(

@@ -11,7 +11,7 @@ export class DialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: {
     cancelText: string;
     confirmText: string;
-    message: string;
+    body: string;
     title: string;
   }, private mdDialogRef: MatDialogRef<DialogComponent>) { }
 
