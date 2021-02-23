@@ -124,7 +124,7 @@ export class SettingsComponent implements OnInit {
   confirmDelete(): void {
     const data = {
       title: 'Confirm Delete',
-      body: 'Are you sure you want to delete your account? This acction cannot be undone',
+      body: 'Are you sure you want to delete your account? This action cannot be undone',
       cancelText: 'CANCEL',
       confirmText: 'CONFIRM',
     };
