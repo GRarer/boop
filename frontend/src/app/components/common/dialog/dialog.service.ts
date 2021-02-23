@@ -6,7 +6,7 @@ import { DialogComponent } from './dialog.component';
 
 @Injectable()
 export class DialogService {
-  dialogRef?: MatDialogRef<DialogComponent>
+  dialogRef?: MatDialogRef<DialogComponent>;
 
   constructor(private dialog: MatDialog) { }
 

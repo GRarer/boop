@@ -6,7 +6,7 @@ import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
 import { getAuthInfoByUsername, getPasswordHashByUuid, removeSession } from "../queries/authQueries";
 import bcrypt from "bcrypt";
-import { createAccount, getUserAccount, updateAccount, updatePassword } from "../queries/accountQueries";
+import { createAccount, getUserAccount, updateAccount, updatePassword, deleteAccount } from "../queries/accountQueries";
 
 export const accountsRouter = express.Router();
 
@@ -63,6 +63,16 @@ accountsRouter.get('/info', handleAsync(async (req, res) => { // TODO make this 
   }
 
   res.send(result);
+}));
+
+accountsRouter.delete('/delete', handleAsync(async (req, res) => {
+  const uuid = await userUuidFromReq(req);
+  if (uuid === undefined) {
+    throwBoopError("Unauthenticated user", 401);
+  }
+
+  await deleteAccount(uuid);
+  res.send();
 }));
 
 accountsRouter.put('/edit', handleAsync(async (req, res) => {

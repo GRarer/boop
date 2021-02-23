@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SessionService } from 'src/app/services/session.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UpdatePasswordRequest, UserAccountResponse, UpdateAccountRequest, genderValues, Gender } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
@@ -20,6 +21,7 @@ export class SettingsComponent implements OnInit {
     private apiService: ApiService,
     private snackBar: MatSnackBar,
     private dialogService: DialogService,
+    private sessionService: SessionService,
   ) {}
 
   genderOptions: Gender[] = genderValues;
@@ -43,12 +45,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.refresh();
-    this.dialogService.open('Title', 'body', 'text', 'text');
-    // this.dialogService.confirmed().subscribe(confirmed => {
-    //   if (confirmed) {
-    //     console.log('Hello world');
-    //   }
-    // });
+
   }
 
   private refresh(): void {
@@ -122,6 +119,35 @@ export class SettingsComponent implements OnInit {
       this.refresh();
     }).catch((error) => {
       this.apiService.showErrorPopup(error);
+    });
+  }
+
+  confirmDelete(): void {
+    var data = {
+      title: 'Confirm Delete',
+      body: 'Are you sure you want to delete your account? This acction cannot be undone',
+      cancelText: 'CANCEL',
+      confirmText: 'CONFIRM',
+    };
+
+    this.dialogService.open(data.title, data.body, data.cancelText, data.confirmText);
+    var confirmed = this.dialogService.confirmed();
+    if (confirmed === undefined) {
+      return;
+    }
+
+    confirmed.subscribe(confirmed => {
+      if (confirmed) {
+        this.apiService.deleteJSON("http://localhost:3000/account/delete").then(() => {
+          this.sessionService.logout().then(
+            () => { void this.router.navigate(["/welcome"]); }
+          ).catch((reason) => {
+            this.apiService.showErrorPopup(reason);
+          });
+        }).catch((reason) => {
+          this.apiService.showErrorPopup(reason);
+        });
+      }
     });
   }
 
