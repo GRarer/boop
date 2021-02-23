@@ -123,7 +123,7 @@ export class SettingsComponent implements OnInit {
   }
 
   confirmDelete(): void {
-    var data = {
+    const data = {
       title: 'Confirm Delete',
       body: 'Are you sure you want to delete your account? This acction cannot be undone',
       cancelText: 'CANCEL',
@@ -131,7 +131,7 @@ export class SettingsComponent implements OnInit {
     };
 
     this.dialogService.open(data.title, data.body, data.cancelText, data.confirmText);
-    var confirmed = this.dialogService.confirmed();
+    const confirmed = this.dialogService.confirmed();
     if (confirmed === undefined) {
       return;
     }

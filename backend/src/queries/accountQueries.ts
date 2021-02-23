@@ -54,7 +54,7 @@ export async function updateAccount(values: UpdateAccountRequest,
 export async function deleteAccount(uuid: string): Promise<void> {
   const query = `DELETE FROM users WHERE user_uuid=$1`;
 
-  await database.query(query, [uuid]); // Any error should be thrown 
+  await database.query(query, [uuid]); // Any error should be thrown
 }
 
 export async function getUserAccount(uuid: string): Promise<{ username: string; fullName: string; friendlyName: string;
