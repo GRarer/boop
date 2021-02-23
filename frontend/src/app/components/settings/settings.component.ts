@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SessionService } from 'src/app/services/session.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UpdatePasswordRequest, UserAccountResponse, UpdateAccountRequest, genderValues, Gender } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { equalToSiblingValidator } from 'src/app/util/ngUtils';
+import { DialogService } from 'src/app/components/common/dialog/dialog.service';
 
 
 @Component({
@@ -18,6 +20,8 @@ export class SettingsComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private snackBar: MatSnackBar,
+    private dialogService: DialogService,
+    private sessionService: SessionService,
   ) {}
 
   genderOptions: Gender[] = genderValues;
@@ -115,6 +119,27 @@ export class SettingsComponent implements OnInit {
     }).catch((error) => {
       this.apiService.showErrorPopup(error);
     });
+  }
+
+  startDelete(): void {
+    this.confirmDelete().catch(err => this.apiService.showErrorPopup(err));
+  }
+
+  private async confirmDelete(): Promise<void> {
+    const data = {
+      title: 'Confirm Delete',
+      body: 'Are you sure you want to delete your account? This action cannot be undone',
+      cancelText: 'CANCEL',
+      confirmText: 'CONFIRM',
+    };
+
+    const confirmed = await this.dialogService.confirm(data);
+
+    if (confirmed) {
+      await this.apiService.deleteJSON("http://localhost:3000/account/delete");
+      await this.sessionService.logout();
+      void this.router.navigate(["/welcome"]);
+    }
   }
 
   // re-checks whether confirm password matches password and updates control's appearance

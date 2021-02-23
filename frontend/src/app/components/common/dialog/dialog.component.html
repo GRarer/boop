@@ -1,0 +1,12 @@
+<div class="header">
+  <h1 mat-dialog-title>{{ data.title }}</h1>
+</div>
+<mat-dialog-content>
+  <p style="font-size: 18px">{{ data.body }}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-flat-button style="margin-right:10px;" (click)="cancel()">
+	  {{ data.cancelText }}
+	</button>
+  <button mat-flat-button (click)="confirm()" color='warn'>{{ data.confirmText }}</button>
+</mat-dialog-actions>

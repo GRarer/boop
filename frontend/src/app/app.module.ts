@@ -28,6 +28,8 @@ import { FriendRequestComponent } from './components/friends/friend-request/frie
 import { Header } from './components/common/header/heading.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ChatDialogComponent } from './components/chat/chat-dialog.component';
+import { DialogComponent } from './components/common/dialog/dialog.component';
+import { DialogService } from './components/common/dialog/dialog.service';
 
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
@@ -50,6 +52,7 @@ import { ChatDialogComponent } from './components/chat/chat-dialog.component';
     Header,
     ChatComponent,
     ChatDialogComponent,
+    DialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,7 +65,7 @@ import { ChatDialogComponent } from './components/chat/chat-dialog.component';
     ClipboardModule,
     ...materialModules, // modules for angular-material components
   ],
-  providers: [],
+  providers: [DialogService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
