@@ -45,7 +45,6 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.refresh();
-
   }
 
   private refresh(): void {
