@@ -5,6 +5,7 @@ import { UpdatePasswordRequest, UserAccountResponse, UpdateAccountRequest, gende
 import { ApiService } from 'src/app/services/api.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { equalToSiblingValidator } from 'src/app/util/ngUtils';
+import { DialogService } from 'src/app/components/common/dialog/dialog.service';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class SettingsComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private snackBar: MatSnackBar,
+    private dialogService: DialogService,
   ) {}
 
   genderOptions: Gender[] = genderValues;
@@ -41,6 +43,12 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.refresh();
+    this.dialogService.open('Title', 'body', 'text', 'text');
+    // this.dialogService.confirmed().subscribe(confirmed => {
+    //   if (confirmed) {
+    //     console.log('Hello world');
+    //   }
+    // });
   }
 
   private refresh(): void {

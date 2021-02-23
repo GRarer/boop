@@ -42,7 +42,7 @@
 				[disabled]="!updateUserForm.valid || updateUserForm.pristine">Update</button>
 		</form>
 	</mat-card>
-	<mat-card>
+	<mat-card style="margin-bottom: 30px;">
 		<mat-card-header>
 			<mat-card-title>Change Password</mat-card-title>
 		</mat-card-header>
@@ -63,5 +63,11 @@
 			<button mat-flat-button color="primary" class="update-button"
 				[disabled]="!changePasswordForm.valid">Update</button>
 		</form>
+	</mat-card>
+	<mat-card>
+		<mat-card-header>
+			<mat-card-title>Delete Account</mat-card-title>
+		</mat-card-header>
+		<button mat-flat-button class="update-button" color='warn'>Delete</button>
 	</mat-card>
 </div>
