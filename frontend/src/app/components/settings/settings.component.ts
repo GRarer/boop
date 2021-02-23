@@ -121,7 +121,11 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  confirmDelete(): void {
+  startDelete(): void {
+    this.confirmDelete().catch(err => this.apiService.showErrorPopup(err));
+  }
+
+  private async confirmDelete(): Promise<void> {
     const data = {
       title: 'Confirm Delete',
       body: 'Are you sure you want to delete your account? This action cannot be undone',
@@ -129,25 +133,13 @@ export class SettingsComponent implements OnInit {
       confirmText: 'CONFIRM',
     };
 
-    this.dialogService.open(data);
-    const confirmed = this.dialogService.confirmed();
-    if (confirmed === undefined) {
-      return;
-    }
+    const confirmed = await this.dialogService.confirm(data);
 
-    void confirmed.then((confirmed) => {
-      if (confirmed) {
-        this.apiService.deleteJSON("http://localhost:3000/account/delete").then(() => {
-          this.sessionService.logout().then(
-            () => { void this.router.navigate(["/welcome"]); }
-          ).catch((reason) => {
-            this.apiService.showErrorPopup(reason);
-          });
-        }).catch((reason) => {
-          this.apiService.showErrorPopup(reason);
-        });
-      }
-    });
+    if (confirmed) {
+      await this.apiService.deleteJSON("http://localhost:3000/account/delete");
+      await this.sessionService.logout();
+      void this.router.navigate(["/welcome"]);
+    }
   }
 
   // re-checks whether confirm password matches password and updates control's appearance

@@ -1,33 +1,30 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { map, take } from 'rxjs/operators';
-import { DialogComponent } from './dialog.component';
+import { BoopError } from 'boop-core';
+import { map } from 'rxjs/operators';
+import { ConfirmationDialogOptions, DialogComponent } from './dialog.component';
 
 @Injectable()
 export class DialogService {
-  dialogRef?: MatDialogRef<DialogComponent>;
+  dialogRef?: MatDialogRef<DialogComponent, boolean>;
 
   constructor(private dialog: MatDialog) { }
 
+  async confirm(
+    dialogOptions: ConfirmationDialogOptions
+  ): Promise<boolean> {
+    // throw an error if a dialog is already open
+    if (this.dialogRef !== undefined) {
+      const error: BoopError = { errorMessage: "ERROR: dialog already open", statusNumber: 0 };
+      throw error;
+    }
 
-  public open(dialogOptions: any): void {
     this.dialogRef = this.dialog.open(DialogComponent, {
-      data: {
-        title: dialogOptions.title,
-        body: dialogOptions.body,
-        cancelText: dialogOptions.cancelText,
-        confirmText: dialogOptions.confirmText
-      }
+      data: dialogOptions
     });
-  }
-  public confirmed(): Promise<any> | undefined {
-    if (this.dialogRef === undefined) {
-      return;
-    }
 
-    return this.dialogRef.afterClosed().pipe(take(1), map(res => {
-      return res;
-    }
-    )).toPromise();
+    const result = await this.dialogRef.afterClosed().pipe(map(response => (response ?? false))).toPromise();
+    this.dialogRef = undefined;
+    return result;
   }
 }
