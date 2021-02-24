@@ -20,8 +20,11 @@ this script from `psql` in your terminal.
 ```sh
 $ psql -U postgres
 <enter your postgres superuser password>
-\i sql/init.sql
+\i init.sql
 ```
+
+`init.sql` is located in the top directory of this project. You can also find the `initialize_examples.sql` script; run
+this after `init.sql` to set up testing example accounts.
 
 ## Building The Core Package
 
@@ -32,18 +35,16 @@ run the build and recompile core when you make changes.
 
 ### Running the Node backend locally
 
-To build and run the server on localhost, run `npm run serve -- --password <your postgres superuser password>` from the
-backend directory. To run a server that automatically recompiles and restarts when you make changes, you can use
-`npm run serve-watch -- --password <your postgres superuser password>`. To compile the server without running it,
-use `npm run build` or `npm run build-watch`.
+To build and run the server on localhost, run `npm run serve` from the backend directory.
 
-If you save your postgres superuser password in an environment variable called `postgres_password`, you can skip the
-`-- --password <your postgres password>` part.
+#### Backend server command line options:
+- `--password <your postgres password>` password to use to connect to postgres. If this argument is not provided, the
+backend will instead check for an environment variable named `postgres_password`.
+- `--sqlUser <your postgres username>` username to use to connect to postgres. Defaults to 'postgres'.
+- `--frequentPush` speeds up the frequency of push notifications to several per minute instead of once every few hours,
+    for testing the push notification system
 
-By default, the backend will try to connect to postgres as the
-user "postgres". On Windows, this user is created during installation. On other platforms, you can either create
-a user named "postgres" or start the backend with the `--sqlUser --<your postgres username>` argument to have the
-server connect as a different postgres username.
+
 
 ### Running the Angular frontend locally
 
