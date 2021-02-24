@@ -26,7 +26,7 @@
         <p style="margin-bottom: 0; margin-top: -10px;" *ngIf="friend.statusMessage"> <mat-icon style="position: relative; top: 7px;">sticky_note_2</mat-icon>“{{friend.statusMessage}}”</p>
       </div>
       <mat-card-actions style="padding-top: 0;">
-        <button mat-button (click)="unfriend(friend.uuid)" color="warn">UNFRIEND</button>
+        <button mat-button (click)="unfriend(friend)" color="warn">UNFRIEND</button>
       </mat-card-actions>
     </mat-card>
   </ng-container>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AnswerFriendRequest, GetFriendsResult, ProfileSummary } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
+import { DialogService } from '../common/dialog/dialog.service';
 
 @Component({
   selector: 'app-add-friends',
@@ -14,7 +14,7 @@ export class FriendsComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private snackBar: MatSnackBar
+    private dialogService: DialogService
   ) { }
 
   ngOnInit(): void {
@@ -41,16 +41,21 @@ export class FriendsComponent implements OnInit {
       });
   }
 
-  unfriend(friendUUID: string): void {
-    this.apiService.postJSON<string, void>(
-      "http://localhost:3000/friends/unfriend",
-      friendUUID
-    ).then(() => {
+  async showUnfriendDialog(friend: ProfileSummary): Promise<void> {
+    const confirmed = await this.dialogService.confirm({
+      title: "Confirm Unfriending",
+      body: `Are you sure you want to unfriend ${friend.fullName}?`,
+      confirmText: "Unfriend",
+      cancelText: "Cancel"
+    });
+    if (confirmed) {
+      await this.apiService.postJSON<string, void>("http://localhost:3000/friends/unfriend", friend.uuid);
       this.loadInfo();
-    })
-      .catch((err) => {
-        this.apiService.showErrorPopup(err);
-      });
+    }
+  }
+
+  unfriend(friend: ProfileSummary): void {
+    this.showUnfriendDialog(friend).catch(err => this.apiService.showErrorPopup(err));
   }
 
 
