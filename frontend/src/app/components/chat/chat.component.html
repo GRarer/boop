@@ -14,7 +14,19 @@
             </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: center;">
-               <button mat-button (click)="launchMethod(method)"><p style="font-size: 18pt; margin-bottom: 0;">{{method.contactID}}</p></button>
+                <div style="display: flex; flex-direction: row;">
+                    <span style="width: 24px;">
+
+                    </span>
+                    <span style="flex-grow: 1; text-align: center; font-size: 18pt; margin-bottom: 0;">
+                        {{method.contactID}}
+                    </span>
+                    <span style="width: 24px;">
+                        <button mat-icon-button style="position: relative; bottom: 8px;" (click)="copyMethod(method)">
+                            <mat-icon>content_copy</mat-icon>
+                        </button>
+                    </span>
+                </div>
             </mat-card-content>
         </mat-card>
     </div>

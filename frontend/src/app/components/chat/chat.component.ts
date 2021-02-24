@@ -3,9 +3,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContactMethod, StartChatResult } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ChatDialogComponent } from './chat-dialog.component';
 import { commonPlatforms } from 'src/app/util/platforms';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-chat',
@@ -21,7 +20,7 @@ export class ChatComponent implements OnInit {
     private apiService: ApiService,
     private snackBar: MatSnackBar,
     private router: Router,
-    public dialog: MatDialog
+    private clipboard: Clipboard,
   ) {}
 
   ngOnInit(): void {
@@ -42,12 +41,10 @@ export class ChatComponent implements OnInit {
   // make platform icons urls visible to html template
   commonPlatforms = commonPlatforms;
 
-  launchMethod(method: ContactMethod): void {
-    const selection: ContactMethod & {friendlyName: string;} = {
-      platform: method.platform,
-      contactID: method.contactID,
-      friendlyName: this.info!.friendlyName
-    };
-    this.dialog.open(ChatDialogComponent, { width: '5in', data: selection });
+  copyMethod(method: ContactMethod): void {
+    this.clipboard.copy(method.contactID);
+    this.snackBar.open(
+      `Copied ${this.info!.friendlyName}'s ${method.platform} ID to clipboard`, "dismiss",
+      { duration: 2000 });
   }
 }

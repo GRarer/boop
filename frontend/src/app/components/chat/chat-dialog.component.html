@@ -1,9 +1,0 @@
-<h1 style="max-width: 5in; margin-bottom: 0;" mat-dialog-title>{{selection.friendlyName}} is {{selection.contactID}} on {{selection.platform}}</h1>
-<div style="max-width: 5in; display: flex; flex-direction: column; align-items: center;">
-
-    <a *ngIf="directLink" mat-raised-button color="primary" class="action-button" [href]="directLink"><mat-icon>launch</mat-icon> View {{selection.friendlyName}} on {{selection.platform}}</a>
-    <button mat-raised-button color="primary" class="action-button" (click)="copyID();"><mat-icon>content_copy</mat-icon> Copy "{{selection.contactID}}"</button>
-    <a *ngIf="homepageLink" mat-raised-button color="primary" class="action-button" [href]="homepageLink"><mat-icon>launch</mat-icon> Open {{selection.platform}}</a>
-    <button mat-stroked-button class="action-button" [mat-dialog-close]><mat-icon>close</mat-icon>Cancel</button>
-
-</div>

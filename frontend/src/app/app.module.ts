@@ -27,7 +27,6 @@ import { OnboardingComponent } from './components/onboarding/onboarding.componen
 import { FriendRequestComponent } from './components/friends/friend-request/friend-request.component';
 import { Header } from './components/common/header/heading.component';
 import { ChatComponent } from './components/chat/chat.component';
-import { ChatDialogComponent } from './components/chat/chat-dialog.component';
 import { DialogComponent } from './components/common/dialog/dialog.component';
 import { DialogService } from './components/common/dialog/dialog.service';
 
@@ -51,7 +50,6 @@ import { DialogService } from './components/common/dialog/dialog.service';
     FriendRequestComponent,
     Header,
     ChatComponent,
-    ChatDialogComponent,
     DialogComponent,
   ],
   imports: [
