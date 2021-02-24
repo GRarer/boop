@@ -3,10 +3,10 @@
     <h2 style="text-align: center; font-size: x-large;">{{getGreeting(info!.friendlyName)}}</h2>
     <div style="width: 4in; margin: auto;">
       <div style="width: 80%; margin: auto;">
-        <button mat-stroked-button routerLink="/add_friends"><mat-icon>group</mat-icon> Friends</button>
-        <button mat-stroked-button routerLink="/push_setup"><mat-icon>notification_add</mat-icon> Notification Setup</button>
-        <button mat-stroked-button routerLink="/edit_contact_info"><mat-icon>alternate_email</mat-icon> Edit Contact Info</button>
-        <button mat-stroked-button routerLink="/settings"><mat-icon>manage_accounts</mat-icon> Account Settings</button>
+        <button class="home-menu-button" mat-raised-button routerLink="/add_friends"><mat-icon>group</mat-icon> Friends</button>
+        <button class="home-menu-button" mat-raised-button routerLink="/push_setup"><mat-icon>notification_add</mat-icon> Notification Setup</button>
+        <button class="home-menu-button" mat-raised-button routerLink="/edit_contact_info"><mat-icon>alternate_email</mat-icon> Edit Contact Info</button>
+        <button class="home-menu-button" mat-raised-button routerLink="/settings"><mat-icon>manage_accounts</mat-icon> Account Settings</button>
 
         <mat-card>
           <mat-card-content style="margin-bottom: 0;">
@@ -36,7 +36,7 @@
           </mat-card-content>
         </mat-card>
 
-        <button mat-stroked-button color="warn" (click)="logout()"><mat-icon>logout</mat-icon> Log Out</button>
+        <button class="home-menu-button" mat-stroked-button color="warn" (click)="logout()"><mat-icon>logout</mat-icon> Log Out</button>
       </div>
     </div>
 </ng-container>
