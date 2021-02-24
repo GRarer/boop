@@ -17,8 +17,10 @@ contactRouter.put('/my_methods', handleAsync(async (req, res) => {
     await client.query(`delete from contact_methods where user_uuid = $1`, [userUUID]);
 
     // insert new methods
-    const params: string[][] = methods.map(method => [userUUID, method.platform, method.contactID]);
-    await client.query(pgFormat('INSERT INTO contact_methods (user_uuid, platform, contact_id) VALUES %L;', params));
+    if (methods.length > 0) {
+      const params: string[][] = methods.map(method => [userUUID, method.platform, method.contactID]);
+      await client.query(pgFormat('INSERT INTO contact_methods (user_uuid, platform, contact_id) VALUES %L;', params));
+    }
   });
 
   res.send();
