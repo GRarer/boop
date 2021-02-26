@@ -2,8 +2,11 @@ import { AnswerFriendRequest, GetFriendsResult } from "boop-core";
 import express from "express";
 import { getAuthInfoByUsername } from "../queries/authQueries";
 import { deleteFriendRequestQueryString, getFriends, getIncomingFriendRequests } from "../queries/friendsQueries";
+import { getPushByUUID } from "../queries/pushQueries";
 import { authenticateUUID } from "../services/auth";
 import { database } from "../services/database";
+import { friendRequestNotification } from "../services/friendNotification";
+import { sendNotificationToUser } from "../services/pushManager";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
 export const friendsRouter = express.Router();
 
@@ -43,6 +46,12 @@ friendsRouter.post('/send_request', handleAsync(async (req, res) => {
     `insert into friend_requests(from_user, to_user) values($1, $2);`,
     [userUUID, friendInfo.userUUID]
   );
+
+  const subs = await getPushByUUID(friendInfo.userUUID);
+  sendNotificationToUser(subs, friendRequestNotification)
+    .catch(err => { console.error(err); });
+
+
 
   // TODO send a notification to the person who received the friend request
   res.send();
