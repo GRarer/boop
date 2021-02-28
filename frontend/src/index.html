@@ -12,6 +12,18 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body class="mat-typography">
+  <!-- receive redirects from 404 page -->
+  <script>
+    (function () {
+      let redirect = sessionStorage.getItem('spa_redirect');
+      sessionStorage.removeItem('spa_redirect');
+      console.log('redirect', redirect);
+      if (redirect && redirect != location.href) {
+        history.replaceState(null, null, redirect);
+      }
+    })();
+  </script>
+
   <app-root></app-root>
   <noscript>Please enable JavaScript to continue using this application.</noscript>
 </body>

@@ -53,6 +53,7 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              "src/404.html",
               "src/manifest.webmanifest",
               "src/boop-service-worker.js"
             ],
