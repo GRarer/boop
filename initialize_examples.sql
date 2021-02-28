@@ -1,12 +1,12 @@
--- script to set up example data for testing. do not use in production.
+-- DO NOT USE IN PRODUCTION. script to set up example data for testing.
 
 \c boop;
 
 do $$
 <<examples>>
 declare
-  -- all of these test accounts use the password "foobar", which matches this hash
-  example_password_hash TEXT := '$2b$09$lAAPQpGfr7wG/D9KzFX1pOTrNpgX5X5AOCunbTxfOdcdmyqnKgOPy';
+  -- all of these test accounts use the password 'beepboob', which matches this hash
+  example_password_hash TEXT := '$2b$09$CNpJ2n9Tgz8Qgz0EbXfXg.ImFxY3A0sP0o3.alzzgAsxLm47O.rJm';
 
   -- fake UUIDs
   georgeUUID UUID := '00000001-0000-0000-0000-000000000000';
