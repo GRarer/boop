@@ -19,55 +19,44 @@ declare
   eveUUID UUID := '0000000e-0000-0000-0000-000000000000';
 
 begin
-    -- add example users'
+    INSERT INTO users
+      ("user_uuid", "username", "full_name", "friendly_name", "bcrypt_hash",
+      "email", "gender", "birth_date",
+      "profile_privacy_level", "profile_show_age", "profile_show_gender", "profile_bio") VALUES
     -- gpb (George P Burdell)
-    INSERT INTO users
-      ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date")
-      VALUES (georgeUUID, 'gpb', example_password_hash, 'George P. Burdell',
-      'George', 'Male', 'gburdell@gatech.edu', '1909-04-01');
-    -- ramonac (Ramona Cartwright Burdell)
-    INSERT INTO users
-      ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date")
-      VALUES (ramonaUUID, 'ramona', example_password_hash, 'Ramona Cartwright Burdell',
-      'Ramona', 'Female', 'rcartwright@agnesscott.edu', '1936-04-01');
+    (georgeUUID, 'gpb', 'Geore P. Budell', 'George', example_password_hash,
+    'gburdell@gatech.edu', 'Male', '1909-04-01',
+    'private', false, true, 'The Eternal Georgia Tech Student. Go Jackets!'),
+    -- ramona (Ramona Cartwright Burdell)
+    (ramonaUUID, 'ramona', 'Ramona Cartwright Burdell', 'Ramona', example_password_hash,
+    'rcartwright@agnesscott.edu', 'Female', '1936-04-01',
+    'public', true, true, 'Fictitious Scottie'),
     -- JRainwater (John Rainwater)
-    INSERT INTO users
-    ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date")
-      VALUES (johnUUID, 'JRainwater', example_password_hash, 'John Rainwater',
-      'Johnny', null, 'jrainwater@washington.edu', '1952-01-01');
+    (johnUUID, 'JRainwater', 'John Rainwater', 'Johnny', example_password_hash,
+    'jrainwater@washington.edu', null, '1952-01-01',
+    'public', true, true, 'Mathematician specializing in Functional Analysis.'),
+    -- alice
+    (aliceUUID, 'alice', 'Alice Exampelton', 'Alice', example_password_hash,
+    'alice@example.com', 'Female', '1995-03-05',
+    'public', true, true, 'Cryptography Enthusiast'),
+    -- bob
+    (bobUUID, 'bob', 'Robert Defacto', 'Bob', example_password_hash,
+    'bob@example.com', 'Male', '1990-10-20',
+    'private', false, false, 'Proponent of public-key encryption'),
+    -- charlie
+    (charlieUUID, 'charlie', 'Charlie McExampleFace', 'Charlie', example_password_hash,
+    'charlie@example.com', 'Nonbinary', '2000-07-15',
+    'public', false, true, ''),
+    -- david
+    (davidUUID, 'david', 'David Défaut', 'Dave', example_password_hash,
+    'david@example.com', null, '1995-03-30',
+    'public', true, true, ''),
+    -- eve
+    (eveUUID, 'eve', 'Eve Exampleton', 'Eve', example_password_hash,
+    'eve@example.com', 'Female', '1996-07-17',
+    'private', true, true, '');
 
-    -- alice, bob, charlie, and david
-    INSERT INTO users
-    ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date")
-      VALUES (aliceUUID, 'alice', example_password_hash, 'Alice Exampleton',
-      'Alice', 'Female', 'alice@example.com', '1995-03-05');
-    INSERT INTO users
-    ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date")
-      VALUES (bobUUID, 'bob', example_password_hash, 'Robert Defacto',
-      'Bob', 'Male', 'bob@example.com', '1999-10-20');
-    INSERT INTO users
-    ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date")
-      VALUES (charlieUUID, 'charlie', example_password_hash, 'Charlie McExampleface',
-      'Charlie', 'Nonbinary', 'charlie@example.com', '2000-07-15');
-    INSERT INTO users
-    ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date")
-      VALUES (davidUUID, 'david', example_password_hash, 'David Défaut',
-      'Dave', null, 'david@example.com', '1995-03-30');
-    INSERT INTO users
-    ("user_uuid", "username", "bcrypt_hash", "full_name",
-      "friendly_name", "gender", "email", "birth_date")
-      VALUES (eveUUID, 'eve', example_password_hash, 'Eve Exampleton',
-      'Eve', 'Female', 'eve@example.com', '1996-07-17');
-
-
-    -- friend request from John Rainwater to George P Burdell
+    -- friend requests
     insert into friend_requests(from_user, to_user)
         values(johnUUID, georgeUUID);
 
@@ -88,7 +77,7 @@ begin
 
     -- contact methods
     INSERT INTO contact_methods (user_uuid, platform, contact_id) VALUES
-    (georgeUUID, 'WhatsApp', '15555555555'),
+    (georgeUUID, 'WhatsApp', '+1-555-555-5555'),
     (georgeUUID, 'Discord', 'burdell#1234'),
     (georgeUUID, 'iMessage', '555-555-5555'),
     (ramonaUUID, 'WhatsApp', '15555551234'),
