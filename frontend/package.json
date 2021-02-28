@@ -29,7 +29,6 @@
     "@angular/router": "~10.0.14",
     "@angular/service-worker": "~10.0.14",
     "boop-core": "file:../core",
-    "ordinal": "^1.0.3",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "web-push": "^3.4.4",
