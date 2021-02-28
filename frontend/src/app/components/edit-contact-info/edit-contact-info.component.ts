@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContactMethod } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
-import ordinal from 'ordinal';
+import { ordinal } from 'src/app/util/ordinal';
 import { commonPlatforms } from 'src/app/util/platforms';
 
 type ContactCard = {
