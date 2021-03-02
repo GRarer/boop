@@ -6,6 +6,7 @@
     <h2 class="section-header">Pending Friend Requests</h2>
     <mat-card *ngFor="let request of info!.pendingFriendRequestsToUser" style="margin-bottom: 10px;">
       <mat-card-header>
+        <img mat-card-avatar [src]="request.avatarUrl">
         <mat-card-title>{{request.fullName}}</mat-card-title>
         <mat-card-subtitle style="margin-bottom: 0;">{{request.username}}</mat-card-subtitle>
       </mat-card-header>
@@ -19,6 +20,7 @@
     <h2 class="section-header">Your Friends</h2>
     <mat-card *ngFor="let friend of info!.currentFriends" style="margin-bottom: 10px;">
       <mat-card-header>
+        <img mat-card-avatar [src]="friend.avatarUrl">
         <mat-card-title>{{friend.fullName}}</mat-card-title>
         <mat-card-subtitle style="margin-bottom: 0;">{{friend.username}}</mat-card-subtitle>
       </mat-card-header>
