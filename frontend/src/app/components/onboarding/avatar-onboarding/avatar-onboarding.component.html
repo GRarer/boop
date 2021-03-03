@@ -1,0 +1,14 @@
+<h2 style="text-align: center; margin-bottom: 0;">Profile Image Setup</h2>
+<app-loading-bar *ngIf="info === undefined"></app-loading-bar>
+<ng-container *ngIf="info !== undefined">
+    <p class="menu-paragraph"> Boop uses the Gravatar image linked to your email address ({{info.emailAddress}})</p>
+    <div style="margin-top: 20px; text-align: center;">
+        <img [src]='info!.avatarUrl' style="width: 100px; height: 100px; border-radius: 50%;">
+        <button (click)="refresh()" mat-icon-button style="display: block; margin: auto;"><mat-icon>refresh</mat-icon></button>
+        <div style="width: 80%; margin: auto;">
+            <a href="//gravatar.com" target="_blank" mat-raised-button  style="width: 100%;">Upload an image on gravatar.com <mat-icon>launch</mat-icon></a>
+            <button mat-raised-button color="primary" style="width: 100%; margin-top: 20px;" (click)="done.emit();">Continue</button>
+        </div>
+        <p style="opacity: 50%; margin-top: 20px; max-width: 2.6in;" class="menu-paragraph">It might around one minute for Gravatar changes to be applied</p>
+    </div>
+</ng-container>
