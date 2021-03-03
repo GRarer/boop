@@ -51,7 +51,7 @@ export class SettingsComponent implements OnInit {
 
   refresh(): void {
     this.isLoading = true;
-    void this.apiService.getJSON<UserAccountResponse>("http://localhost:3000/account/info", undefined)
+    this.apiService.getJSON<UserAccountResponse>("http://localhost:3000/account/info", undefined)
       .then((response) => {
         this.info = response;
         this.updateUserForm.setValue(
