@@ -43,14 +43,17 @@ export class SettingsComponent implements OnInit {
 
   isLoading: boolean = true;
 
+  info?: UserAccountResponse;
+
   ngOnInit(): void {
     this.refresh();
   }
 
-  private refresh(): void {
+  refresh(): void {
     this.isLoading = true;
     void this.apiService.getJSON<UserAccountResponse>("http://localhost:3000/account/info", undefined)
       .then((response) => {
+        this.info = response;
         this.updateUserForm.setValue(
           {
             username: response.username,

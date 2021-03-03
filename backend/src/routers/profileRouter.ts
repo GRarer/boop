@@ -11,7 +11,7 @@ profileRouter.get('/chat_info', handleAsync(async (req, res) => {
     throwBoopError("invalid or missing chat notification token", 400);
   }
 
-  const person = (await database.query<{user_uuid: string; username: string; friendly_name: string; email: string}>(
+  const person = (await database.query<{user_uuid: string; username: string; friendly_name: string; email: string;}>(
     `select user_uuid, username, friendly_name, email
     from users join push_identity_tokens on user_uuid = target_user_uuid
     where token = $1;`,
