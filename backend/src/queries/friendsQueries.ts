@@ -12,7 +12,7 @@ export async function getIncomingFriendRequests(uuid: string): Promise<ProfileSu
     `select distinct user_uuid, username, full_name, status_message, email
     from users join friend_requests on user_uuid = from_user where to_user = $1;`;
   type ResultRow
-    = {user_uuid: string; username: string; full_name: string; status_message: string | null; email: string};
+    = {user_uuid: string; username: string; full_name: string; status_message: string | null; email: string;};
   const results: ResultRow[] = await database.query(query, [uuid]);
   return results.map(r =>
     ({

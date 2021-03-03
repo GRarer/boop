@@ -11,7 +11,5 @@ export function emailToGravatarURL(email: string): string {
       // ignore uploaded profile images marked as containing nudity, violence, etc
       rating: 'pg',
     },
-  // use https
-  true
   );
 }

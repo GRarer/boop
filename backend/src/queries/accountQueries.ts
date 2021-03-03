@@ -1,8 +1,10 @@
-import { CreateAccountRequest, Gender, genderValues, LoginResponse, UpdateAccountRequest } from "boop-core";
+import { CreateAccountRequest, Gender, genderValues, LoginResponse, UpdateAccountRequest,
+  UserAccountResponse } from "boop-core";
 import { database } from "../services/database";
 import { v4 as uuidv4 } from 'uuid';
 import { hashPassword, login, } from "../services/auth";
 import { throwBoopError } from "../util/handleAsync";
+import { emailToGravatarURL } from "../services/avatars";
 
 export async function createAccount(request: CreateAccountRequest): Promise<LoginResponse> {
   const accountUUID = uuidv4();
@@ -57,8 +59,7 @@ export async function deleteAccount(uuid: string): Promise<void> {
   await database.query(query, [uuid]); // Any error should be thrown
 }
 
-export async function getUserAccount(uuid: string): Promise<{ username: string; fullName: string; friendlyName: string;
-  emailAddress: string; birthDate: string; gender: Gender; } | undefined> {
+export async function getUserAccount(uuid: string): Promise<UserAccountResponse> {
   const query = `SELECT "username", "full_name", "friendly_name", "email", "birth_date", "gender"
    FROM users WHERE user_uuid=$1`;
   type UserRow = {
@@ -72,19 +73,20 @@ export async function getUserAccount(uuid: string): Promise<{ username: string; 
 
   const rows: UserRow[] = (await database.query(query, [uuid]));
 
-  if (rows.length > 0) {
-    const result = rows[0];
-    return {
-      username: result.username,
-      fullName: result.full_name,
-      friendlyName: result.friendly_name,
-      emailAddress: result.email,
-      birthDate: result.birth_date,
-      gender: result.gender
-    };
+  if (rows.length === 0) {
+    throwBoopError("Account Not Found", 404);
   }
 
-  return undefined;
+  const result = rows[0];
+  return {
+    username: result.username,
+    fullName: result.full_name,
+    friendlyName: result.friendly_name,
+    emailAddress: result.email,
+    birthDate: result.birth_date,
+    gender: result.gender,
+    avatarUrl: emailToGravatarURL(result.email),
+  };
 }
 
 export async function updatePassword(uuid: string, password: string): Promise<void> {
