@@ -2,7 +2,7 @@ mat-form-field {
     min-width: 80%;
 }
 
-::ng-deep mat-card {
-    margin-bottom: 10px !important;
+:host ::ng-deep mat-card {
     margin: auto;
+    margin-bottom: 15px;
 }

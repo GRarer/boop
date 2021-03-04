@@ -2,9 +2,10 @@ mat-form-field {
 	width: 100%;
 }
 
-mat-card {
+:host ::ng-deep mat-card {
 	width: calc(100% - 60px);
 	margin: auto;
+	margin-bottom: 30px;
 }
 
 .update-button {
