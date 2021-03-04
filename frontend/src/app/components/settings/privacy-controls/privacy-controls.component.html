@@ -1,8 +1,8 @@
 <form [formGroup]="formGroup" *ngIf="formGroup">
-    <mat-card style="margin-bottom: 30px;">
+    <mat-card>
         <mat-card-header>
             <mat-card-title>Profile Privacy</mat-card-title>
-            <mat-card-subtitle>Control who can see your profile</mat-card-subtitle>
+            <mat-card-subtitle>Control who can see your profile, friends list, and contact info</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content style="padding-left: 16px;">
             <mat-radio-group #privacySelection formControlName="privacyLevel" class="stacked-radio-group">
@@ -21,7 +21,7 @@
             </div>
         </mat-card-content>
     </mat-card>
-    <mat-card style="margin-bottom: 30px;">
+    <mat-card>
         <mat-card-header>
             <mat-card-title>Profile Information</mat-card-title>
             <mat-card-subtitle>Control what information is shown on your profile</mat-card-subtitle>

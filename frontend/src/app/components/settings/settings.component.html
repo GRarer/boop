@@ -1,6 +1,6 @@
 <app-loading-bar *ngIf="info === undefined"></app-loading-bar>
 <div *ngIf="info !== undefined" style="padding-bottom: 10px;">
-	<mat-card style="margin-bottom: 30px;">
+	<mat-card>
 		<mat-card-header>
 			<mat-card-title>User Info</mat-card-title>
 		</mat-card-header>
@@ -42,7 +42,7 @@
 				[disabled]="!updateUserForm.valid || updateUserForm.pristine">Update</button>
 		</form>
 	</mat-card>
-	<mat-card style="margin-bottom: 30px;">
+	<mat-card>
 		<mat-card-header>
 			<mat-card-title>Profile Avatar</mat-card-title>
 			<mat-card-subtitle>Boop uses the Gravatar image linked to your email address</mat-card-subtitle>
@@ -63,7 +63,7 @@
 	<form [formGroup]="privacyForm" (submit)="updatePrivacySettings()">
 		<app-privacy-controls [formGroup]="privacyForm"></app-privacy-controls>
 	</form>
-	<mat-card style="margin-bottom: 30px;">
+	<mat-card>
 		<mat-card-header>
 			<mat-card-title>Change Password</mat-card-title>
 		</mat-card-header>
@@ -85,7 +85,7 @@
 				[disabled]="!changePasswordForm.valid">Update</button>
 		</form>
 	</mat-card>
-	<mat-card style="border: 2px solid #f44336">
+	<mat-card style="border: 2px solid #f44336; margin-bottom: 0;">
 		<mat-card-header>
 			<mat-card-title>Delete Account</mat-card-title>
 		</mat-card-header>
