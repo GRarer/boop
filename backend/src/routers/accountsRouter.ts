@@ -8,7 +8,9 @@ import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
 import { getAuthInfoByUsername, getPasswordHashByUuid, removeSession } from "../queries/authQueries";
 import bcrypt from "bcrypt";
-import { createAccount, getCurrentSettings, updateAccount, updatePassword, deleteAccount } from "../queries/accountQueries";
+import {
+  createAccount, getCurrentSettings, updateAccount, updatePassword, deleteAccount
+} from "../queries/accountQueries";
 import { database } from "../services/database";
 
 export const accountsRouter = express.Router();
@@ -50,7 +52,8 @@ accountsRouter.post('/register', handleAsync(async (req, res) => {
     throwBoopError("Invalid gender format.", 400);
   }
 
-  const loginResponse: LoginResponse = await createAccount(body);
+  await createAccount(body);
+  const loginResponse: LoginResponse = await login({ username: body.username, password: body.password });
   res.send(loginResponse);
 }));
 

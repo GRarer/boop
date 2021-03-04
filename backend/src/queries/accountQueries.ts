@@ -1,21 +1,24 @@
-import { CreateAccountRequest, Gender, genderValues, LoginResponse, UpdateAccountRequest,
+import { CreateAccountRequest, Gender, genderValues, UpdateAccountRequest,
   CurrentSettingsResponse, PrivacyLevel } from "boop-core";
 import { database } from "../services/database";
 import { v4 as uuidv4 } from 'uuid';
-import { hashPassword, login, } from "../services/auth";
+import { hashPassword } from "../services/auth";
 import { throwBoopError } from "../util/handleAsync";
 import { emailToGravatarURL } from "../services/avatars";
 
-export async function createAccount(request: CreateAccountRequest): Promise<LoginResponse> {
+export async function createAccount(request: CreateAccountRequest): Promise<void> {
   const accountUUID = uuidv4();
   const passwordHash = await hashPassword(request.password);
 
   const query =
       `INSERT INTO users
-      ("user_uuid", "username", "bcrypt_hash", "full_name", "friendly_name", "gender", "email", "birth_date")
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`;
-  const params = [accountUUID, request.username, passwordHash, request.fullName, request.friendlyName,
-    request.gender, request.emailAddress, request.birthDate];
+      ("user_uuid", "username", "bcrypt_hash", "full_name", "friendly_name", "gender",
+      "email", "birth_date", "profile_privacy_level", "profile_show_age", "profile_show_gender")
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);`;
+  const params = [
+    accountUUID, request.username, passwordHash, request.fullName, request.friendlyName, request.gender,
+    request.emailAddress, request.birthDate, request.privacyLevel, request.profileShowAge, request.profileShowGender
+  ];
 
   try {
     await database.query(query, params);
@@ -26,8 +29,6 @@ export async function createAccount(request: CreateAccountRequest): Promise<Logi
       throw err;
     }
   }
-
-  return await login({ username: request.username, password: request.password });
 }
 
 

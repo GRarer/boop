@@ -11,6 +11,9 @@ export type CreateAccountRequest = {
   emailAddress: string;
   birthDate: string; // ISO format date string (e.g. 2020-01-16)
   gender: Gender;
+  privacyLevel: PrivacyLevel;
+  profileShowAge: boolean;
+  profileShowGender: boolean;
 };
 
 export type UpdateAccountRequest = {
