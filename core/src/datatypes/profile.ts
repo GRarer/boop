@@ -28,3 +28,7 @@ export type StartChatResult = {
   avatarUrl: string;
   contactMethods: ContactMethod[];
 };
+
+// private profiles are visible to friends and friends-of-friends
+// restricted profiles are visible only to friends, which prevents friends-of-friends from being matched
+export type PrivacyLevel = "public" | "private" | "restricted";

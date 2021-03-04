@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionService } from 'src/app/services/session.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UpdatePasswordRequest, UserAccountResponse, UpdateAccountRequest, genderValues, Gender } from 'boop-core';
+import {
+  UpdatePasswordRequest, CurrentSettingsResponse, UpdateAccountRequest, genderValues, Gender, UpdatePrivacyRequest
+} from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { equalToSiblingValidator } from 'src/app/util/ngUtils';
@@ -35,25 +37,32 @@ export class SettingsComponent implements OnInit {
     birthDate: new FormControl('', [Validators.required]),
   });
 
+  privacyForm: FormGroup = new FormGroup({
+    showAge: new FormControl('', [Validators.required]),
+    showGender: new FormControl('', [Validators.required]),
+    privacyLevel: new FormControl('', [Validators.required]),
+  });
+
   changePasswordForm: FormGroup = new FormGroup({
     oldPassword: new FormControl('', [Validators.required]),
     newPassword: new FormControl('', [Validators.required]),
     confirmNewPassword: new FormControl('', [Validators.required, equalToSiblingValidator("newPassword")])
   });
 
-  isLoading: boolean = true;
-
-  info?: UserAccountResponse;
+  info?: CurrentSettingsResponse;
 
   ngOnInit(): void {
+    // update privacy settings every time the privacy form is changed
+    this.privacyForm.valueChanges.subscribe(() => { this.updatePrivacySettings(); });
+    // refresh to load current settings
     this.refresh();
   }
 
   refresh(): void {
-    this.isLoading = true;
-    this.apiService.getJSON<UserAccountResponse>("http://localhost:3000/account/info", undefined)
+    this.info = undefined;
+    this.apiService.getJSON<CurrentSettingsResponse>("http://localhost:3000/account/current_settings", undefined)
       .then((response) => {
-        this.info = response;
+        console.log(response);
         this.updateUserForm.setValue(
           {
             username: response.username,
@@ -65,7 +74,15 @@ export class SettingsComponent implements OnInit {
           }
         );
         this.updateUserForm.markAsPristine();
-        this.isLoading = false;
+        this.privacyForm.setValue({
+          showAge: response.profileShowAge,
+          showGender: response.profileShowGender,
+          privacyLevel: response.privacyLevel
+        }, {
+          emitEvent: false // don't trigger updatePrivacySettings()
+        });
+        this.privacyForm.markAsPristine();
+        this.info = response;
       }).catch((error) => {
         console.error(error);
         this.snackBar.open(
@@ -105,8 +122,6 @@ export class SettingsComponent implements OnInit {
     }
 
     const value = this.updateUserForm.value;
-    console.log(value);
-
     const request: UpdateAccountRequest = {
       username: value.username,
       fullName: value.fullName,
@@ -122,6 +137,17 @@ export class SettingsComponent implements OnInit {
     }).catch((error) => {
       this.apiService.showErrorPopup(error);
     });
+  }
+
+  updatePrivacySettings(): void {
+    const value = this.privacyForm.value;
+    const request: UpdatePrivacyRequest = {
+      profileShowAge: value.showAge,
+      profileShowGender: value.showGender,
+      privacyLevel: value.privacyLevel
+    };
+    this.apiService.putJSON("http://localhost:3000/account/privacy", request)
+      .catch(err => { this.apiService.showErrorPopup(err); });
   }
 
   startDelete(): void {

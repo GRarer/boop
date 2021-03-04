@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { UserAccountResponse } from 'boop-core';
+import { CurrentSettingsResponse } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class AvatarOnboardingComponent implements OnInit {
 
-  info: UserAccountResponse | undefined;
+  info: CurrentSettingsResponse | undefined;
 
   @Output() done = new EventEmitter<void>();
 
@@ -23,7 +23,7 @@ export class AvatarOnboardingComponent implements OnInit {
 
   refresh(): void {
     this.info = undefined;
-    this.apiService.getJSON<UserAccountResponse>("http://localhost:3000/account/info", undefined)
+    this.apiService.getJSON<CurrentSettingsResponse>("http://localhost:3000/account/current_settings", undefined)
       .then((response) => {
         this.info = response;
       })

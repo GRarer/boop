@@ -1,5 +1,5 @@
 import { CreateAccountRequest, Gender, genderValues, LoginResponse, UpdateAccountRequest,
-  UserAccountResponse } from "boop-core";
+  CurrentSettingsResponse, PrivacyLevel } from "boop-core";
 import { database } from "../services/database";
 import { v4 as uuidv4 } from 'uuid';
 import { hashPassword, login, } from "../services/auth";
@@ -59,9 +59,11 @@ export async function deleteAccount(uuid: string): Promise<void> {
   await database.query(query, [uuid]); // Any error should be thrown
 }
 
-export async function getUserAccount(uuid: string): Promise<UserAccountResponse> {
-  const query = `SELECT "username", "full_name", "friendly_name", "email", "birth_date", "gender"
-   FROM users WHERE user_uuid=$1`;
+export async function getCurrentSettings(uuid: string): Promise<CurrentSettingsResponse> {
+  const query =
+  `SELECT "username", "full_name", "friendly_name", "email", "birth_date", "gender",
+    "profile_privacy_level", "profile_show_age","profile_show_gender"
+    FROM users WHERE user_uuid=$1`;
   type UserRow = {
     username: string;
     full_name: string;
@@ -69,15 +71,14 @@ export async function getUserAccount(uuid: string): Promise<UserAccountResponse>
     email: string;
     birth_date: string;
     gender: Gender;
+    profile_privacy_level: PrivacyLevel;
+    profile_show_age: boolean;
+    profile_show_gender: boolean;
   };
 
   const rows: UserRow[] = (await database.query(query, [uuid]));
+  const result = rows[0] ?? throwBoopError("Account Not Found", 404);
 
-  if (rows.length === 0) {
-    throwBoopError("Account Not Found", 404);
-  }
-
-  const result = rows[0];
   return {
     username: result.username,
     fullName: result.full_name,
@@ -86,6 +87,9 @@ export async function getUserAccount(uuid: string): Promise<UserAccountResponse>
     birthDate: result.birth_date,
     gender: result.gender,
     avatarUrl: emailToGravatarURL(result.email),
+    privacyLevel: result.profile_privacy_level,
+    profileShowAge: result.profile_show_age,
+    profileShowGender: result.profile_show_gender
   };
 }
 

@@ -31,3 +31,23 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     max-height: 2em;
     margin-top: -0.5em;
 }
+
+.stacked-radio-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.stacked-radio-button {
+    margin-bottom: 5px;
+
+    mat-icon {
+        position: relative;
+        top: 2px;
+        margin-right: 8px;
+    }
+
+    span {
+        position: relative;
+        bottom: 5px;
+    }
+}
