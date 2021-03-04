@@ -17,11 +17,17 @@ export async function selectPairs(): Promise<Pairing[]> {
       FROM users
       WHERE (do_not_disturb IS NOT true) and (last_push_timestamp is null or last_push_timestamp < $1)
     ),
-    -- find all the friend-of-friend relationships
+    -- users with restricted profiles cannot match with friends-of-friends
+	  restricted_users AS (
+		  select user_uuid from users where profile_privacy_level = 'restricted'
+	  ),
+    -- find all the friend-of-friend relationships that don't include someone with a restricted profile
     metafriends as (
       select f1.user_a as user_a, f1.user_b as shared, f2.user_b as user_b
       from friends f1 join friends f2 on f1.user_b = f2.user_a
       where f1.user_a <> f2.user_b and f2.user_b not in (select f3.user_b from friends f3 where f3.user_a = f1.user_a)
+		and f1.user_a not in (select user_uuid from restricted_users)
+		and f2.user_b not in (select user_uuid from restricted_users)
     ),
     -- pick a random subset of users to get notifications about friends
     friends_chosen_users AS (
