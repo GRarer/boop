@@ -5,9 +5,8 @@ import { deleteFriendRequestQueryString, getFriends, getIncomingFriendRequests }
 import { getPushByUUID } from "../queries/pushQueries";
 import { authenticateUUID } from "../services/auth";
 import { database } from "../services/database";
-import { friendRequestNotification } from "../services/friendNotification";
+import { friendRequestNotification, friendAcceptNotification } from "../services/friendNotification";
 import { sendNotificationToUser } from "../services/pushManager";
-import { friendAcceptNotification } from "../services/userNotification";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
 export const friendsRouter = express.Router();
 
