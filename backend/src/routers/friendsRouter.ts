@@ -7,6 +7,7 @@ import { authenticateUUID } from "../services/auth";
 import { database } from "../services/database";
 import { friendRequestNotification } from "../services/friendNotification";
 import { sendNotificationToUser } from "../services/pushManager";
+import { friendAcceptNotification } from "../services/userNotification";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
 export const friendsRouter = express.Router();
 
@@ -49,9 +50,7 @@ friendsRouter.post('/send_request', handleAsync(async (req, res) => {
 
   const subs = await getPushByUUID(friendInfo.userUUID);
   sendNotificationToUser(subs, friendRequestNotification)
-    .catch(err => { console.error(err); });
-
-
+    .catch(err => { console.error(err); });  
 
   // TODO send a notification to the person who received the friend request
   res.send();
@@ -83,10 +82,24 @@ friendsRouter.post('/answer_request', handleAsync(async (req, res) => {
       await client.query(
         `INSERT INTO FRIENDS(user_a, user_b) values ($1, $2), ($2, $1);`, [userUUID, body.friendUUID]);
     }));
+
+    
+    // Send notification back to user
+    const subs = await getPushByUUID(userUUID);
+    sendNotificationToUser(subs, friendAcceptNotification)
+      .catch(err => { console.error(err); });
+    // 
+
+
   } else {
     // just remove friend request
     await database.query(deleteFriendRequestQueryString, [userUUID, body.friendUUID]);
   }
+
+  // const subs = await getPushByUUID(friendInfo.userUUID);
+  // sendNotificationToUser(subs, friendRequestNotification)
+  //   .catch(err => { console.error(err); });
+
 
   res.send();
 }));
