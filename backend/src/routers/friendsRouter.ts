@@ -2,8 +2,11 @@ import { AnswerFriendRequest, GetFriendsResult } from "boop-core";
 import express from "express";
 import { getAuthInfoByUsername } from "../queries/authQueries";
 import { deleteFriendRequestQueryString, getFriends, getIncomingFriendRequests } from "../queries/friendsQueries";
+import { getPushByUUID } from "../queries/pushQueries";
 import { authenticateUUID } from "../services/auth";
 import { database } from "../services/database";
+import { friendRequestNotification, friendAcceptNotification } from "../services/friendNotification";
+import { sendNotificationToUser } from "../services/pushManager";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
 export const friendsRouter = express.Router();
 
@@ -44,6 +47,10 @@ friendsRouter.post('/send_request', handleAsync(async (req, res) => {
     [userUUID, friendInfo.userUUID]
   );
 
+  const subs = await getPushByUUID(friendInfo.userUUID);
+  sendNotificationToUser(subs, friendRequestNotification)
+    .catch(err => { console.error(err); });
+
   // TODO send a notification to the person who received the friend request
   res.send();
 }));
@@ -74,11 +81,15 @@ friendsRouter.post('/answer_request', handleAsync(async (req, res) => {
       await client.query(
         `INSERT INTO FRIENDS(user_a, user_b) values ($1, $2), ($2, $1);`, [userUUID, body.friendUUID]);
     }));
+
+    // Send notification to the sender of the request
+    const subs = await getPushByUUID(body.friendUUID);
+    sendNotificationToUser(subs, friendAcceptNotification)
+      .catch(err => { console.error(err); });
   } else {
     // just remove friend request
     await database.query(deleteFriendRequestQueryString, [userUUID, body.friendUUID]);
   }
-
   res.send();
 }));
 

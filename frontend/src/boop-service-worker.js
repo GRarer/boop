@@ -1,5 +1,5 @@
 // custom service worker
-console.log("boop custom service worker version 4");
+console.log("boop custom service worker version 5");
 
 // detect whether this instance is localhost or deployed
 const host = `${self.registration.scope}`.includes("localhost")
@@ -24,6 +24,9 @@ try {
       console.log("navigating");
       event.notification.close();
       event.waitUntil(clients.openWindow(`${host}home`));
+    } else if (action === "show_friends_page") {
+      event.notification.close();
+      event.waitUntil(clients.openWindow(`${host}add_friends`));
     }
   });
 } catch (err) {
