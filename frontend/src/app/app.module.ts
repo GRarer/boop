@@ -30,6 +30,7 @@ import { ChatComponent } from './components/chat/chat.component';
 import { DialogComponent } from './components/common/dialog/dialog.component';
 import { DialogService } from './components/common/dialog/dialog.service';
 import { AvatarOnboardingComponent } from './components/onboarding/avatar-onboarding/avatar-onboarding.component';
+import { PrivacyControlsComponent } from './components/settings/privacy-controls/privacy-controls.component';
 
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
@@ -53,6 +54,7 @@ import { AvatarOnboardingComponent } from './components/onboarding/avatar-onboar
     ChatComponent,
     DialogComponent,
     AvatarOnboardingComponent,
+    PrivacyControlsComponent,
   ],
   imports: [
     BrowserModule,

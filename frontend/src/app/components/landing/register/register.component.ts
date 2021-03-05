@@ -22,11 +22,17 @@ export class RegisterComponent implements OnInit {
   genderOptions: Gender[] = genderValues;
 
   registerForm: FormGroup = new FormGroup({
+    // user info
     fullName: new FormControl('', [Validators.required]),
     friendlyName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     birthDate: new FormControl('', [Validators.required]),
     gender: new FormControl(),
+    // privacy settings
+    privacyLevel: new FormControl('public', [Validators.required]),
+    showAge: new FormControl(true, [Validators.required]),
+    showGender: new FormControl(true, [Validators.required]),
+    // user must check box to agree to terms
     agreeToTerms: new FormControl(false, [Validators.requiredTrue]),
   });
 
@@ -44,9 +50,7 @@ export class RegisterComponent implements OnInit {
 
   register(): void {
     const value = this.registerForm.value;
-    const fullName: string = value.fullName;
-    const friendlyName: string = value.friendlyName;
-    const emailAddress: string = value.email;
+
     // form value for gender is empty string if user chose "prefer not so say", or undefined if they did not choose
     // in either of those cases, we replace that with null
     const gender: Gender = value.gender || null;
@@ -59,11 +63,14 @@ export class RegisterComponent implements OnInit {
     const request: CreateAccountRequest = {
       username: this.credentials!.username,
       password: this.credentials!.password,
-      fullName,
-      friendlyName,
-      emailAddress,
+      fullName: value.fullName,
+      friendlyName: value.friendlyName,
+      emailAddress: value.email,
       gender,
       birthDate,
+      privacyLevel: value.privacyLevel,
+      profileShowAge: value.showAge,
+      profileShowGender: value.showGender,
     };
     this.sessionService.loginNewAccount(request).then(() => {
       void this.router.navigate(["/onboarding"]);

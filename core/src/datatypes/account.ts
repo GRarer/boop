@@ -1,6 +1,7 @@
 // data for account creation
 
 import { Gender } from "./gender";
+import { PrivacyLevel } from "./profile";
 
 export type CreateAccountRequest = {
   username: string;
@@ -10,6 +11,9 @@ export type CreateAccountRequest = {
   emailAddress: string;
   birthDate: string; // ISO format date string (e.g. 2020-01-16)
   gender: Gender;
+  privacyLevel: PrivacyLevel;
+  profileShowAge: boolean;
+  profileShowGender: boolean;
 };
 
 export type UpdateAccountRequest = {
@@ -21,7 +25,7 @@ export type UpdateAccountRequest = {
   gender: Gender;
 };
 
-export type UserAccountResponse = {
+export type CurrentSettingsResponse = {
   username: string;
   fullName: string;
   friendlyName: string;
@@ -29,6 +33,9 @@ export type UserAccountResponse = {
   birthDate: string;
   gender: Gender;
   avatarUrl: string;
+  privacyLevel: PrivacyLevel;
+  profileShowAge: boolean;
+  profileShowGender: boolean;
 };
 
 export type UpdatePasswordRequest = {
@@ -36,4 +43,8 @@ export type UpdatePasswordRequest = {
   newPassword: string;
 };
 
-
+export type UpdatePrivacyRequest = {
+  privacyLevel: PrivacyLevel;
+  profileShowAge: boolean;
+  profileShowGender: boolean;
+};

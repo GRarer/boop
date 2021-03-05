@@ -1,12 +1,17 @@
 import express from "express";
-import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse,
-  sessionTokenHeaderName, UpdatePasswordRequest, UpdateAccountRequest, UserAccountResponse } from "boop-core";
+import {
+  failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse, sessionTokenHeaderName,
+  UpdatePasswordRequest, UpdateAccountRequest, CurrentSettingsResponse, UpdatePrivacyRequest
+} from "boop-core";
 import { authenticateUUID, login, userUuidFromReq } from "../services/auth";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
 import { getAuthInfoByUsername, getPasswordHashByUuid, removeSession } from "../queries/authQueries";
 import bcrypt from "bcrypt";
-import { createAccount, getUserAccount, updateAccount, updatePassword, deleteAccount } from "../queries/accountQueries";
+import {
+  createAccount, getCurrentSettings, updateAccount, updatePassword, deleteAccount
+} from "../queries/accountQueries";
+import { database } from "../services/database";
 
 export const accountsRouter = express.Router();
 
@@ -47,13 +52,14 @@ accountsRouter.post('/register', handleAsync(async (req, res) => {
     throwBoopError("Invalid gender format.", 400);
   }
 
-  const loginResponse: LoginResponse = await createAccount(body);
+  await createAccount(body);
+  const loginResponse: LoginResponse = await login({ username: body.username, password: body.password });
   res.send(loginResponse);
 }));
 
-accountsRouter.get('/info', handleAsync(async (req, res) => { // TODO make this a query string
+accountsRouter.get('/current_settings', handleAsync(async (req, res) => {
   const uuid = await authenticateUUID(req);
-  const result: UserAccountResponse = await getUserAccount(uuid);
+  const result: CurrentSettingsResponse = await getCurrentSettings(uuid);
   res.send(result);
 }));
 
@@ -112,6 +118,17 @@ accountsRouter.put('/password', handleAsync(async (req, res) => {
   }
 
   await updatePassword(uuid, body.newPassword);
+  res.send();
+}));
+
+accountsRouter.put('/privacy', handleAsync(async (req, res) => {
+  const uuid: string = await authenticateUUID(req);
+  const newValues: UpdatePrivacyRequest = req.body;
+  await database.query(
+    `UPDATE users SET profile_privacy_level = $1, profile_show_age = $2, profile_show_gender = $3
+    WHERE user_uuid=$4;`,
+    [newValues.privacyLevel, newValues.profileShowAge, newValues.profileShowGender, uuid]
+  );
   res.send();
 }));
 

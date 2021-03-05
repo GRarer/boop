@@ -1,6 +1,6 @@
-<app-loading-bar *ngIf="isLoading"></app-loading-bar>
-<div *ngIf="!isLoading" style="padding-bottom: 10px;">
-	<mat-card style="margin-bottom: 30px;">
+<app-loading-bar *ngIf="info === undefined"></app-loading-bar>
+<div *ngIf="info !== undefined" style="padding-bottom: 10px;">
+	<mat-card>
 		<mat-card-header>
 			<mat-card-title>User Info</mat-card-title>
 		</mat-card-header>
@@ -42,7 +42,7 @@
 				[disabled]="!updateUserForm.valid || updateUserForm.pristine">Update</button>
 		</form>
 	</mat-card>
-	<mat-card style="margin-bottom: 30px;">
+	<mat-card>
 		<mat-card-header>
 			<mat-card-title>Profile Avatar</mat-card-title>
 			<mat-card-subtitle>Boop uses the Gravatar image linked to your email address</mat-card-subtitle>
@@ -53,13 +53,17 @@
 				<button (click)="refresh()" mat-icon-button><mat-icon>refresh</mat-icon></button>
 				<p style="margin-bottom: 0;">{{info!.emailAddress}}</p>
 			</div>
-			<p style="color: rgba(0,0,0,.54); text-align: center;">It might around one minute for Gravatar changes to be applied</p>
+			<p style="color: rgba(0,0,0,.54); text-align: center;">It might take around one minute for Gravatar changes to be applied</p>
 
 			<a href="//gravatar.com" target="_blank" style= "width: 100%;" color="primary" mat-raised-button>Upload an image on gravatar.com <mat-icon>launch</mat-icon></a>
 		</mat-card-content>
 
 	</mat-card>
-	<mat-card style="margin-bottom: 30px;">
+
+	<form [formGroup]="privacyForm" (submit)="updatePrivacySettings()">
+		<app-privacy-controls [formGroup]="privacyForm"></app-privacy-controls>
+	</form>
+	<mat-card>
 		<mat-card-header>
 			<mat-card-title>Change Password</mat-card-title>
 		</mat-card-header>
@@ -81,7 +85,7 @@
 				[disabled]="!changePasswordForm.valid">Update</button>
 		</form>
 	</mat-card>
-	<mat-card style="border: 2px solid #f44336">
+	<mat-card style="border: 2px solid #f44336; margin-bottom: 0;">
 		<mat-card-header>
 			<mat-card-title>Delete Account</mat-card-title>
 		</mat-card-header>
