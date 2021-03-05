@@ -1,6 +1,6 @@
 import express from "express";
 import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse,
-  sessionTokenHeaderName, UpdatePasswordRequest, UpdateAccountRequest } from "boop-core";
+  sessionTokenHeaderName, UpdatePasswordRequest, UpdateAccountRequest, UserAccountResponse } from "boop-core";
 import { authenticateUUID, login, userUuidFromReq } from "../services/auth";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
@@ -52,16 +52,8 @@ accountsRouter.post('/register', handleAsync(async (req, res) => {
 }));
 
 accountsRouter.get('/info', handleAsync(async (req, res) => { // TODO make this a query string
-  const uuid = await userUuidFromReq(req);
-  if (uuid === undefined) {
-    throwBoopError("Unauthenticated user", 401);
-  }
-
-  const result = await getUserAccount(uuid);
-  if (result === undefined) {
-    throwBoopError("User not found", 404);
-  }
-
+  const uuid = await authenticateUUID(req);
+  const result: UserAccountResponse = await getUserAccount(uuid);
   res.send(result);
 }));
 

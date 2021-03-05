@@ -28,6 +28,7 @@ export type UserAccountResponse = {
   emailAddress: string;
   birthDate: string;
   gender: Gender;
+  avatarUrl: string;
 };
 
 export type UpdatePasswordRequest = {

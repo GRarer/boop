@@ -4,7 +4,7 @@ export type ProfileSummary = {
   username: string;
   fullName: string;
   statusMessage: string;
-  // TODO include profile image
+  avatarUrl: string;
 };
 
 export type GetFriendsResult = {
@@ -25,6 +25,6 @@ export type ContactMethod = {
 export type StartChatResult = {
   username: string;
   friendlyName: string;
-  // TODO include profile image
+  avatarUrl: string;
   contactMethods: ContactMethod[];
 };
