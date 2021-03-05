@@ -83,7 +83,6 @@ friendsRouter.post('/answer_request', handleAsync(async (req, res) => {
         `INSERT INTO FRIENDS(user_a, user_b) values ($1, $2), ($2, $1);`, [userUUID, body.friendUUID]);
     }));
 
-    
     // Send notification back to user
     const subs = await getPushByUUID(userUUID);
     sendNotificationToUser(subs, friendAcceptNotification)
@@ -95,12 +94,6 @@ friendsRouter.post('/answer_request', handleAsync(async (req, res) => {
     // just remove friend request
     await database.query(deleteFriendRequestQueryString, [userUUID, body.friendUUID]);
   }
-
-  // const subs = await getPushByUUID(friendInfo.userUUID);
-  // sendNotificationToUser(subs, friendRequestNotification)
-  //   .catch(err => { console.error(err); });
-
-
   res.send();
 }));
 
