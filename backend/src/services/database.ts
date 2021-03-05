@@ -18,7 +18,7 @@ class Database {
       user: process.env.PGUSER ?? usernameArgument,
       host: process.env.PGHOST ?? 'localhost',
       database: process.env.PGDATABASE ?? 'boop',
-      password: process.env.PGPASSWORD ?? passwordArgument,
+      password: process.env.PGPASSWORD ?? process.env.postgres_password ?? passwordArgument,
       port: 5432,
     });
   }
