@@ -12,14 +12,13 @@ class Database {
     * we next look for an environment variable called "postgres_password".
     */
     const passwordArgument: string | undefined = parseArgs(process.argv.slice(2))["password"];
-    const passwordEnvironmentVariable: string | undefined = process.env["postgres_password"];
-
-    const usernameArgument: string | undefined = parseArgs(process.argv.slice(2))["sqlUser"];
+    const usernameArgument: string | undefined = parseArgs(process.argv.slice(2))["sqlUser"] ?? 'postgres';
 
     this.pool = new Pool({
-      user: usernameArgument ?? 'postgres',
-      database: 'boop',
-      password: passwordArgument ?? passwordEnvironmentVariable,
+      user: process.env.PGUSER ?? usernameArgument,
+      host: process.env.PGHOST ?? 'localhost',
+      database: process.env.PGDATABASE ?? 'boop',
+      password: process.env.PGPASSWORD ?? process.env.postgres_password ?? passwordArgument,
       port: 5432,
     });
   }
