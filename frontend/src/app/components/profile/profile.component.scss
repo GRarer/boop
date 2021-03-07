@@ -1,0 +1,39 @@
+.profile-image {
+    width: 1in;
+    height: 1in;
+    border-radius: 50%;
+}
+
+.profile-demographic {
+    width: 1in;
+    text-align: center;
+    display: inline-block;
+    font-size: large;
+}
+
+.profile-container {
+    width: calc(100% - 40px);
+    margin: auto;
+}
+
+.bio {
+    margin-top: 10px;
+    text-align: center;
+    font-size: medium;
+}
+
+.status {
+    margin-top: 10px;
+    text-align: center;
+    font-size: medium;
+    font-style: italic;
+}
+
+:host ::ng-deep .mat-tab-label {
+    min-width: 110px;
+    font-size: large;
+    mat-icon {
+        margin-right: 8px;
+      }
+
+}

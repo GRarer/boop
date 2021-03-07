@@ -1,1 +1,48 @@
-<p>profile works!</p>
+<app-loading-bar *ngIf="loading"></app-loading-bar>
+<ng-container *ngIf="!loading">
+    <!-- message to display when you cannot view this profile-->
+    <ng-container *ngIf="denialReason">
+        <p>{{denialReason}}</p>
+    </ng-container>
+    <!--profile information-->
+    <div *ngIf="profile" class="profile-container">
+        <div style="text-align: center;">
+            <img [src]='profile!.avatarUrl' class = 'profile-image'>
+            <h1 class="mat-headline">{{profile!.fullName}}</h1>
+        </div>
+        <div style="text-align: center;">
+            <span *ngIf="profile!.gender" class="profile-demographic" [ngSwitch]="profile!.gender">
+                <mat-icon *ngSwitchCase="'Female'">female</mat-icon>
+                <mat-icon *ngSwitchCase="'Male'">male</mat-icon>
+                <mat-icon *ngSwitchCase="'Nonbinary'">transgender</mat-icon>
+            </span>
+            <span *ngIf="profile!.birthDate" class="profile-demographic">{{profile!.birthDate}}</span>
+        </div>
+        <ng-container *ngIf="profile!.statusMessage !== ''">
+            <mat-divider></mat-divider>
+            <p class="status">“{{profile!.statusMessage}}”</p>
+        </ng-container>
+        <ng-container *ngIf="profile!.bio">
+            <mat-divider></mat-divider>
+            <p class="bio">{{profile!.bio}}</p>
+        </ng-container>
+        <mat-tab-group mat-align-tabs="center">
+            <mat-tab>
+              <ng-template mat-tab-label class="tab-handle">
+                <mat-icon>group</mat-icon>
+                Friends
+              </ng-template>
+              Content 1
+            </mat-tab>
+
+            <mat-tab>
+              <ng-template mat-tab-label class="tab-handle">
+                <mat-icon>alternate_email</mat-icon>
+                Contact Info
+              </ng-template>
+              Content 2
+            </mat-tab>
+          </mat-tab-group>
+    </div>
+
+</ng-container>
