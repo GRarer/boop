@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Profile, ProfileResponse } from 'boop-core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ContactMethod, Profile, ProfileResponse, ProfileSummary } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
+import { commonPlatforms } from 'src/app/util/platforms';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-profile',
@@ -14,10 +17,15 @@ export class ProfileComponent implements OnInit {
   denialReason: string | undefined; // reason why page is not visible
   profile?: Profile; // info to display if page is visible
 
+  // make platform icons urls visible to html template
+  commonPlatforms = commonPlatforms;
 
   constructor(
     private apiService: ApiService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    private clipboard: Clipboard,
   ) {
   }
 
@@ -47,5 +55,21 @@ export class ProfileComponent implements OnInit {
       this.denialReason = response.reason;
       this.loading = false;
     }
+  }
+
+  viewFriendProfile(friend: ProfileSummary): void {
+    this.navigateToProfile(friend.username).catch(err => this.apiService.showErrorPopup(err));
+  }
+
+  private async navigateToProfile(username: string): Promise<void> {
+    await this.router.navigate(['/profile', username]);
+    await this.refresh();
+  }
+
+  copyMethod(method: ContactMethod): void {
+    this.clipboard.copy(method.contactID);
+    this.snackBar.open(
+      `Copied ${this.profile!.fullName}'s ${method.platform} ID to clipboard`, "dismiss",
+      { duration: 2000 });
   }
 }
