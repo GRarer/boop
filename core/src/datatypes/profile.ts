@@ -1,4 +1,4 @@
-import { Gender } from "index";
+import { Gender } from "./gender";
 
 // api datatypes for friends and profile
 export type ProfileSummary = {
@@ -32,8 +32,8 @@ export type Profile = {
   statusMessage: string;
   contactMethods: ContactMethod[];
   friends: ProfileSummary[];
-  gender?: Gender;
-  age?: number;
+  gender: Gender;
+  birthDate: string | null;
 }
 
 export type ProfileResponse = {

@@ -14,6 +14,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTabsModule } from '@angular/material/tabs';
 
 // include all of the material component modules that we use here to avoid cluttering the main AppModule
 export const materialModules = [
@@ -32,6 +34,8 @@ export const materialModules = [
   MatTooltipModule,
   MatToolbarModule,
   MatSlideToggleModule,
-  MatRadioModule
+  MatRadioModule,
+  MatDividerModule,
+  MatTabsModule,
 ];
 

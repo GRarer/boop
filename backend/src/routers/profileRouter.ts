@@ -38,7 +38,9 @@ profileRouter.get('/user_profile', handleAsync(async (req, res) => {
         bio: profileInfo.bio,
         statusMessage: profileInfo.statusMessage,
         contactMethods: contactMethods,
-        friends: friendsList
+        friends: friendsList,
+        gender: profileInfo.visibleGender,
+        birthDate: profileInfo.visibleBirthDate
       },
       isSelf: requesterUUID === profileInfo.uuid
     };
