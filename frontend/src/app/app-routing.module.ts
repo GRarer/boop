@@ -7,6 +7,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { NotFound404Component } from './components/not-found404/not-found404.component';
 import { OnboardingComponent } from './components/onboarding/onboarding.component';
+import { ProfileComponent } from './components/profile/profile.component';
 import { PushSubscribeComponent } from './components/push-subscribe/push-subscribe.component';
 import { SettingsComponent } from './components/settings/settings.component';
 /* eslint-disable @typescript-eslint/no-extraneous-class */
@@ -20,6 +21,8 @@ const routes: Routes = [
   { path: 'edit_contact_info', component: EditContactInfoComponent },
   { path: 'add_friends', component: FriendsComponent },
   { path: 'chat', component: ChatComponent },
+  { path: 'profile/:username', component: ProfileComponent },
+
   { path: '**', component: NotFound404Component },
 ];
 

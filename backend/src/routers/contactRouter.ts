@@ -4,6 +4,7 @@ import { authenticateUUID } from "../services/auth";
 import { database, } from "../services/database";
 import { handleAsync, } from "../util/handleAsync";
 import pgFormat from "pg-format";
+import { getContactMethods } from "../queries/contactQueries";
 
 export const contactRouter = express.Router();
 
@@ -28,10 +29,6 @@ contactRouter.put('/my_methods', handleAsync(async (req, res) => {
 
 contactRouter.get('/my_methods', handleAsync(async (req, res) => {
   const userUUID = await authenticateUUID(req);
-  type ResultRow = {platform: string; contact_id: string;};
-  const results = await database.query<ResultRow>(
-    `select platform, contact_id from contact_methods where user_uuid = $1`, [userUUID]
-  );
-  const methods: ContactMethod[] = results.map(row => ({ platform: row.platform, contactID: row.contact_id }));
+  const methods: ContactMethod[] = await getContactMethods(userUUID);
   res.send(methods);
 }));
