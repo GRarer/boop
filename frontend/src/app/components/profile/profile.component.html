@@ -2,7 +2,7 @@
 <ng-container *ngIf="!loading">
     <!-- message to display when you cannot view this profile-->
     <ng-container *ngIf="denialReason">
-        <p>{{denialReason}}</p>
+      <p class="denied">{{denialReason}}</p>
     </ng-container>
     <!--profile information-->
     <div *ngIf="profile" class="profile-container">
@@ -26,13 +26,27 @@
             <mat-divider></mat-divider>
             <p class="bio">{{profile!.bio}}</p>
         </ng-container>
-        <mat-tab-group mat-align-tabs="center">
+        <mat-tab-group dynamicHeight mat-align-tabs="center">
             <mat-tab>
               <ng-template mat-tab-label class="tab-handle">
                 <mat-icon>group</mat-icon>
                 Friends
               </ng-template>
-              Content 1
+              <!-- friends list tab -->
+              <div class="cards-container">
+                <mat-card *ngFor="let friend of profile!.friends" class="friend-card">
+                  <mat-card-header>
+                    <img mat-card-avatar [src]="friend.avatarUrl">
+                    <mat-card-title>{{friend.fullName}}</mat-card-title>
+                    <mat-card-subtitle style="margin-bottom: 0;">{{friend.username}}</mat-card-subtitle>
+                  </mat-card-header>
+                  <p style="margin-bottom: 0; margin-top: 5px;" *ngIf="friend.statusMessage">Status: “{{friend.statusMessage}}”</p>
+                  <mat-card-actions style="padding-top: 0;">
+                    <button mat-button (click)="viewFriendProfile(friend)" >VIEW PROFILE</button>
+                  </mat-card-actions>
+                </mat-card>
+              </div>
+
             </mat-tab>
 
             <mat-tab>
@@ -40,7 +54,33 @@
                 <mat-icon>alternate_email</mat-icon>
                 Contact Info
               </ng-template>
-              Content 2
+              <!-- contact info tab -->
+              <div class="cards-container">
+                <mat-card *ngFor="let method of profile!.contactMethods" class="contact-card">
+                  <mat-card-header>
+                      <mat-card-title>
+                          <img *ngIf="commonPlatforms[method.platform] !== undefined"
+                              class="platform-icon" [src]="commonPlatforms[method.platform]!.iconUrl">
+                          {{method.platform}}
+                  </mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content style="text-align: center;">
+                    <div style="display: flex; flex-direction: row;">
+                      <span style="width: 24px;">
+
+                      </span>
+                      <span style="flex-grow: 1; text-align: center; font-size: 18pt; margin-bottom: 0;">
+                          {{method.contactID}}
+                      </span>
+                      <span style="width: 24px;">
+                          <button mat-icon-button style="position: relative; bottom: 8px;" (click)="copyMethod(method)">
+                              <mat-icon>content_copy</mat-icon>
+                          </button>
+                      </span>
+                  </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
             </mat-tab>
           </mat-tab-group>
     </div>
