@@ -27,7 +27,6 @@ export class FriendRequestComponent implements OnInit {
 
 
   sendFriendRequest(): void {
-    console.log(this.friendRequestForm.value);
     const friendUsername: unknown = this.friendRequestForm.value.username;
     if (typeof friendUsername !== "string" || friendUsername === "") {
       return;
