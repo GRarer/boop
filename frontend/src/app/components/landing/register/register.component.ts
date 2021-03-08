@@ -3,7 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { CreateAccountRequest, Gender, genderValues, LoginRequest, toIsoDate, minYearsAgo } from 'boop-core';
+import { CreateAccountRequest, Gender, genderValues, LoginRequest, minYearsAgo } from 'boop-core';
+import { DateTime } from 'luxon';
 import { ApiService } from 'src/app/services/api.service';
 import { SessionService } from 'src/app/services/session.service';
 import { PrivacyPolicyDialogComponent } from './privacy-policy-dialog/privacy-policy-dialog.component';
@@ -54,7 +55,8 @@ export class RegisterComponent implements OnInit {
     // form value for gender is empty string if user chose "prefer not so say", or undefined if they did not choose
     // in either of those cases, we replace that with null
     const gender: Gender = value.gender || null;
-    const birthDate = toIsoDate(value.birthDate);
+
+
     if (!minYearsAgo(value.birthDate, 13)) {
       this.snackBar.open("You must be at least 13 years old.", "Dismiss", { duration: 5000 });
       return;
@@ -67,7 +69,7 @@ export class RegisterComponent implements OnInit {
       friendlyName: value.friendlyName,
       emailAddress: value.email,
       gender,
-      birthDate,
+      birthDate: DateTime.fromJSDate(value.birthDate).toISODate(),
       privacyLevel: value.privacyLevel,
       profileShowAge: value.showAge,
       profileShowGender: value.showGender,

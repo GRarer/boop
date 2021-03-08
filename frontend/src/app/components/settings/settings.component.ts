@@ -3,12 +3,14 @@ import { Router } from '@angular/router';
 import { SessionService } from 'src/app/services/session.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
-  UpdatePasswordRequest, CurrentSettingsResponse, UpdateAccountRequest, genderValues, Gender, UpdatePrivacyRequest
+  UpdatePasswordRequest, CurrentSettingsResponse, UpdateAccountRequest, genderValues, Gender, UpdatePrivacyRequest,
+  minYearsAgo
 } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { equalToSiblingValidator } from 'src/app/util/ngUtils';
 import { DialogService } from 'src/app/components/common/dialog/dialog.service';
+import { DateTime } from 'luxon';
 
 
 @Component({
@@ -70,7 +72,7 @@ export class SettingsComponent implements OnInit {
             fullName: response.fullName,
             friendlyName: response.friendlyName,
             email: response.emailAddress,
-            birthDate: response.birthDate,
+            birthDate: DateTime.fromISO(response.birthDate).toJSDate()
           }
         );
         this.updateUserForm.markAsPristine();
@@ -122,15 +124,24 @@ export class SettingsComponent implements OnInit {
     }
 
     const value = this.updateUserForm.value;
+
+    const date: Date = value.birthDate;
+
+    if (!minYearsAgo(date, 13)) {
+      this.snackBar.open("You must be at least 13 years old.", "Dismiss", { "duration": 5000 });
+      return;
+    }
+
     const request: UpdateAccountRequest = {
       username: value.username,
       fullName: value.fullName,
       friendlyName: value.friendlyName,
       emailAddress: value.email,
-      birthDate: value.birthDate,
-      gender: value.gender
+      birthDate: DateTime.fromJSDate(date).toISODate(),
+      // form value for gender is empty string if user chose "prefer not so say", and we have to replace that with null
+      gender: value.gender || null
     };
-
+    console.log(request);
     this.apiService.putJSON("http://localhost:3000/account/edit", request).then(() => {
       this.snackBar.open("Account Updated.", "Dismiss", { "duration": 5000 });
       this.refresh();

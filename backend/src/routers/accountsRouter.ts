@@ -12,6 +12,7 @@ import {
   createAccount, getCurrentSettings, updateAccount, updatePassword, deleteAccount
 } from "../queries/accountQueries";
 import { database } from "../services/database";
+import { DateTime } from "luxon";
 
 export const accountsRouter = express.Router();
 
@@ -40,14 +41,19 @@ accountsRouter.post('/register', handleAsync(async (req, res) => {
   }
 
   // validate age and gender
+  let meetsMinimumAge = false;
   try {
-    const birthDate: Date = new Date(body.birthDate);
-    if (!minYearsAgo(birthDate, 13)) {
-      throwBoopError("Age must be at least 13 years.", 403);
+    const birthDate: Date = DateTime.fromISO(body.birthDate).toJSDate();
+    if (minYearsAgo(birthDate, 13)) {
+      meetsMinimumAge = true;
     }
   } catch (reason) {
-    throwBoopError("Invalid date format.", 400);
+    throwBoopError("Invalid date format", 400);
   }
+  if (!meetsMinimumAge) {
+    throwBoopError("Age must be at least 13 years", 403);
+  }
+
   if (!isGender(body.gender)) {
     throwBoopError("Invalid gender format.", 400);
   }
@@ -83,14 +89,19 @@ accountsRouter.put('/edit', handleAsync(async (req, res) => {
 
   const uuid = await authenticateUUID(req);
 
+  let meetsMinimumAge = false;
   try {
-    const birthDate: Date = new Date(body.birthDate);
-    if (!minYearsAgo(birthDate, 13)) {
-      throwBoopError("Age must be at least 13 years", 403);
+    const birthDate: Date = DateTime.fromISO(body.birthDate).toJSDate();
+    if (minYearsAgo(birthDate, 13)) {
+      meetsMinimumAge = true;
     }
   } catch (reason) {
     throwBoopError("Invalid date format", 400);
   }
+  if (!meetsMinimumAge) {
+    throwBoopError("Age must be at least 13 years", 403);
+  }
+
   if (!isGender(body.gender)) {
     throwBoopError("Invalid gender format", 400);
   }
