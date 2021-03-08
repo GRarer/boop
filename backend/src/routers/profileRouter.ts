@@ -1,9 +1,11 @@
-import { ContactMethod, ProfileResponse, StartChatResult } from "boop-core";
+import {
+  ContactMethod, ProfileResponse, StartChatResult, ProfileEditResponse, UpdateProfileTextRequest
+} from "boop-core";
 import express from "express";
 import { getContactMethods } from "../queries/contactQueries";
 import { getFriends } from "../queries/friendsQueries";
 import { getProfileAndPrivacy } from "../queries/profileQueries";
-import { userUuidFromReq } from "../services/auth";
+import { authenticateUUID, userUuidFromReq } from "../services/auth";
 import { emailToGravatarURL } from "../services/avatars";
 import { database, } from "../services/database";
 import { profileVisibility } from "../services/profilePrivacy";
@@ -52,6 +54,31 @@ profileRouter.get('/user_profile', handleAsync(async (req, res) => {
     };
     res.send(response);
   }
+}));
+
+profileRouter.get('/my_profile_text', handleAsync(async (req, res) => {
+  const uuid = await authenticateUUID(req);
+  const rows = await database.query<{profile_bio: string; status_message: string; username: string;}>(
+    `select profile_bio, status_message, username from users where user_uuid=$1;`,
+    [uuid]
+  );
+  const result = rows[0] ?? throwBoopError("Profile not found", 404);
+  const response: ProfileEditResponse = {
+    statusMessage: result.status_message,
+    bio: result.profile_bio,
+    username: result.username
+  };
+  res.send(response);
+}));
+
+profileRouter.put('/my_profile_text', handleAsync(async (req, res) => {
+  const uuid = await authenticateUUID(req);
+  const newInfo: UpdateProfileTextRequest = req.body;
+  await database.query(
+    `UPDATE users SET profile_bio=$1, status_message=$2 where user_uuid=$3;`,
+    [newInfo.bio, newInfo.statusMessage, uuid]
+  );
+  res.send();
 }));
 
 

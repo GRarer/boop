@@ -10,6 +10,9 @@
             <img [src]='profile!.avatarUrl' class = 'profile-image'>
             <h1 class="mat-headline">{{profile!.fullName}}</h1>
         </div>
+        <ng-container *ngIf="editable">
+          <button mat-raised-button color="primary" class="action-link" routerLink="/edit_profile"><mat-icon>edit</mat-icon> Edit Profile</button>
+        </ng-container>
         <div style="text-align: center;">
             <span *ngIf="profile!.gender" class="profile-demographic" [ngSwitch]="profile!.gender">
                 <mat-icon *ngSwitchCase="'Female'">female</mat-icon>

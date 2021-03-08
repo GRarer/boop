@@ -56,3 +56,15 @@ export type StartChatResult = {
 // private profiles are visible to friends and friends-of-friends
 // restricted profiles are visible only to friends, which prevents friends-of-friends from being matched
 export type PrivacyLevel = "public" | "private" | "restricted";
+
+// information for showing the "edit profile" screen
+export type ProfileEditResponse = {
+  username: string,
+  bio: string,
+  statusMessage: string
+};
+
+export type UpdateProfileTextRequest = {
+  bio: string,
+  statusMessage: string
+}
