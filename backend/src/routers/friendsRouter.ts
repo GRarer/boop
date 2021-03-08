@@ -50,8 +50,6 @@ friendsRouter.post('/send_request', handleAsync(async (req, res) => {
   const subs = await getPushByUUID(friendInfo.userUUID);
   sendNotificationToUser(subs, friendRequestNotification)
     .catch(err => { console.error(err); });
-
-  // TODO send a notification to the person who received the friend request
   res.send();
 }));
 

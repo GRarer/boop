@@ -27,7 +27,6 @@ export class AppComponent implements OnInit {
 
     this.sessionService.loadSavedSession().then(
       (savedLoaded) => {
-        console.log("loaded saved session", savedLoaded);
         // do not require login to visit certain pages
         const pathExemptFromLogin = ["/chat"].includes(window.location.pathname);
         if (!savedLoaded && !pathExemptFromLogin) {

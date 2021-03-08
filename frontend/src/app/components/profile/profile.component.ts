@@ -45,7 +45,6 @@ export class ProfileComponent implements OnInit {
         username
       }
     );
-    console.log(response);
     if (response.visible) {
       this.profile = response.profile;
       this.denialReason = undefined;

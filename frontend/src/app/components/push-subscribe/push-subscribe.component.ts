@@ -53,7 +53,6 @@ export class PushSubscribeComponent implements OnInit {
     const subscription = await this.swPush.requestSubscription({
       serverPublicKey: vapidKeys.publicKey
     });
-    console.log(subscription);
     await this.apiService.postJSON<PushSubscriptionJSON, void>(
       "http://localhost:3000/push/addSubscription", subscription.toJSON()
     );

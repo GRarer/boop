@@ -37,7 +37,6 @@ export class EditContactInfoComponent implements OnInit {
   loadContacts(): void {
     this.apiService.getJSON<ContactMethod[]>("http://localhost:3000/contact/my_methods")
       .then(methods => {
-        console.log(methods);
         this.contacts = methods.map(method => {
           if (this.platformOptions.includes(method.platform)) {
             return ({ platformSelection: method.platform, contactID: method.contactID });
@@ -109,7 +108,6 @@ export class EditContactInfoComponent implements OnInit {
       }
       methods.push({ platform, contactID });
     }
-    console.log(methods);
     this.apiService.putJSON<ContactMethod[], void>("http://localhost:3000/contact/my_methods", methods)
       .then(() => {
         this.snackBar.open(`Your contact info has been updated.`, "Dismiss", { "duration": 5000 });
