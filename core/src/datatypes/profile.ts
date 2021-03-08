@@ -34,7 +34,7 @@ export type Profile = {
   friends: ProfileSummary[];
   gender: Gender;
   birthDate: string | null;
-}
+};
 
 export type ProfileResponse = {
   visible: true;
@@ -43,7 +43,7 @@ export type ProfileResponse = {
 } | {
   visible: false;
   reason: string;
-}
+};
 
 
 export type StartChatResult = {
