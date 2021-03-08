@@ -24,7 +24,7 @@ begin
       "email", "gender", "birth_date",
       "profile_privacy_level", "profile_show_age", "profile_show_gender", "profile_bio") VALUES
     -- gpb (George P Burdell)
-    (georgeUUID, 'gpb', 'Geore P. Budell', 'George', example_password_hash,
+    (georgeUUID, 'gpb', 'George P. Burdell', 'George', example_password_hash,
     'gburdell@gatech.edu', 'Male', '1909-04-01',
     'private', false, true, 'The Eternal Georgia Tech Student. Go Jackets!'),
     -- ramona (Ramona Cartwright Burdell)
@@ -36,7 +36,7 @@ begin
     'jrainwater@washington.edu', null, '1952-01-01',
     'public', true, true, 'Mathematician specializing in Functional Analysis.'),
     -- alice
-    (aliceUUID, 'alice', 'Alice Exampelton', 'Alice', example_password_hash,
+    (aliceUUID, 'alice', 'Alice Exampleton', 'Alice', example_password_hash,
     'alice@example.com', 'Female', '1995-03-05',
     'public', true, true, 'Cryptography Enthusiast'),
     -- bob
