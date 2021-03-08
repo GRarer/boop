@@ -4,8 +4,9 @@
     <div style="width: 4in; margin: auto;">
       <div style="width: 80%; margin: auto;">
         <button class="home-menu-button" mat-raised-button routerLink="/add_friends"><mat-icon>group</mat-icon> Friends</button>
-        <button class="home-menu-button" mat-raised-button routerLink="/push_setup"><mat-icon>notification_add</mat-icon> Notification Setup</button>
+        <button class="home-menu-button" mat-raised-button (click)="navigateToProfile()"><mat-icon>contact_page</mat-icon> Profile</button>
         <button class="home-menu-button" mat-raised-button routerLink="/edit_contact_info"><mat-icon>alternate_email</mat-icon> Edit Contact Info</button>
+        <button class="home-menu-button" mat-raised-button routerLink="/push_setup"><mat-icon>notification_add</mat-icon> Notification Setup</button>
         <button class="home-menu-button" mat-raised-button routerLink="/settings"><mat-icon>manage_accounts</mat-icon> Account Settings</button>
 
         <mat-card>

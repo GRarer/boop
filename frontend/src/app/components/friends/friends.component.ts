@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AnswerFriendRequest, GetFriendsResult, ProfileSummary } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
 import { DialogService } from '../common/dialog/dialog.service';
@@ -14,7 +15,8 @@ export class FriendsComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -52,6 +54,10 @@ export class FriendsComponent implements OnInit {
       await this.apiService.postJSON<string, void>("http://localhost:3000/friends/unfriend", friend.uuid);
       this.loadInfo();
     }
+  }
+
+  showProfile(friend: ProfileSummary): void {
+    void this.router.navigate(['/profile', friend.username]);
   }
 
   unfriend(friend: ProfileSummary): void {

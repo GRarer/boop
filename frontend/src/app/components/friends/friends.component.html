@@ -11,6 +11,7 @@
         <mat-card-subtitle style="margin-bottom: 0;">{{request.username}}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions style="padding-top: 0;">
+        <button mat-button (click)="showProfile(request)">PROFILE</button>
         <button mat-button (click)="answerFriendRequest(request, true)" color="primary">ACCEPT</button>
         <button mat-button (click)="answerFriendRequest(request, false)" color="warn">REJECT</button>
       </mat-card-actions>
@@ -26,6 +27,7 @@
       </mat-card-header>
       <p style="margin-bottom: 0; margin-top: 5px;" *ngIf="friend.statusMessage">Status: “{{friend.statusMessage}}”</p>
       <mat-card-actions style="padding-top: 0;">
+        <button mat-button (click)="showProfile(friend)">PROFILE</button>
         <button mat-button (click)="unfriend(friend)" color="warn">UNFRIEND</button>
       </mat-card-actions>
     </mat-card>
