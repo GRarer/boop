@@ -5,6 +5,7 @@ import { ContactMethod, Profile, ProfileResponse, ProfileSummary } from 'boop-co
 import { ApiService } from 'src/app/services/api.service';
 import { commonPlatforms } from 'src/app/util/platforms';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-profile',
@@ -46,6 +47,12 @@ export class ProfileComponent implements OnInit {
       }
     );
     if (response.visible) {
+      // replace ISO-format birth date with just age
+      if (response.profile.birthDate !== null) {
+        const birthDateTime = DateTime.fromISO(response.profile.birthDate);
+        response.profile.birthDate = `${Math.floor(DateTime.now().diff(birthDateTime, 'years').years)}`;
+      }
+
       this.profile = response.profile;
       this.denialReason = undefined;
       this.loading = false;
