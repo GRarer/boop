@@ -1,0 +1,31 @@
+<app-loading-bar *ngIf="info === undefined"></app-loading-bar>
+<ng-container *ngIf="info">
+    <h1 style="text-align: center; font-size: x-large;">Edit Profile</h1>
+    <div class="menu-div">
+      <mat-card>
+        <mat-card-content style="margin-bottom: 0;">
+          <mat-form-field style="width: 100%;" appearance="outline">
+            <mat-label>Status Message</mat-label>
+            <input matInput [(ngModel)]="info.statusMessage" placeholder="What's up?">
+            <button mat-icon-button matSuffix (click)="removeStatus()" [disabled]="!info.statusMessage">
+              <mat-icon>clear</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field style="width: 100%; margin-bottom: -20px;" appearance="outline">
+              <mat-label>Profile Description</mat-label>
+              <textarea matInput [(ngModel)]="info.bio" placeholder="Introduce yourself" style=" min-height: 5em;"></textarea>
+          </mat-form-field>
+          <button mat-raised-button class="update-button" (click)="update()" color="primary">Update Status And Description</button>
+        </mat-card-content>
+
+      </mat-card>
+      <div class="link-button-container">
+        <button class="link-button" mat-raised-button routerLink="/settings">
+          <mat-icon>manage_accounts</mat-icon> Manage Personal Info, Avatar, and Privacy</button>
+        <button class="link-button" mat-raised-button routerLink="/edit_contact_info">
+          <mat-icon>alternate_email</mat-icon> Edit Contact Info</button>
+        <button class="link-button" mat-raised-button (click)="showProfile()" color="primary">
+            <mat-icon>face</mat-icon> View Profile</button>
+      </div>
+    </div>
+</ng-container>

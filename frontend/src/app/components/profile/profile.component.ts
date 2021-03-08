@@ -17,6 +17,7 @@ export class ProfileComponent implements OnInit {
   loading: boolean = true;
   denialReason: string | undefined; // reason why page is not visible
   profile?: Profile; // info to display if page is visible
+  editable: boolean = false; // whether to show the edit button, i.e. whether it is the current user's own profile
 
   // make platform icons urls visible to html template
   commonPlatforms = commonPlatforms;
@@ -55,10 +56,12 @@ export class ProfileComponent implements OnInit {
 
       this.profile = response.profile;
       this.denialReason = undefined;
+      this.editable = response.isSelf;
       this.loading = false;
     } else {
       this.profile = undefined;
       this.denialReason = response.reason;
+      this.editable = false;
       this.loading = false;
     }
   }
