@@ -8,8 +8,13 @@ export const userInfoRouter = express.Router();
 userInfoRouter.get('/home_info', handleAsync(async (req, res) => {
   const userUUID = await authenticateUUID(req);
 
-  const query = `select friendly_name, status_message, do_not_disturb from users where user_uuid = $1`;
-  type ResultRow = {friendly_name: string; status_message: string | null; do_not_disturb: boolean | null;};
+  const query = `select friendly_name, status_message, do_not_disturb, username from users where user_uuid = $1`;
+  type ResultRow = {
+    friendly_name: string;
+    status_message: string | null;
+    do_not_disturb: boolean | null;
+    username: string;
+  };
   const results: ResultRow[] = (await database.query(query, [userUUID]));
   if (results.length === 0) {
     // user should always be found since we already checked that the session token matches a user uuid
@@ -19,7 +24,8 @@ userInfoRouter.get('/home_info', handleAsync(async (req, res) => {
   const response: HomeScreenInfoResponse = {
     friendlyName: result.friendly_name,
     statusMessage: result.status_message ?? "",
-    doNotDisturb: result.do_not_disturb ?? false
+    doNotDisturb: result.do_not_disturb ?? false,
+    username: result.username,
   };
   res.send(response);
 }));

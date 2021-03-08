@@ -69,6 +69,10 @@ export class HomeComponent implements OnInit {
     this.updateStatus();
   }
 
+  navigateToProfile(): void {
+    void this.router.navigate(["/profile", this.info!.username]);
+  }
+
   logout(): void {
     this.sessionService.logout().then(
       () => { void this.router.navigate(["/welcome"]); }
