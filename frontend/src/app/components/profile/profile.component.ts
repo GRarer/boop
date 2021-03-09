@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContactMethod, Profile, ProfileResponse, ProfileSummary, ProfileViewerRelation } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
 import { commonPlatforms } from 'src/app/util/platforms';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { Location } from '@angular/common';
 import { DateTime } from 'luxon';
 
 @Component({
@@ -27,6 +28,7 @@ export class ProfileComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     private clipboard: Clipboard,
+    private location: Location,
   ) {
   }
 
@@ -35,7 +37,6 @@ export class ProfileComponent implements OnInit {
   }
 
   async refresh(): Promise<void> {
-    console.log("refresh");
     this.loading = true;
     this.profile = undefined;
     this.denialReason = undefined;
@@ -45,7 +46,6 @@ export class ProfileComponent implements OnInit {
       "http://localhost:3000/profile/user_profile",
       { username }
     );
-    console.log(response);
     if (response.visible) {
       // replace ISO-format birth date with just age
       if (response.profile.birthDate !== null) {
@@ -74,12 +74,10 @@ export class ProfileComponent implements OnInit {
   }
 
   private async sendFriendRequestAsync(): Promise<void> {
-    console.log("send request");
     await this.apiService.postJSON<string, void>(
       "http://localhost:3000/friends/send_request_to_uuid",
       this.profile!.uuid
     );
-    console.log("request sent");
     await this.refresh();
   }
 
@@ -97,5 +95,25 @@ export class ProfileComponent implements OnInit {
     this.snackBar.open(
       `Copied ${this.profile!.fullName}'s ${method.platform} ID to clipboard`, "dismiss",
       { duration: 2000 });
+  }
+
+  // navigate to previous page, and refresh if previous page is a profile
+  goBack(): void {
+    const originalPath = this.location.path();
+    this.location.back();
+    // if we're still on this component after a short delay, refresh
+    // we can't do this synchronously because it takes a small time for location.back() to have an effect
+    const checkToRefresh: () => void = () => {
+      const currentPath = this.location.path();
+      if (currentPath === originalPath ) {
+        // keep waiting in intervals of 5ms
+        setTimeout(checkToRefresh, 5);
+      } else if (/^\/profile\//g.test(currentPath)) {
+        // refresh if we arrive on a new profile
+        this.refresh().catch(err => this.apiService.showErrorPopup(err));
+      }
+      // if the destination is not a profile page, we don't need to refresh this component
+    };
+    checkToRefresh();
   }
 }

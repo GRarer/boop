@@ -43,13 +43,13 @@ export type ProfileViewerRelation = {
   self: boolean;
   friend: boolean;
   pendingFriendRequest? : "incoming" | "outgoing";
-}
+};
 
 export type ProfileResponse = {
   visible: true;
   profile: Profile;
   // determines whether to show "edit" or "send friend request" buttons
-  viewerRelation: ProfileViewerRelation
+  viewerRelation: ProfileViewerRelation;
 } | {
   visible: false;
   reason: string;
@@ -69,12 +69,12 @@ export type PrivacyLevel = "public" | "private" | "restricted";
 
 // information for showing the "edit profile" screen
 export type ProfileEditResponse = {
-  username: string,
-  bio: string,
-  statusMessage: string
+  username: string;
+  bio: string;
+  statusMessage: string;
 };
 
 export type UpdateProfileTextRequest = {
-  bio: string,
-  statusMessage: string
-}
+  bio: string;
+  statusMessage: string;
+};

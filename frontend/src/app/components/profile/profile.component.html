@@ -3,7 +3,7 @@
     <!-- message to display when you cannot view this profile-->
     <ng-container *ngIf="denialReason">
       <p class="denied">{{denialReason}}</p>
-      <button mat-raised-button style="display: block; margin: auto; margin-top: 10px;" color="primary" routerLink="/">Go to Home</button>
+      <button mat-raised-button style="display: block; margin: auto; margin-top: 10px;" color="primary" (click)="goBack()">Back</button>
     </ng-container>
     <!--profile information-->
     <div *ngIf="profile" class="profile-container">
