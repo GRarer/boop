@@ -47,4 +47,8 @@ export class ChatComponent implements OnInit {
       `Copied ${this.info!.friendlyName}'s ${method.platform} ID to clipboard`, "dismiss",
       { duration: 2000 });
   }
+
+  goToProfile(): void {
+    void this.router.navigate(["/profile", this.info!.username]);
+  }
 }
