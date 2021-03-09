@@ -26,10 +26,10 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse> {
   }
 }
 
-function sessionTokenFromReq(req: Request): string {
+function sessionTokenFromReq(req: Request): string | undefined {
   const token: string | undefined = req.header(sessionTokenHeaderName);
   if (typeof token !== "string") {
-    throwBoopError("Missing Authentication Token", 401);
+    return undefined;
   }
   return token;
 }
@@ -38,7 +38,7 @@ function sessionTokenFromReq(req: Request): string {
 // in most cases you should use authenticateUUID instead
 export async function userUuidFromReq(req: Request): Promise<string | undefined> {
   const token = sessionTokenFromReq(req);
-  return await getSessionUserUUID(token);
+  return token === undefined ? undefined : (await getSessionUserUUID(token));
 }
 
 // returns user UUID matching request's session token header, or throws an error if it cannot authenticate
