@@ -8,7 +8,7 @@ import { getProfileAndPrivacy } from "../queries/profileQueries";
 import { authenticateUUID, userUuidFromReq } from "../services/auth";
 import { emailToGravatarURL } from "../services/avatars";
 import { database, } from "../services/database";
-import { profileVisibility } from "../services/profilePrivacy";
+import { lookupProfileViewerRelation, profileVisibility } from "../services/profileInfo";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
 export const profileRouter = express.Router();
 
@@ -23,11 +23,12 @@ profileRouter.get('/user_profile', handleAsync(async (req, res) => {
   const friendsList = await getFriends(profileInfo.uuid);
   const contactMethods = await getContactMethods(profileInfo.uuid);
 
+  const profileFriendUUIDs = friendsList.map(summary => summary.uuid);
   const visibility = await profileVisibility({
     privacyLevel: profileInfo.privacyLevel,
     profileUUID: profileInfo.uuid,
-    requesterUUID: requesterUUID,
-    profileFriendUUIDs: friendsList.map(summary => summary.uuid)
+    requesterUUID,
+    profileFriendUUIDs
   });
 
   if (visibility.allow) {
@@ -44,7 +45,13 @@ profileRouter.get('/user_profile', handleAsync(async (req, res) => {
         gender: profileInfo.visibleGender,
         birthDate: profileInfo.visibleBirthDate
       },
-      isSelf: requesterUUID === profileInfo.uuid
+      viewerRelation: await lookupProfileViewerRelation(
+        {
+          profileUUID: profileInfo.uuid,
+          requesterUUID,
+          profileFriendUUIDs
+        }
+      )
     };
     res.send(response);
   } else {

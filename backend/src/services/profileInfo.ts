@@ -1,4 +1,4 @@
-import { PrivacyLevel } from "boop-core";
+import { PrivacyLevel, ProfileViewerRelation } from "boop-core";
 import { database } from "./database";
 
 // determines whether a user profile should be visible to the user who requested it
@@ -7,7 +7,7 @@ import { database } from "./database";
 export async function profileVisibility(
   opts: {
     privacyLevel: PrivacyLevel;
-    requesterUUID?: string;
+    requesterUUID: string | undefined;
     profileUUID: string;
     profileFriendUUIDs: string[];
   }
@@ -56,5 +56,68 @@ export async function profileVisibility(
       ? { allow: true }
       : { allow: false, reason: "You must be friends with this user to view this profile." };
   }
+  }
+}
+
+// information about the relationship between the viewer and the owner of this profile
+// the friends list should already be known by the caller, but this function will query for friend requests
+// if that information is needed
+export async function lookupProfileViewerRelation(
+  opts: {
+    requesterUUID: string | undefined;
+    profileUUID: string;
+    profileFriendUUIDs: string[];
+  }
+): Promise<ProfileViewerRelation> {
+  if (opts.requesterUUID === undefined) {
+    return {
+      self: false,
+      viewerLoggedIn: false,
+      friend: false,
+    };
+  } else if (opts.requesterUUID === opts.profileUUID) {
+    return {
+      self: true,
+      viewerLoggedIn: true,
+      friend: false,
+    };
+  } else if (opts.profileFriendUUIDs.includes(opts.requesterUUID)) {
+    return {
+      self: false,
+      viewerLoggedIn: true,
+      friend: true,
+    };
+  } else {
+    // if the user is logged in but is not the owner of the profile or one of the owner's friends,
+    // then we want to know whether there is already a pending friend request between these users
+    const senders: string[] = (
+      await database.query<{from_user: string;}>(
+        `select distinct from_user
+        from friend_requests
+        where (from_user = $1 and to_user = $2) or (from_user = $2 and to_user = $1);`,
+        [opts.requesterUUID, opts.profileUUID]
+      )
+    ).map(row => row.from_user);
+    if (senders.includes(opts.profileUUID)) {
+      return {
+        viewerLoggedIn: true,
+        self: false,
+        friend: false,
+        pendingFriendRequest: "incoming"
+      };
+    } else if (senders.includes(opts.requesterUUID)) {
+      return {
+        viewerLoggedIn: true,
+        self: false,
+        friend: false,
+        pendingFriendRequest: "outgoing"
+      };
+    } else {
+      return {
+        viewerLoggedIn: true,
+        self: false,
+        friend: false,
+      };
+    }
   }
 }

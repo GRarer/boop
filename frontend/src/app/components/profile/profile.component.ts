@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ContactMethod, Profile, ProfileResponse, ProfileSummary } from 'boop-core';
+import { ContactMethod, Profile, ProfileResponse, ProfileSummary, ProfileViewerRelation } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
 import { commonPlatforms } from 'src/app/util/platforms';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -17,8 +17,7 @@ export class ProfileComponent implements OnInit {
   loading: boolean = true;
   denialReason: string | undefined; // reason why page is not visible
   profile?: Profile; // info to display if page is visible
-  editable: boolean = false; // whether to show the edit button, i.e. whether it is the current user's own profile
-
+  relation?: ProfileViewerRelation;
   // make platform icons urls visible to html template
   commonPlatforms = commonPlatforms;
 
@@ -36,6 +35,7 @@ export class ProfileComponent implements OnInit {
   }
 
   async refresh(): Promise<void> {
+    console.log("refresh");
     this.loading = true;
     this.profile = undefined;
     this.denialReason = undefined;
@@ -43,10 +43,9 @@ export class ProfileComponent implements OnInit {
     const username: string = this.route.snapshot.params["username"] ?? "";
     const response = await this.apiService.getJSON<ProfileResponse>(
       "http://localhost:3000/profile/user_profile",
-      {
-        username
-      }
+      { username }
     );
+    console.log(response);
     if (response.visible) {
       // replace ISO-format birth date with just age
       if (response.profile.birthDate !== null) {
@@ -56,14 +55,32 @@ export class ProfileComponent implements OnInit {
 
       this.profile = response.profile;
       this.denialReason = undefined;
-      this.editable = response.isSelf;
+      this.relation = response.viewerRelation;
       this.loading = false;
     } else {
       this.profile = undefined;
       this.denialReason = response.reason;
-      this.editable = false;
+      this.relation = undefined;
       this.loading = false;
     }
+  }
+
+  // send a friend request to the owner of this profile
+  sendFriendRequest(): void {
+    this.sendFriendRequestAsync()
+      .catch((err) => {
+        this.apiService.showErrorPopup(err);
+      });
+  }
+
+  private async sendFriendRequestAsync(): Promise<void> {
+    console.log("send request");
+    await this.apiService.postJSON<string, void>(
+      "http://localhost:3000/friends/send_request_to_uuid",
+      this.profile!.uuid
+    );
+    console.log("request sent");
+    await this.refresh();
   }
 
   viewFriendProfile(friend: ProfileSummary): void {

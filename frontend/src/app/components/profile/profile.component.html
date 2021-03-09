@@ -10,9 +10,14 @@
             <img [src]='profile!.avatarUrl' class = 'profile-image'>
             <h1 class="mat-headline">{{profile!.fullName}}</h1>
         </div>
-        <ng-container *ngIf="editable">
-          <button mat-raised-button color="primary" class="action-link" routerLink="/edit_profile"><mat-icon>edit</mat-icon> Edit Profile</button>
-        </ng-container>
+        <!-- display different controls depending on requester's relationship to profile -->
+        <button *ngIf="relation!.self" mat-raised-button color="primary" class="action-link" routerLink="/edit_profile"><mat-icon>edit</mat-icon> Edit Profile</button>
+        <p *ngIf="relation!.friend"  class="friend-label"><mat-icon>group</mat-icon>You are friends with this user.</p>
+        <p *ngIf="relation!.pendingFriendRequest === 'outgoing'" class="friend-label"><mat-icon>people_outline</mat-icon>You send a friend request to this user.</p>
+        <button *ngIf="relation!.pendingFriendRequest === 'incoming'" mat-raised-button class="action-link" routerLink="/add_friends"><mat-icon>person_add_alt_1</mat-icon> This User Sent You A Friend Request</button>
+        <button *ngIf="!relation!.self && !relation!.friend && !relation!.pendingFriendRequest" mat-raised-button class="action-link" (click)="sendFriendRequest()"><mat-icon>person_add_alt_1</mat-icon> Send Friend Request</button>
+
+
         <div style="text-align: center;">
             <span *ngIf="profile!.gender" class="profile-demographic" [ngSwitch]="profile!.gender">
                 <mat-icon *ngSwitchCase="'Female'">female</mat-icon>
