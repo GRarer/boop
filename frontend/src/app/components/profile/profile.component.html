@@ -3,6 +3,7 @@
     <!-- message to display when you cannot view this profile-->
     <ng-container *ngIf="denialReason">
       <p class="denied">{{denialReason}}</p>
+      <button mat-raised-button style="display: block; margin: auto; margin-top: 10px;" color="primary" routerLink="/">Go to Home</button>
     </ng-container>
     <!--profile information-->
     <div *ngIf="profile" class="profile-container">
@@ -15,7 +16,7 @@
         <p *ngIf="relation!.friend"  class="friend-label"><mat-icon>group</mat-icon>You are friends with this user.</p>
         <p *ngIf="relation!.pendingFriendRequest === 'outgoing'" class="friend-label"><mat-icon>people_outline</mat-icon>You send a friend request to this user.</p>
         <button *ngIf="relation!.pendingFriendRequest === 'incoming'" mat-raised-button class="action-link" routerLink="/add_friends"><mat-icon>person_add_alt_1</mat-icon> This User Sent You A Friend Request</button>
-        <button *ngIf="!relation!.self && !relation!.friend && !relation!.pendingFriendRequest" mat-raised-button class="action-link" (click)="sendFriendRequest()"><mat-icon>person_add_alt_1</mat-icon> Send Friend Request</button>
+        <button *ngIf="relation!.viewerLoggedIn && !relation!.self && !relation!.friend && !relation!.pendingFriendRequest" mat-raised-button class="action-link" (click)="sendFriendRequest()"><mat-icon>person_add_alt_1</mat-icon> Send Friend Request</button>
 
 
         <div style="text-align: center;">
