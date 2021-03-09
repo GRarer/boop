@@ -1,6 +1,5 @@
 import { AnswerFriendRequest, GetFriendsResult } from "boop-core";
 import express from "express";
-import { getAuthInfoByUsername } from "../queries/authQueries";
 import { deleteFriendRequestQueryString, getFriends, getIncomingFriendRequests } from "../queries/friendsQueries";
 import { getPushByUUID } from "../queries/pushQueries";
 import { authenticateUUID } from "../services/auth";
@@ -10,46 +9,51 @@ import { sendNotificationToUser } from "../services/pushManager";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
 export const friendsRouter = express.Router();
 
-friendsRouter.post('/send_request', handleAsync(async (req, res) => {
-  const userUUID = await authenticateUUID(req);
-
-  const friend_username: unknown = req.body;
-  if (typeof friend_username !== "string") {
-    throwBoopError("Malformed username", 400);
-  }
-  const friendInfo = await getAuthInfoByUsername(friend_username); // TODO use a more specific query
-  if (friendInfo === undefined) {
-    throwBoopError("Specified username not found", 404);
-  }
-  if (userUUID === friendInfo.userUUID) {
+async function createFriendRequest(fromUUID: string, toUUID: string): Promise<void> {
+  // verify that request can be sent
+  if (fromUUID === toUUID) {
     throwBoopError("You cannot send a friend request to yourself.", 403);
   }
-
-  const alreadySentRequest: boolean = (await getIncomingFriendRequests(friendInfo.userUUID))
-    .some(profile => profile.uuid === userUUID);
-  if (alreadySentRequest) {
+  if ((await getIncomingFriendRequests(toUUID)).some(profile => profile.uuid === fromUUID)) {
     throwBoopError("You already sent a friend request to that user.", 409);
   }
-  const reverseExists: boolean = (await getIncomingFriendRequests(userUUID))
-    .some(profile => profile.uuid === friendInfo.userUUID);
-  if (reverseExists) {
+  if ((await getIncomingFriendRequests(fromUUID)).some(profile => profile.uuid === toUUID)) {
     throwBoopError("That user already sent a friend request to you.", 409);
-    return;
   }
-  const alreadyFriends: boolean = (await getFriends(userUUID))
-    .some(profile => profile.uuid === friendInfo.userUUID);
-  if (alreadyFriends) {
+  if ((await getFriends(fromUUID)).some(profile => profile.uuid === toUUID)) {
     throwBoopError("You are already friends with that user.", 409);
   }
-
+  // add friend request in database
   await database.query(
     `insert into friend_requests(from_user, to_user) values($1, $2);`,
-    [userUUID, friendInfo.userUUID]
+    [fromUUID, toUUID]
   );
-
-  const subs = await getPushByUUID(friendInfo.userUUID);
+  // send notification to recipient of friend request
+  const subs = await getPushByUUID(toUUID);
   sendNotificationToUser(subs, friendRequestNotification)
     .catch(err => { console.error(err); });
+}
+
+// send a friend request to a user specified by username
+friendsRouter.post('/send_request', handleAsync(async (req, res) => {
+  const userUUID = await authenticateUUID(req);
+  const friend_username: string = req.body;
+  // find uuid associated with username
+  const matchingUsers = await database.query<{user_uuid: string;}>(
+    `select user_uuid from users where username = $1`,
+    [friend_username]
+  );
+  const toUUID = (matchingUsers[0] ?? throwBoopError(`User not found: ${friend_username}`, 404)).user_uuid;
+
+  await createFriendRequest(userUUID, toUUID);
+  res.send();
+}));
+
+// send a friend request to a user specified by uuid
+friendsRouter.post('/send_request_to_uuid', handleAsync(async (req, res) => {
+  const fromUUID = await authenticateUUID(req);
+  const toUUID: string = req.body;
+  await createFriendRequest(fromUUID, toUUID);
   res.send();
 }));
 

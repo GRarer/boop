@@ -36,10 +36,20 @@ export type Profile = {
   birthDate: string | null;
 };
 
+// the relationship between the viewer and the owner of a profile determines what options are shown
+// e.g. "edit" or "send friend request"
+export type ProfileViewerRelation = {
+  viewerLoggedIn: boolean;
+  self: boolean;
+  friend: boolean;
+  pendingFriendRequest? : "incoming" | "outgoing";
+}
+
 export type ProfileResponse = {
   visible: true;
   profile: Profile;
-  isSelf: boolean; // whether this is the profile of the logged in user
+  // determines whether to show "edit" or "send friend request" buttons
+  viewerRelation: ProfileViewerRelation
 } | {
   visible: false;
   reason: string;
