@@ -11,12 +11,15 @@ import { userInfoRouter } from "./routers/userInfoRouter";
 import { friendsRouter } from "./routers/friendsRouter";
 import { contactRouter } from "./routers/contactRouter";
 import { profileRouter } from "./routers/profileRouter";
+import { config } from "./config";
 
 const app = express();
-const port = process.env.PORT ?? 3000;
+const port = config.expressPort;
 
 // middleware
 app.use((req, res, next) => { next(); }, cors());
+// intellisense might warn that bodyParser is deprecated, even though the way we are using it is not deprecated
+// this is a bug causes by Express having a deprecated function with the same name as a non-deprecated namespace.
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.text());

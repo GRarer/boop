@@ -37,13 +37,17 @@ run the build and recompile core when you make changes.
 
 To build and run the server on localhost, run `npm run serve` from the backend directory.
 
-#### Backend server command line options:
-- `--password <your postgres password>` password to use to connect to postgres. If this argument is not provided, the
-backend will instead check for an environment variable named `postgres_password`.
-- `--sqlUser <your postgres username>` username to use to connect to postgres. Defaults to 'postgres'.
-- `--frequentPush` speeds up the frequency of push notifications to several per minute instead of once every few hours,
-    for testing the push notification system
+#### Backend environment variables
+- `PORT` port for express server. Defaults to 3000.
+- `PGUSER` username to use to connect to postgres. Defaults to 'postgres'.
+- `PGPASSWORD` password to use to connect to postgres.
+- `PGHOST` host url of Postgres server. Defaults to 'localhost'.
 
+#### Backend server command line options:
+- `--pg-password <your postgres password>` password to use to connect to postgres. Overrides "PGPASSWORD" environment variable.
+- `--pg-user <your postgres username>` username to use to connect to postgres. Overrides "PGUSER" environment variable.
+- `--frequent-push` speeds up the frequency of push notifications to several per minute instead of once every few hours,
+    for testing the push notification system
 
 
 ### Running the Angular frontend locally

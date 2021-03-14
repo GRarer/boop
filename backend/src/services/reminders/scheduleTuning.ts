@@ -1,5 +1,5 @@
 
-import parseArgs from "minimist";
+import { config } from "../../config";
 
 // average person is selected around once per day, so gets on average between one and two pushes per day
 const standardScheduleParameters = {
@@ -15,15 +15,15 @@ const standardScheduleParameters = {
 
 // substitute parameters that cause pushes to happen very frequently for testing purposes
 const testScheduleParameters = {
+  // 10 seconds
   cooldown: 10000,
+  // 5 seconds
   interval: 5000,
   friendProbability: 0.5,
   metafriendProbability: 0.5,
 };
 
 export const scheduleParameters: typeof standardScheduleParameters =
-  parseArgs(process.argv.slice(2))["frequentPush"]
-    ? testScheduleParameters
-    : standardScheduleParameters;
+  config.highFrequencyNotifications ? testScheduleParameters : standardScheduleParameters;
 
 
