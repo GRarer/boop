@@ -50,10 +50,13 @@ CREATE TABLE administrators(
 
 -- create special admin account
 INSERT INTO users
-("user_uuid", "username", "bcrypt_hash", "full_name", "friendly_name", "gender", "email", "birth_date")
-VALUES ('689b90d7-41ed-4257-a2a1-ca6d608d28f7', 'admin', '$2b$09$6Xjk49GbCZTjoognkzPk2.pyblewRbaiHLGap0PjETNNX924or4xS',
-'Boop Administrator', 'Administrator', null, 'example@example.com', '2000-01-15');
-INSERT INTO administrators(admin_user_uuid) values ('689b90d7-41ed-4257-a2a1-ca6d608d28f7');
+("user_uuid", "username", "bcrypt_hash",
+"full_name", "friendly_name", "email", "birth_date", "profile_privacy_level",
+"profile_show_age", "profile_show_gender")
+VALUES ('00000000-0000-0000-0000-000000000000', 'admin', '$2b$09$6Xjk49GbCZTjoognkzPk2.pyblewRbaiHLGap0PjETNNX924or4xS',
+'Boop Administrator', 'Administrator', 'boopsocialapp@gmail.com', '2000-01-01', 'restricted',
+'false', 'false');
+INSERT INTO administrators(admin_user_uuid) values ('00000000-0000-0000-0000-000000000000');
 
 -- user log-in sessions
 CREATE TABLE sessions(
