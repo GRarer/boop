@@ -1,5 +1,5 @@
 import pg, { Pool } from "pg";
-import parseArgs from "minimist";
+import { config } from "../config";
 
 // manages our connection to PostgreSQL database
 class Database {
@@ -7,20 +7,7 @@ class Database {
   private pool: pg.Pool; // a pool of connection clients allows us to make concurrent queries
 
   constructor() {
-    /* To connect to the database, we need to have the computer's postgres superuser password
-    * The first place we look is the --password command-line argument. If that argument is not included,
-    * we next look for an environment variable called "postgres_password".
-    */
-    const passwordArgument: string | undefined = parseArgs(process.argv.slice(2))["password"];
-    const usernameArgument: string | undefined = parseArgs(process.argv.slice(2))["sqlUser"] ?? 'postgres';
-
-    this.pool = new Pool({
-      user: process.env.PGUSER ?? usernameArgument,
-      host: process.env.PGHOST ?? 'localhost',
-      database: process.env.PGDATABASE ?? 'boop',
-      password: process.env.PGPASSWORD ?? process.env.postgres_password ?? passwordArgument,
-      port: 5432,
-    });
+    this.pool = new Pool(config.databaseConnectionSettings);
   }
 
   // performs a single query

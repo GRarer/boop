@@ -23,10 +23,6 @@ function clearExpiredPushTokens(): void {
 }
 
 export function startRepeatedJobs(): void {
-  // start cleanup tasks once at startup
-  clearExpiredSessions();
-  clearExpiredPushTokens();
-
   // check for expired user sessions every hour
   setInterval(clearExpiredSessions, (60 * 60 * 1000));
   // check for expired push tokens every 12 hours
@@ -38,4 +34,11 @@ export function startRepeatedJobs(): void {
       console.error(err);
     });
   }, scheduleParameters.interval);
+
+  // schedule cleanup tasks to run once shortly after startup in addition to the regular schedule
+  // we wait so that this does not return before the database connection check completes
+  setTimeout(() => {
+    clearExpiredSessions();
+    clearExpiredPushTokens();
+  }, 10000);
 }
