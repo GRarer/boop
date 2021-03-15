@@ -103,7 +103,7 @@ CREATE FUNCTION selectPairs(
     friend_probability double precision,
     metafriend_probability double precision
 ) RETURNS TABLE (
-        user_a TEXT, user_b TEXT,
+        user_a UUID, user_b UUID,
         full_name_a TEXT, friendly_name_a TEXT, gender_a GENDER_IDENTITY, vapid_subs_a JSONB[],
         full_name_b TEXT, friendly_name_b TEXT, gender_b GENDER_IDENTITY, vapid_subs_b JSONB[],
         -- mutual friend fields are null for users who are friends
