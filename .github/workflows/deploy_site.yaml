@@ -1,0 +1,33 @@
+# build frontend and deploy to github pages
+name: Deploy Web-App
+
+on:
+  push:
+    branches: [ $default-branch ]
+
+jobs:
+  build-and-deploy-angular:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    # build core package
+    - uses: bahmutov/npm-install@v1.6.2
+      with:
+        working-directory: ./core
+    - name: build-core
+      run: npm run build
+      working-directory: ./core
+    # build frontend package
+    - uses: bahmutov/npm-install@v1.6.2
+      with:
+        working-directory: ./frontend
+    - name: build-frontend
+      run: npm run build-prod
+      working-directory: ./frontend
+    # deploy build output to github pages
+    - name: deploy
+      uses: JamesIves/github-pages-deploy-action@4.1.0
+      with:
+        branch: gh-pages # The branch the action should deploy to.
+        folder: ./frontend/dist/boop-web # The folder the action should deploy.
