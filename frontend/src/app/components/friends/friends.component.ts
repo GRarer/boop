@@ -24,7 +24,7 @@ export class FriendsComponent implements OnInit {
   }
 
   loadInfo(): void {
-    this.apiService.getJSON<GetFriendsResult>("http://localhost:3000/friends/my_friends")
+    this.apiService.getJSON<GetFriendsResult>("friends/my_friends")
       .then(info => { this.info = info; })
       .catch(err => {
         this.apiService.showErrorPopup(err);
@@ -33,7 +33,7 @@ export class FriendsComponent implements OnInit {
 
   answerFriendRequest(friend: ProfileSummary, accept: boolean): void {
     this.apiService.postJSON<AnswerFriendRequest, void>(
-      "http://localhost:3000/friends/answer_request",
+      "friends/answer_request",
       { friendUUID: friend.uuid, accept }
     ).then(() => {
       this.loadInfo();
@@ -51,7 +51,7 @@ export class FriendsComponent implements OnInit {
       cancelText: "Cancel"
     });
     if (confirmed) {
-      await this.apiService.postJSON<string, void>("http://localhost:3000/friends/unfriend", friend.uuid);
+      await this.apiService.postJSON<string, void>("friends/unfriend", friend.uuid);
       this.loadInfo();
     }
   }

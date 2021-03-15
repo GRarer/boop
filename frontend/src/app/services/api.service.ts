@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, } from '@angular/common/htt
 import { SessionService } from './session.service';
 import { isBoopError, sessionTokenHeaderName } from 'boop-core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { formatEndpointURL } from '../util/domains';
 
 // class that handles http requests to the back end to support a REST API
 // automatically includes the current session token in a header, so do not use this to make requests to a 3rd party
@@ -18,19 +19,19 @@ export class ApiService {
   ) { }
 
   async getJSON<ResponseBodyT>(
-    endPointUrl: string,
+    endpointPath: string,
     queryParams?: {[param: string]: string | string[];}
   ): Promise<ResponseBodyT> {
     const options = {
       params: queryParams,
       headers: this.getAuthenticationHeader(),
     };
-    return this.httpClient.get<ResponseBodyT>(endPointUrl, options).toPromise();
+    return this.httpClient.get<ResponseBodyT>(formatEndpointURL(endpointPath), options).toPromise();
   }
 
   // like getJSON, but interprets response body as a raw string instead of parsing it as json
   async getText(
-    endPointUrl: string,
+    endpointPath: string,
     queryParams?: {[param: string]: string | string[];}
   ): Promise<string> {
     const options = {
@@ -38,38 +39,38 @@ export class ApiService {
       headers: this.getAuthenticationHeader(),
       responseType: 'text' as const
     };
-    return this.httpClient.get(endPointUrl, options).toPromise();
+    return this.httpClient.get(formatEndpointURL(endpointPath), options).toPromise();
   }
 
   async postJSON<RequestBodyT, ResponseBodyT>(
-    endPointUrl: string,
+    endpointPath: string,
     body: RequestBodyT
   ): Promise<ResponseBodyT> {
     const options = {
       headers: this.getAuthenticationHeader(),
     };
-    return this.httpClient.post<ResponseBodyT>(endPointUrl, body, options).toPromise();
+    return this.httpClient.post<ResponseBodyT>(formatEndpointURL(endpointPath), body, options).toPromise();
   }
 
   async putJSON<RequestBodyT, ResponseBodyT>(
-    endPointUrl: string,
+    endpointPath: string,
     body: RequestBodyT
   ): Promise<ResponseBodyT> {
     const options = {
       headers: this.getAuthenticationHeader(),
     };
-    return this.httpClient.put<ResponseBodyT>(endPointUrl, body, options).toPromise();
+    return this.httpClient.put<ResponseBodyT>(formatEndpointURL(endpointPath), body, options).toPromise();
   }
 
   async deleteJSON<ResponseBodyT>(
-    endPointUrl: string,
+    endpointPath: string,
     queryParams?: {[param: string]: string | string[];}
   ): Promise<ResponseBodyT> {
     const options = {
       params: queryParams,
       headers: this.getAuthenticationHeader(),
     };
-    return this.httpClient.delete<ResponseBodyT>(endPointUrl, options).toPromise();
+    return this.httpClient.delete<ResponseBodyT>(formatEndpointURL(endpointPath), options).toPromise();
   }
 
   // shows a snackbar message for an error thrown by the backend

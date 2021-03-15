@@ -28,7 +28,7 @@ export class CommandsService {
 
   private sendExampleCommand(): void {
     console.log("sending example admin command");
-    this.apiService.postJSON("http://localhost:3000/admin/check", undefined)
+    this.apiService.postJSON("admin/check", undefined)
       .then(()=>{
         console.log("Current user is admin");
       })
@@ -36,14 +36,14 @@ export class CommandsService {
   }
 
   private manualPush(username: string): void {
-    this.apiService.postJSON("http://localhost:3000/admin/push", username)
+    this.apiService.postJSON("admin/push", username)
       .then(() => console.log("sent push"))
       .catch((reason) => console.error(reason));
   }
 
   private manualPair(usernameA: string, usernameB: string, mutualFriendUsername?: string): void {
     this.apiService.postJSON<{a: string; b: string; mutual?: string;}, void>(
-      "http://localhost:3000/admin/pair",
+      "admin/pair",
       { a: usernameA, b: usernameB, mutual: mutualFriendUsername }
     )
       .then(() => console.log("notifications triggered"))

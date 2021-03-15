@@ -43,7 +43,7 @@ export class ProfileComponent implements OnInit {
 
     const username: string = this.route.snapshot.params["username"] ?? "";
     const response = await this.apiService.getJSON<ProfileResponse>(
-      "http://localhost:3000/profile/user_profile",
+      "profile/user_profile",
       { username }
     );
     if (response.visible) {
@@ -75,7 +75,7 @@ export class ProfileComponent implements OnInit {
 
   private async sendFriendRequestAsync(): Promise<void> {
     await this.apiService.postJSON<string, void>(
-      "http://localhost:3000/friends/send_request_to_uuid",
+      "friends/send_request_to_uuid",
       this.profile!.uuid
     );
     await this.refresh();
