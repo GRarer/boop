@@ -37,14 +37,31 @@ run the build and recompile core when you make changes.
 
 To build and run the server on localhost, run `npm run serve` from the backend directory.
 
+#### Setting Up VAPID keys
+
+Boop uses the web push protocol to send notifications, which requires a VAPID key pair. The server reads the keys
+from the `BOOP_VAPID_PUBLIC_KEY` and `BOOP_VAPID_PRIVATE_KEY` environment variables, which can also be configured
+by creating a file at `backend/.env` that looks like this:
+
+```
+BOOP_VAPID_PUBLIC_KEY=Public_Key_Goes_Here
+BOOP_VAPID_PRIVATE_KEY=Private_Key_Goes_Here
+```
+
+You can generate a new key pair for your instance of the Boop server by navigating to the backend directory and running
+`npx web-push generate-vapid-keys`.
+
 #### Backend environment variables
-- `PORT` port for express server. Defaults to 3000.
+- `BOOP_VAPID_PUBLIC_KEY` public half of a VAPID key pair for web push notifications
+- `BOOP_VAPID_PRIVATE_KEY` private half of a VAPID key pair for web push notifications
+- `PORT` port for Express server. Defaults to 3000.
 - `PGUSER` username to use to connect to postgres. Defaults to 'postgres'.
 - `PGPASSWORD` password to use to connect to postgres.
 - `PGHOST` host url of Postgres server. Defaults to 'localhost'.
 
 #### Backend server command line options:
-- `--pg-password <your postgres password>` password to use to connect to postgres. Overrides "PGPASSWORD" environment variable.
+- `--pg-password <your postgres password>` password to use to connect to postgres. Overrides "PGPASSWORD" environment
+    variable.
 - `--pg-user <your postgres username>` username to use to connect to postgres. Overrides "PGUSER" environment variable.
 - `--frequent-push` speeds up the frequency of push notifications to several per minute instead of once every few hours,
     for testing the push notification system
