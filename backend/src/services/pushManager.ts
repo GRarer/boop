@@ -1,10 +1,10 @@
-import { vapidKeys } from "boop-core";
 import webpush from "web-push";
+import { config } from "../config";
 
 webpush.setVapidDetails(
-  'mailto:gracerarer@gatech.edu', // TODO create an email address for boop
-  vapidKeys.publicKey,
-  vapidKeys.privateKey
+  'mailto:boopsocialapp@gmail.com',
+  config.vapidKeys.publicKey,
+  config.vapidKeys.privateKey
 );
 
 // send a notification to all vapid endpoints associated with the given user

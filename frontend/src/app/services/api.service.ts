@@ -28,6 +28,19 @@ export class ApiService {
     return this.httpClient.get<ResponseBodyT>(endPointUrl, options).toPromise();
   }
 
+  // like getJSON, but interprets response body as a raw string instead of parsing it as json
+  async getText(
+    endPointUrl: string,
+    queryParams?: {[param: string]: string | string[];}
+  ): Promise<string> {
+    const options = {
+      params: queryParams,
+      headers: this.getAuthenticationHeader(),
+      responseType: 'text' as const
+    };
+    return this.httpClient.get(endPointUrl, options).toPromise();
+  }
+
   async postJSON<RequestBodyT, ResponseBodyT>(
     endPointUrl: string,
     body: RequestBodyT

@@ -1,4 +1,5 @@
 import express from "express";
+import { config } from "../config";
 import { addPushSubscription } from "../queries/pushQueries";
 import { authenticateUUID, } from "../services/auth";
 import { isWebpushSubscription } from "../services/pushManager";
@@ -16,4 +17,9 @@ subscriptionRouter.post('/addSubscription', handleAsync(async (req, res) => {
   const userUUID = await authenticateUUID(req);
   await addPushSubscription(req.body, userUUID);
   res.send();
+}));
+
+subscriptionRouter.get('/vapid_public_key', handleAsync(async (req, res) => {
+  res.send(config.vapidKeys.publicKey);
+  console.log(res.getHeaders());
 }));
