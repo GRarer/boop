@@ -62,7 +62,7 @@ export class SettingsComponent implements OnInit {
 
   refresh(): void {
     this.info = undefined;
-    this.apiService.getJSON<CurrentSettingsResponse>("http://localhost:3000/account/current_settings", undefined)
+    this.apiService.getJSON<CurrentSettingsResponse>("account/current_settings", undefined)
       .then((response) => {
         console.log(response);
         this.updateUserForm.setValue(
@@ -111,7 +111,7 @@ export class SettingsComponent implements OnInit {
       newPassword: newPassword
     };
     this.changePasswordForm.reset();
-    this.apiService.putJSON("http://localhost:3000/account/password", request).then(() => {
+    this.apiService.putJSON("account/password", request).then(() => {
       this.snackBar.open("Password updated", "Dismiss", { duration: 5000 });
     }).catch((error) => {
       this.apiService.showErrorPopup(error);
@@ -142,7 +142,7 @@ export class SettingsComponent implements OnInit {
       gender: value.gender || null
     };
     console.log(request);
-    this.apiService.putJSON("http://localhost:3000/account/edit", request).then(() => {
+    this.apiService.putJSON("account/edit", request).then(() => {
       this.snackBar.open("Account Updated.", "Dismiss", { "duration": 5000 });
       this.refresh();
     }).catch((error) => {
@@ -157,7 +157,7 @@ export class SettingsComponent implements OnInit {
       profileShowGender: value.showGender,
       privacyLevel: value.privacyLevel
     };
-    this.apiService.putJSON("http://localhost:3000/account/privacy", request)
+    this.apiService.putJSON("account/privacy", request)
       .catch(err => { this.apiService.showErrorPopup(err); });
   }
 
@@ -176,7 +176,7 @@ export class SettingsComponent implements OnInit {
     const confirmed = await this.dialogService.confirm(data);
 
     if (confirmed) {
-      await this.apiService.deleteJSON("http://localhost:3000/account/delete");
+      await this.apiService.deleteJSON("account/delete");
       await this.sessionService.logout();
       void this.router.navigate(["/welcome"]);
     }

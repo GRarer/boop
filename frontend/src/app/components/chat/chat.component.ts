@@ -33,7 +33,7 @@ export class ChatComponent implements OnInit {
     }
 
     this.apiService.getJSON<StartChatResult>(
-      "http://localhost:3000/profile/chat_info", { token })
+      "profile/chat_info", { token })
       .then(result => { this.info = result; })
       .catch(err => { this.apiService.showErrorPopup(err); });
   }

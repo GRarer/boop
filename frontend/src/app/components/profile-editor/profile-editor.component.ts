@@ -24,14 +24,14 @@ export class ProfileEditorComponent implements OnInit {
   }
 
   refresh(): void {
-    this.apiService.getJSON<ProfileEditResponse>("http://localhost:3000/profile/my_profile_text")
+    this.apiService.getJSON<ProfileEditResponse>("profile/my_profile_text")
       .then(info => { this.info = info; })
       .catch(err => this.apiService.showErrorPopup(err));
   }
 
   removeStatus(): void {
     this.info!.statusMessage = "";
-    this.apiService.putJSON<string, void>("http://localhost:3000/user_info/update_status", "")
+    this.apiService.putJSON<string, void>("user_info/update_status", "")
       .then(() => {
         this.snackBar.open("Status cleared", "Dismiss", { duration: 2500 });
       })
@@ -42,7 +42,7 @@ export class ProfileEditorComponent implements OnInit {
 
   update(): void {
     this.apiService.putJSON<UpdateProfileTextRequest, void>(
-      "http://localhost:3000/profile/my_profile_text",
+      "profile/my_profile_text",
       { bio: this.info!.bio, statusMessage: this.info!.statusMessage }
     )
       .then(() => { this.snackBar.open("Profile Updated", "Dismiss", { duration: 2500 }); })

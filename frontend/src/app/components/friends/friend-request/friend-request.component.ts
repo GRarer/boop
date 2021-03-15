@@ -32,7 +32,7 @@ export class FriendRequestComponent implements OnInit {
       return;
     }
     this.friendRequestForm.reset();
-    this.apiService.postJSON<string, void>("http://localhost:3000/friends/send_request", friendUsername)
+    this.apiService.postJSON<string, void>("friends/send_request", friendUsername)
       .then(() => {
         this.snackBar.open(`Sent friend request to '${friendUsername}'.`, "Dismiss", { "duration": 5000 });
         this.sentRequest.emit();

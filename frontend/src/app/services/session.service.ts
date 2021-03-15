@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CreateAccountRequest, isLoginResponse, LoginRequest, LoginResponse, sessionTokenHeaderName } from 'boop-core';
+import { formatEndpointURL } from '../util/domains';
 
 const sessionLSKey = "boop-session"; // key for storing sessions in local storage
 
@@ -20,14 +21,15 @@ export class SessionService {
   async login(credentials: LoginRequest): Promise<void> {
     // TODO parameterize backend domain instead of specifying localhost
     this.currentSession = (await this.httpClient.post<LoginResponse>(
-      "http://localhost:3000/account/login", credentials
+      formatEndpointURL("account/login"),
+      credentials
     ).toPromise());
     this.saveSession(this.currentSession);
   }
 
   async loginNewAccount(request: CreateAccountRequest): Promise<void> {
     this.currentSession = (await this.httpClient.post<LoginResponse>(
-      "http://localhost:3000/account/register", request
+      formatEndpointURL("account/register"), request
     ).toPromise());
     this.saveSession(this.currentSession);
   }
@@ -40,7 +42,7 @@ export class SessionService {
       return false;
     }
     const isValidSession = await this.httpClient.get<boolean>(
-      "http://localhost:3000/account/sessionValid",
+      formatEndpointURL("account/sessionValid"),
       { headers: new HttpHeaders({ [sessionTokenHeaderName]: savedSession.sessionToken }) }
     ).toPromise();
     if (isValidSession) {
@@ -68,7 +70,7 @@ export class SessionService {
     if (token !== undefined) {
       // we tell the backend that it should close the session, but we don't need to await for the response
       this.httpClient.post(
-        "http://localhost:3000/account/logout",
+        formatEndpointURL("account/logout"),
         undefined,
         { headers: new HttpHeaders({ [sessionTokenHeaderName]: token }) }
       ).toPromise()
