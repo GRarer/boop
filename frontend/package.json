@@ -7,10 +7,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build-pwa": "npx ng build --service-worker",
-    "start-pwa": "npm run build-pwa && npx http-server ./dist/boop-web",
-    "build-prod": "npx ng build --service-worker --prod",
-    "lint": "npx eslint src --ext .ts"
+    "build-pwa": "ng build --service-worker",
+    "start-pwa": "npm run build-pwa && http-server ./dist/boop-web",
+    "build-prod": "ng build --service-worker --prod",
+    "lint": "eslint src --ext .ts"
   },
   "eslintIgnore": [
     "src/polyfills.ts",

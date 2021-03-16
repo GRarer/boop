@@ -10,11 +10,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "npx tsc --build && npm run rollup",
-    "clean": "npx shx --silent rm -rf dist",
-    "build-watch": "npm run clean && (trap 'kill 0' SIGINT ; npx tsc --build --watch & npx rollup -c rollup.config.ts --watch)",
-    "lint": "npx eslint . --ext .ts",
-    "rollup": "npx rollup -c rollup.config.ts"
+    "build": "tsc --build && npm run rollup",
+    "clean": "shx --silent rm -rf dist",
+    "build-watch": "npm run clean && (trap 'kill 0' SIGINT ; tsc --build --watch & rollup -c rollup.config.ts --watch)",
+    "lint": "eslint . --ext .ts",
+    "rollup": "rollup -c rollup.config.ts"
   },
   "eslintIgnore": [
     "dist/*",

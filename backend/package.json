@@ -5,13 +5,13 @@
   "license": "MIT",
   "main": "build_output/index.js",
   "scripts": {
-    "build": "npx tsc --build",
-    "clean": "npx tsc --build --clean",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
     "start-node": "node .",
     "serve": "npm run clean && npm run build && node .",
-    "build-watch": "npm run clean && npx tsc --build --watch",
-    "serve-watch": "npm run clean && npx tsc --build && (trap 'kill 0' SIGINT ; npx tsc --build --watch & npx nodemon .)",
-    "lint": "npx eslint src --ext .ts"
+    "build-watch": "npm run clean && tsc --build --watch",
+    "serve-watch": "npm run clean && tsc --build && (trap 'kill 0' SIGINT ; tsc --build --watch & nodemon .)",
+    "lint": "eslint src --ext .ts"
   },
   "author": "",
   "dependencies": {
