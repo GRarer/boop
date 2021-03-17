@@ -10,7 +10,6 @@ dotenv.config(); // if a .env file is present, dotenv configures process.env wit
 const args = parseArgs(process.argv.slice(2));
 // environment variables
 const env = process.env;
-console.log(env);
 
 // show a message and halt startup if vapid keys are not provided
 function missingKeyWarning(): never {
