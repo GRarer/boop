@@ -1,25 +1,44 @@
-export const friendRequestNotification = {
-  "notification": {
-    "title": "Boop Friend Request!",
-    "body": "You got a friend request on Boop",
-    // TODO add an icon that works even when the app is closed
-    "silent": false,
-    "actions": [{
-      "action": "show_friends_page",
-      "title": "View friend request"
-    }]
-  }
-};
 
-export const friendAcceptNotification = {
-  "notification": {
-    "title": "Boop Friend Request!",
-    "body": "Someone accepted your friend request, check out who that was",
-    // TODO add an icon that works even when the app is closed
-    "silent": false,
-    "actions": [{
-      "action": "show_friends_page",
-      "title": "View Friends"
-    }]
+import { database } from "../services/database";
+import { throwBoopError } from "../util/handleAsync";
+
+
+async function queryFullName(userUUID: string): Promise<string> {
+  const rows = await database.query<{full_name: string;}>(
+    `select full_name from users where user_uuid = $1`, [userUUID]
+  );
+  if (rows.length === 0) {
+    throwBoopError("User not found", 404);
   }
-};
+  return rows[0].full_name;
+}
+
+export async function friendRequestNotification(userUUID: string): Promise<{notification: Object;}> {
+  const senderFullName: string = await queryFullName(userUUID);
+  return {
+    "notification": {
+      "title": "Boop Friend Request!",
+      "body": `You got a friend request on Boop from ${senderFullName}`,
+      "silent": false,
+      "actions": [{
+        "action": "show_friends_page",
+        "title": "View friend request"
+      }]
+    }
+  };
+}
+
+export async function friendAcceptNotification(userUUID: string): Promise<{notification: Object;}> {
+  const friendFullName: string = await queryFullName(userUUID);
+  return {
+    "notification": {
+      "title": "Boop Friend Request!",
+      "body": `${friendFullName} accepted your friend request`,
+      "silent": false,
+      "actions": [{
+        "action": "show_friends_page",
+        "title": "View Friends"
+      }]
+    }
+  };
+}
