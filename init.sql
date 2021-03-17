@@ -137,6 +137,7 @@ CREATE FUNCTION selectPairs(
     friend_options AS (
         SELECT user_a, array_agg(user_b order by random()) as user_bs
         FROM friends_chosen_users join friends on friends_chosen_users.user_uuid = friends.user_a
+        where friends.user_b in (select user_uuid from enabled_users)
         group by user_a
     ),
     -- pick a random subset of users to get notifications about friends-of-friends
@@ -149,6 +150,7 @@ CREATE FUNCTION selectPairs(
     metafriend_options AS (
         SELECT user_a, array_agg(ARRAY[user_b, shared] order by random()) as user_bs
         FROM metafriends_chosen_users join metafriends on metafriends_chosen_users.user_uuid = metafriends.user_a
+        where metafriends.user_b in (select user_uuid from enabled_users)
         group by user_a
     ),
     friend_pairs as (
