@@ -7,6 +7,7 @@ import { database } from "../services/database";
 import { friendRequestNotification, friendAcceptNotification } from "../services/friendNotification";
 import { sendNotificationToUser } from "../services/pushManager";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
+
 export const friendsRouter = express.Router();
 
 async function createFriendRequest(fromUUID: string, toUUID: string): Promise<void> {
@@ -30,7 +31,7 @@ async function createFriendRequest(fromUUID: string, toUUID: string): Promise<vo
   );
   // send notification to recipient of friend request
   const subs = await getPushByUUID(toUUID);
-  sendNotificationToUser(subs, friendRequestNotification)
+  sendNotificationToUser(subs, await friendRequestNotification(fromUUID))
     .catch(err => { console.error(err); });
 }
 
@@ -86,7 +87,7 @@ friendsRouter.post('/answer_request', handleAsync(async (req, res) => {
 
     // Send notification to the sender of the request
     const subs = await getPushByUUID(body.friendUUID);
-    sendNotificationToUser(subs, friendAcceptNotification)
+    sendNotificationToUser(subs, await friendAcceptNotification(userUUID))
       .catch(err => { console.error(err); });
   } else {
     // just remove friend request
