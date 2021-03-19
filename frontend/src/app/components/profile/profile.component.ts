@@ -29,11 +29,14 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private clipboard: Clipboard,
     private location: Location,
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.refresh().catch(err => this.apiService.showErrorPopup(err));
+    // subscribe to refresh content when navigating between profiles
+    this.route.paramMap.subscribe(_ => {
+      this.refresh().catch(err => this.apiService.showErrorPopup(err));
+    });
   }
 
   async refresh(): Promise<void> {
@@ -97,23 +100,7 @@ export class ProfileComponent implements OnInit {
       { duration: 2000 });
   }
 
-  // navigate to previous page, and refresh if previous page is a profile
   goBack(): void {
-    const originalPath = this.location.path();
     this.location.back();
-    // if we're still on this component after a short delay, refresh
-    // we can't do this synchronously because it takes a small time for location.back() to have an effect
-    const checkToRefresh: () => void = () => {
-      const currentPath = this.location.path();
-      if (currentPath === originalPath ) {
-        // keep waiting in intervals of 5ms
-        setTimeout(checkToRefresh, 5);
-      } else if (/^\/profile\//g.test(currentPath)) {
-        // refresh if we arrive on a new profile
-        this.refresh().catch(err => this.apiService.showErrorPopup(err));
-      }
-      // if the destination is not a profile page, we don't need to refresh this component
-    };
-    checkToRefresh();
   }
 }
