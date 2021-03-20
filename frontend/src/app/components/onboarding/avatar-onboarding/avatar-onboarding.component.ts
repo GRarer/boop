@@ -21,7 +21,7 @@ export class AvatarOnboardingComponent implements OnInit {
     this.refresh();
   }
 
-  refresh(): void {
+  private refresh(): void {
     this.info = undefined;
     this.apiService.getJSON<CurrentSettingsResponse>("account/current_settings", undefined)
       .then((response) => {
