@@ -45,7 +45,12 @@
 	<mat-card>
 		<mat-card-header>
 			<mat-card-title>Profile Avatar</mat-card-title>
-			<mat-card-subtitle>Boop uses the Gravatar image linked to your email address</mat-card-subtitle>
+			<mat-card-subtitle>Boop uses Gravatar, a service that connects your email address to your profile image across
+				different websites and apps. To change your Gravatar image, go to
+				<a class="inline-button" mat-button color="primary" href="//gravatar.com" target="_blank">gravatar.com</a>
+				and sign in or create an account using the same email address that you use for Boop ({{info!.emailAddress}}).
+
+			</mat-card-subtitle>
 		</mat-card-header>
 		<mat-card-content style="margin-left: 16px;">
 			<div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
@@ -53,9 +58,7 @@
 				<button (click)="refresh()" mat-icon-button><mat-icon>refresh</mat-icon></button>
 				<p style="margin-bottom: 0;">{{info!.emailAddress}}</p>
 			</div>
-			<p style="color: rgba(0,0,0,.54); text-align: center;">It might take around one minute for Gravatar changes to be applied</p>
-
-			<a href="//gravatar.com" target="_blank" style= "width: 100%;" color="primary" mat-raised-button>Upload an image on gravatar.com <mat-icon>launch</mat-icon></a>
+			<p style="color: rgba(0,0,0,.54);">It might take around one minute for Gravatar changes to be applied.</p>
 		</mat-card-content>
 
 	</mat-card>
