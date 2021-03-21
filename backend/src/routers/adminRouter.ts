@@ -35,6 +35,8 @@ adminRouter.post('/push', handleAsync(async (req, res) => {
       "data": {
         "defaultAction": "show_app"
       },
+      "icon": "https://boopboop.app/assets/icons/icon-96x96.png",
+      "badge": "https://boopboop.app/assets/icons/icon-white-96x96.png",
       "silent": false,
       "actions": [{
         "action": "show_app",

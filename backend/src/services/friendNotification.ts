@@ -19,6 +19,8 @@ export async function friendRequestNotification(userUUID: string): Promise<{noti
     "notification": {
       "title": "Boop Friend Request!",
       "body": `You got a friend request on Boop from ${senderFullName}`,
+      "icon": "https://boopboop.app/assets/icons/icon-96x96.png",
+      "badge": "https://boopboop.app/assets/icons/icon-white-96x96.png",
       "silent": false,
       "data": {
         "defaultAction": "show_friends_page"
@@ -37,6 +39,8 @@ export async function friendAcceptNotification(userUUID: string): Promise<{notif
     "notification": {
       "title": "Boop Friend Request!",
       "body": `${friendFullName} accepted your friend request`,
+      "icon": "https://boopboop.app/assets/icons/icon-96x96.png",
+      "badge": "https://boopboop.app/assets/icons/icon-white-96x96.png",
       "silent": false,
       "data": {
         "defaultAction": "show_friends_page"

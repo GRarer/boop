@@ -23,7 +23,8 @@ function boopNotificationPayload(message: string, token: string): {notification:
     "notification": {
       "title": "Boop!",
       "body": message,
-      // TODO add an icon that works even when the app is closed
+      "icon": "https://boopboop.app/assets/icons/icon-96x96.png",
+      "badge": "https://boopboop.app/assets/icons/icon-white-96x96.png",
       "data": {
         "pushIdentityToken": token,
         "defaultAction": "show_start_chat"
