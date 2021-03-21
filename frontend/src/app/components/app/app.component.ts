@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
       (savedLoaded) => {
         // do not require login to visit certain pages
         const pathExemptFromLogin = [
+          /^\/register$/g,
           /^\/chat$/g,
           /^\/profile\//g
         ].some(regex => regex.test(window.location.pathname));

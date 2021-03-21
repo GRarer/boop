@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CreateAccountRequest, isLoginResponse, LoginRequest, LoginResponse, sessionTokenHeaderName } from 'boop-core';
+import { isLoginResponse, LoginRequest, LoginResponse, sessionTokenHeaderName } from 'boop-core';
 import { formatEndpointURL } from '../util/domains';
 
 const sessionLSKey = "boop-session"; // key for storing sessions in local storage
@@ -19,7 +19,6 @@ export class SessionService {
   ) { }
 
   async login(credentials: LoginRequest): Promise<void> {
-    // TODO parameterize backend domain instead of specifying localhost
     this.currentSession = (await this.httpClient.post<LoginResponse>(
       formatEndpointURL("account/login"),
       credentials
@@ -27,10 +26,8 @@ export class SessionService {
     this.saveSession(this.currentSession);
   }
 
-  async loginNewAccount(request: CreateAccountRequest): Promise<void> {
-    this.currentSession = (await this.httpClient.post<LoginResponse>(
-      formatEndpointURL("account/register"), request
-    ).toPromise());
+  loginFromToken(loginResponse: LoginResponse): void {
+    this.currentSession = loginResponse;
     this.saveSession(this.currentSession);
   }
 

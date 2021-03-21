@@ -17,6 +17,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { MatStepperModule } from '@angular/material/stepper';
 
 // include all of the material component modules that we use here to avoid cluttering the main AppModule
 export const materialModules = [
@@ -38,6 +39,7 @@ export const materialModules = [
   MatRadioModule,
   MatDividerModule,
   MatTabsModule,
-  TextFieldModule
+  TextFieldModule,
+  MatStepperModule,
 ];
 

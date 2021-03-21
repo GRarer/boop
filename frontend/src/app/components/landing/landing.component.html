@@ -1,59 +1,53 @@
-<ng-container *ngIf="!inProgressRegistration">
-    <p class="menu-paragraph">
-        Boop sends reminders to you and your friends to encourage spontaneous social interaction online.</p>
-    <h2 style="text-align: center; margin-bottom: 0;">Sign up to receive <i>Boops!</i></h2>
+<p class="menu-paragraph">
+    Boop sends reminders to you and your friends to encourage spontaneous social interaction online.</p>
+<h2 style="text-align: center; margin-bottom: 0;">Sign up to receive <i>Boops!</i></h2>
 
-    <div>
-        <form [formGroup]="startRegistrationForm" (submit)="startRegistration()">
-            <div class="horizontal-center close-stacked-input">
-                <mat-form-field appearance="outline">
-                    <mat-label>Username</mat-label>
-                    <input matInput formControlName="username">
-                </mat-form-field>
-            </div>
-            <div class="horizontal-center close-stacked-input">
-                <mat-form-field appearance="outline">
-                    <mat-label>Password</mat-label>
-                    <input matInput formControlName="password" type="password" (keyup)="checkConfirmPassword()">
-                </mat-form-field>
-            </div>
-            <div class="horizontal-center close-stacked-input">
-                <mat-form-field appearance="outline">
-                    <mat-label>Confirm Password</mat-label>
-                    <input matInput formControlName="confirmPassword" type="password" (keyup)="checkConfirmPassword()">
-                </mat-form-field>
-            </div>
-            <div style="text-align: center;">
-                <button mat-flat-button color="primary" style="width: 60%;"
-                    [disabled]="!startRegistrationForm.valid">Sign Up</button>
-            </div>
-        </form>
-        <hr
-            style="max-width: 60%; margin-top:30px; height:2px; border-width:0; color:rgba(0,0,0, 0.25);; background-color:rgba(0,0,0, 0.25);">
-        <h2
-            style="text-align: center; margin: auto; margin-top: -25px; color: rgba(0,0,0, 0.25); width: 40px;" class="mat-app-background">
-            OR</h2>
-        <h2 style="text-align: center; margin-bottom: 0;">Log In</h2>
-        <form [formGroup]="loginForm" (submit)="login()">
-            <div class="horizontal-center close-stacked-input">
-                <mat-form-field appearance="outline">
-                    <mat-label>Username</mat-label>
-                    <input matInput formControlName="username">
-                </mat-form-field>
-            </div>
-            <div class="horizontal-center close-stacked-input">
-                <mat-form-field appearance="outline">
-                    <mat-label>Password</mat-label>
-                    <input matInput formControlName="password" type="password">
-                </mat-form-field>
-            </div>
-            <div style="text-align: center;">
-                <button mat-flat-button color="primary" style="width: 60%" [disabled]="!loginForm.valid">Log In</button>
-            </div>
-        </form>
-    </div>
-</ng-container>
-<ng-container *ngIf="inProgressRegistration">
-    <app-register [credentials]="inProgressRegistration"
-        (cancelRegistration)="inProgressRegistration = undefined; startRegistrationForm.reset();"></app-register>
-</ng-container>
+<div>
+    <form [formGroup]="startRegistrationForm" (submit)="startRegistration()">
+        <div class="horizontal-center close-stacked-input">
+            <mat-form-field appearance="outline">
+                <mat-label>Username</mat-label>
+                <input matInput formControlName="username">
+            </mat-form-field>
+        </div>
+        <div class="horizontal-center close-stacked-input">
+            <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input matInput formControlName="password" type="password" (keyup)="checkConfirmPassword()">
+            </mat-form-field>
+        </div>
+        <div class="horizontal-center close-stacked-input">
+            <mat-form-field appearance="outline">
+                <mat-label>Confirm Password</mat-label>
+                <input matInput formControlName="confirmPassword" type="password" (keyup)="checkConfirmPassword()">
+            </mat-form-field>
+        </div>
+        <div style="text-align: center;">
+            <button mat-flat-button color="primary" style="width: 60%;" [disabled]="!startRegistrationForm.valid">Sign
+                Up</button>
+        </div>
+    </form>
+    <hr
+        style="max-width: 60%; margin-top:30px; height:2px; border-width:0; color:rgba(0,0,0, 0.25);; background-color:rgba(0,0,0, 0.25);">
+    <h2 style="text-align: center; margin: auto; margin-top: -25px; color: rgba(0,0,0, 0.25); width: 40px;"
+        class="mat-app-background">
+        OR</h2>
+    <h2 style="text-align: center; margin-bottom: 0;">Log In</h2>
+    <form [formGroup]="loginForm" (submit)="login()">
+        <div class="horizontal-center close-stacked-input">
+            <mat-form-field appearance="outline">
+                <mat-label>Username</mat-label>
+                <input matInput formControlName="username">
+            </mat-form-field>
+        </div>
+        <div class="horizontal-center close-stacked-input">
+            <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input matInput formControlName="password" type="password">
+            </mat-form-field>
+        </div>
+        <div style="text-align: center;">
+            <button mat-flat-button color="primary" style="width: 60%" [disabled]="!loginForm.valid">Log In</button>
+        </div>
+    </form>
+</div>

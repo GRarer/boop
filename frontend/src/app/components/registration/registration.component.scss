@@ -1,0 +1,32 @@
+mat-form-field {
+    width: 100%;
+    margin-bottom: -20px;
+}
+
+:host ::ng-deep mat-form-field-outline-start {
+    background-color: red;
+}
+
+:host ::ng-deep .mat-stepper-vertical {
+    background-color: #FAFAFA;
+}
+
+:host ::ng-deep mat-card {
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+:host ::ng-deep .mat-step-header {
+    padding-left: 10px;
+}
+
+:host ::ng-deep .mat-vertical-content-container {
+    margin-left: 22px;
+    .mat-vertical-stepper-content {
+        .mat-vertical-content {
+            padding-left: 12px;
+            padding-right: 34px;
+            padding-bottom: 34px;
+        }
+    }
+}

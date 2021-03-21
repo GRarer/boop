@@ -44,6 +44,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "gravatar",
+              "querystring"
+            ],
             "outputPath": "dist/boop-web",
             "index": "src/index.html",
             "main": "src/main.ts",

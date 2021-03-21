@@ -10,7 +10,7 @@ export function handleAsync(
       if (isBoopError(reason)) {
         response.status(reason.statusNumber).send(reason);
       } else {
-        console.error("expected error in handler");
+        console.error("unexpected error in handler");
         console.error(reason);
         response.sendStatus(500);
       }

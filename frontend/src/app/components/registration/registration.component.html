@@ -1,0 +1,93 @@
+<mat-vertical-stepper linear=true #stepper>
+    <mat-step [stepControl]="identityForm" label="Personal Information" state="person">
+        <form [formGroup]="identityForm">
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Full Name</mat-label>
+                    <input matInput formControlName="fullName" placeholder="e.g. Jane Doe">
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Nickname</mat-label>
+                    <input matInput formControlName="friendlyName" placeholder="e.g. Jane">
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Email Address</mat-label>
+                    <input matInput formControlName="email" placeholder="e.g. jdoe@example.com">
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Gender</mat-label>
+                    <mat-select formControlName="gender">
+                        <mat-option *ngFor="let gender of genderOptions" [value]="gender">
+                            {{gender}}
+                        </mat-option>
+                        <mat-option value="">
+                            Prefer Not To Say
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Birth Date</mat-label>
+                    <input readonly matInput [matDatepicker]="picker" [max]="birthdayMax" [min]="birthdayMin"
+                        formControlName="birthDate" (click)="picker.open()">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker startView="multi-year"></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="profileForm" label="Profile" state="contact_page">
+        <form [formGroup]="profileForm">
+            <mat-form-field appearance="outline" style="margin-bottom: 0px;">
+                <mat-label>Profile Description (bio)</mat-label>
+                <textarea formControlName="bio" matInput placeholder="Introduce yourself"
+                    style=" min-height: 3em;"></textarea>
+            </mat-form-field>
+            <app-privacy-controls [formGroup]="profileForm"></app-privacy-controls>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="contactsForm" label="Social Messaging Contact Info" state="alternate_email">
+        <app-editable-contact-cards (confirmChanges)="storeContacts($event)"></app-editable-contact-cards>
+    </mat-step>
+    <mat-step [stepControl]="avatarForm" label="Avatar" state="face">
+        <p>
+            Boop uses Gravatar, a service that connects your email address to your profile image across
+            different websites and apps. To change your Gravatar image, go to
+            <a class="inline-button" mat-button color="primary" href="//gravatar.com" target="_blank">gravatar.com</a>
+            and sign in or create an account using the same email address that you use for Boop ({{getEmail()}}).
+        </p>
+        <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
+            <img *ngIf="showAvatar" [src]='getAvatarUrl()' style="width: 90px; height: 90px; border-radius: 50%;">
+            <button (click)="refreshAvatar()" mat-icon-button><mat-icon>refresh</mat-icon></button>
+        </div>
+        <p>It might take around one minute for Gravatar changes to be applied.</p>
+        <button mat-raised-button color="primary" style="width: 100%;" (click)="confirmAvatar()">Continue</button>
+    </mat-step>
+    <mat-step [stepControl]="pushForm" label="Notifications" state="notifications">
+        <p class="menu-paragraph"> Boop uses push notification reminders to remind you and your friends to keep in touch.</p>
+        <button mat-raised-button color="primary" style="margin: auto; display: block; margin-top: 10px;"
+            (click)="activateNotifications()">Activate Notifications On This Device</button>
+        <button mat-button style="margin: auto; display: block;" (click)="skipNotifications()">Skip This Step</button>
+
+        <p style="opacity: 50%; margin-top: 20px; max-width: 2.6in;" class="menu-paragraph">Web push notifications are not
+            currently supported on iOS devices.</p>
+    </mat-step>
+    <mat-step label="Submit" state="done_all">
+        <div style="display: flex; flex-direction: row;">
+            <mat-checkbox color="primary" [(ngModel)]="agreedToTerms"></mat-checkbox>
+            <p style="margin-left: 10px; line-height: 0.9;">I have read and agree to the
+                <button mat-button type="button" class="inline-button" color="primary" (click)="showPrivacyPolicy()">Privacy Policy</button>
+                and
+                <button mat-button type="button" class="inline-button" color="primary" (click)="showTermsAndConditions()">User Agreement</button>
+            </p>
+        </div>
+        <button [disabled]="!agreedToTerms" mat-raised-button color="primary" style="width: 100%;" (click)="register()">Create Account</button>
+    </mat-step>
+</mat-vertical-stepper>
