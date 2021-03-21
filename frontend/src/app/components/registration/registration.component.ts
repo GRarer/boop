@@ -213,7 +213,7 @@ export class RegistrationComponent implements OnInit {
     };
 
     this.apiService.postJSON<CreateAccountRequest, LoginResponse>("account/register", request).then(response => {
-      this.sessionService.loginFromToken(response);
+      this.sessionService.setToken(response.sessionToken);
       this.registrationService.clearCredentials();
       void this.router.navigate(["home"]);
     }).catch(err => this.apiService.showErrorPopup(err));

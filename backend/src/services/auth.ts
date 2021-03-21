@@ -20,7 +20,7 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse> {
     // a prefix is included in session tokens to prevent confusing them with user UUIDs
     const token: string = `session-${uuidv4()}`;
     await setSession(token, userInfo.userUUID);
-    return { userUUID: userInfo.userUUID, sessionToken: token };
+    return { sessionToken: token };
   } else {
     throwBoopError("Incorrect password", 403);
   }
