@@ -20,6 +20,9 @@ export async function friendRequestNotification(userUUID: string): Promise<{noti
       "title": "Boop Friend Request!",
       "body": `You got a friend request on Boop from ${senderFullName}`,
       "silent": false,
+      "data": {
+        "defaultAction": "show_friends_page"
+      },
       "actions": [{
         "action": "show_friends_page",
         "title": "View friend request"
@@ -35,6 +38,9 @@ export async function friendAcceptNotification(userUUID: string): Promise<{notif
       "title": "Boop Friend Request!",
       "body": `${friendFullName} accepted your friend request`,
       "silent": false,
+      "data": {
+        "defaultAction": "show_friends_page"
+      },
       "actions": [{
         "action": "show_friends_page",
         "title": "View Friends"
