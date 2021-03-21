@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { failsPasswordRequirement, failsUsernameRequirement, LoginRequest } from 'boop-core';
+import { failsPasswordRequirement, failsUsernameRequirement } from 'boop-core';
+import { RegistrationService } from 'src/app/registration.service';
 import { ApiService } from 'src/app/services/api.service';
 import { SessionService } from 'src/app/services/session.service';
 import { equalToSiblingValidator } from 'src/app/util/ngUtils';
@@ -13,15 +14,12 @@ import { equalToSiblingValidator } from 'src/app/util/ngUtils';
   styleUrls: ['./landing.component.scss'],
 })
 export class LandingComponent implements OnInit {
-
-  // registration page will be shown when this is set
-  inProgressRegistration?: LoginRequest;
-
   constructor(
     private sessionService: SessionService,
     private snackBar: MatSnackBar,
     private router: Router,
     private apiService: ApiService,
+    private registrationService: RegistrationService,
   ) { }
 
   startRegistrationForm: FormGroup = new FormGroup({
@@ -59,14 +57,12 @@ export class LandingComponent implements OnInit {
     }
 
     // check that username isn't already taken
-    // TODO parameterize backend base url
     this.apiService.getJSON<boolean>("account/exists", { username })
       .then(accountExists => {
         if (accountExists) {
           this.snackBar.open("That username is already taken.", "Dismiss", { "duration": 5000 });
         } else {
-          // causes registration screen to be shown
-          this.inProgressRegistration = { username, password };
+          this.registrationService.startRegistration({ username, password });
         }
       }).catch((err) => {
         this.apiService.showErrorPopup(err);

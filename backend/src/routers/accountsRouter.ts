@@ -33,6 +33,7 @@ accountsRouter.post('/logout', handleAsync(async (req, res) => {
 
 accountsRouter.post('/register', handleAsync(async (req, res) => {
   const body: CreateAccountRequest = req.body;
+
   // validate username and password format
   const passwordOrUsernameIssue: string | undefined
     = failsUsernameRequirement(body.username) ?? failsPasswordRequirement(body.password);
@@ -51,7 +52,7 @@ accountsRouter.post('/register', handleAsync(async (req, res) => {
     throwBoopError("Invalid date format", 400);
   }
   if (!meetsMinimumAge) {
-    throwBoopError("Age must be at least 13 years", 403);
+    throwBoopError("You must be at least 13 years old", 403);
   }
 
   if (!isGender(body.gender)) {
@@ -99,7 +100,7 @@ accountsRouter.put('/edit', handleAsync(async (req, res) => {
     throwBoopError("Invalid date format", 400);
   }
   if (!meetsMinimumAge) {
-    throwBoopError("Age must be at least 13 years", 403);
+    throwBoopError("You must be at least 13 years old", 403);
   }
 
   if (!isGender(body.gender)) {

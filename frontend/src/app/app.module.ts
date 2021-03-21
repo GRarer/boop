@@ -14,26 +14,26 @@ import { materialModules } from './materialDependencies';
 import { NotFound404Component } from './components/not-found404/not-found404.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { HomeComponent } from './components/home/home.component';
-import { RegisterComponent } from './components/landing/register/register.component';
-import { TermsDialogComponent } from './components/landing/register/terms-dialog/terms-dialog.component';
+import { TermsDialogComponent } from './components/common/terms-dialog/terms-dialog.component';
 import { PrivacyPolicyDialogComponent }
-  from './components/landing/register/privacy-policy-dialog/privacy-policy-dialog.component';
+  from './components/common/privacy-policy-dialog/privacy-policy-dialog.component';
 import { PushSubscribeComponent } from './components/push-subscribe/push-subscribe.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { FriendsComponent } from './components/friends/friends.component';
 import { LoadingBarComponent } from './components/common/loading-bar/loading-bar.component';
 import { EditContactInfoComponent } from './components/edit-contact-info/edit-contact-info.component';
-import { OnboardingComponent } from './components/onboarding/onboarding.component';
 import { FriendRequestComponent } from './components/friends/friend-request/friend-request.component';
 import { Header } from './components/common/header/heading.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { DialogComponent } from './components/common/dialog/dialog.component';
 import { DialogService } from './components/common/dialog/dialog.service';
-import { AvatarOnboardingComponent } from './components/onboarding/avatar-onboarding/avatar-onboarding.component';
 import { PrivacyControlsComponent } from './components/settings/privacy-controls/privacy-controls.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
-
+import { RegistrationComponent } from './components/registration/registration.component';
+import {
+  EditableContactCardsComponent
+} from './components/edit-contact-info/editable-contact-cards/editable-contact-cards.component';
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 @NgModule({
@@ -42,7 +42,6 @@ import { ProfileEditorComponent } from './components/profile-editor/profile-edit
     NotFound404Component,
     LandingComponent,
     HomeComponent,
-    RegisterComponent,
     TermsDialogComponent,
     PrivacyPolicyDialogComponent,
     PushSubscribeComponent,
@@ -50,15 +49,15 @@ import { ProfileEditorComponent } from './components/profile-editor/profile-edit
     FriendsComponent,
     LoadingBarComponent,
     EditContactInfoComponent,
-    OnboardingComponent,
     FriendRequestComponent,
     Header,
     ChatComponent,
     DialogComponent,
-    AvatarOnboardingComponent,
     PrivacyControlsComponent,
     ProfileComponent,
     ProfileEditorComponent,
+    RegistrationComponent,
+    EditableContactCardsComponent,
   ],
   imports: [
     BrowserModule,

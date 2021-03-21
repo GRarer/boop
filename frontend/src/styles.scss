@@ -11,6 +11,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
         max-width: 80%;
         margin: auto;
     }
+
+    .input-hint {
+        color: rgba(0,0,0,.6);
+        font-size: 11px;
+        margin: 0;
+        margin-bottom: 5px;
+        padding-left: 11px;
+    }
 }
 
 // make the inside of outline mat-form-field be true white

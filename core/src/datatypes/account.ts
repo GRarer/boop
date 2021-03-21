@@ -1,7 +1,7 @@
 // data for account creation
 
 import { Gender } from "./gender";
-import { PrivacyLevel } from "./profile";
+import { ContactMethod, PrivacyLevel } from "./profile";
 
 export type CreateAccountRequest = {
   username: string;
@@ -14,6 +14,9 @@ export type CreateAccountRequest = {
   privacyLevel: PrivacyLevel;
   profileShowAge: boolean;
   profileShowGender: boolean;
+  profileBio: string;
+  pushSubscription?: PushSubscriptionJSON;
+  contactMethods: ContactMethod[];
 };
 
 export type UpdateAccountRequest = {

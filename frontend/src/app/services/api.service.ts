@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, } from '@angular/common/http';
 import { SessionService } from './session.service';
-import { isBoopError, sessionTokenHeaderName } from 'boop-core';
+import { sessionTokenHeaderName } from 'boop-core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { formatEndpointURL } from '../util/domains';
 
@@ -84,14 +84,16 @@ export class ApiService {
   }
 
   private getErrorDescription(err: unknown): string {
-    if (!(err instanceof HttpErrorResponse)) {
-      return "Something went wrong.";
+    if (typeof err === "string") {
+      return err;
     }
-    const error: unknown = err.error;
-    if (!isBoopError(error)) {
-      return "Something went wrong.";
+    if (typeof err === "object" && (typeof (err as any)["errorMessage"] === "string")) {
+      return (err as any)["errorMessage"];
     }
-    return error.errorMessage;
+    if (err instanceof HttpErrorResponse) {
+      return this.getErrorDescription(err.error);
+    }
+    return "Something went wrong.";
   }
 
   private getAuthenticationHeader(): HttpHeaders | undefined {
