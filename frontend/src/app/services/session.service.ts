@@ -1,17 +1,17 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { isLoginResponse, LoginRequest, LoginResponse, sessionTokenHeaderName } from 'boop-core';
+import { LoginRequest, LoginResponse, sessionTokenHeaderName } from 'boop-core';
 import { formatEndpointURL } from '../util/domains';
 
-const sessionLSKey = "boop-session"; // key for storing sessions in local storage
+const tokenLSKey = "boop-session-token"; // key for storing session tokens in local storage
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
 
-  private currentSession: LoginResponse | undefined;
+  private token?: string;
 
   constructor(
     private httpClient: HttpClient,
@@ -19,36 +19,36 @@ export class SessionService {
   ) { }
 
   async login(credentials: LoginRequest): Promise<void> {
-    this.currentSession = (await this.httpClient.post<LoginResponse>(
+    const token = (await this.httpClient.post<LoginResponse>(
       formatEndpointURL("account/login"),
       credentials
-    ).toPromise());
-    this.saveSession(this.currentSession);
+    ).toPromise()).sessionToken;
+    this.setToken(token);
   }
 
-  loginFromToken(loginResponse: LoginResponse): void {
-    this.currentSession = loginResponse;
-    this.saveSession(this.currentSession);
+  setToken(token: string): void {
+    this.token = token;
+    this.saveToken(this.token);
   }
 
   // attempts to load saved session if it exists, returns false if it doesn't or it has expired.
   async loadSavedSession(): Promise<boolean> {
     // load existing session if one is saved
-    const savedSession = this.retrieveSession();
-    if (savedSession === undefined) {
+    const savedToken = localStorage.getItem(tokenLSKey);
+    if (savedToken === null) {
       return false;
     }
     const isValidSession = await this.httpClient.get<boolean>(
       formatEndpointURL("account/sessionValid"),
-      { headers: new HttpHeaders({ [sessionTokenHeaderName]: savedSession.sessionToken }) }
+      { headers: new HttpHeaders({ [sessionTokenHeaderName]: savedToken }) }
     ).toPromise();
     if (isValidSession) {
-      this.currentSession = savedSession;
+      this.token = savedToken;
       return true;
     } else {
       this.snackBar.open("Your previous session has timed out.", "Dismiss", { "duration": 5000 });
       try {
-        localStorage.removeItem(sessionLSKey);
+        localStorage.removeItem(tokenLSKey);
       } catch (err) {
         console.error(err);
       }
@@ -57,13 +57,13 @@ export class SessionService {
   }
 
   getSessionToken(): string | undefined {
-    return this.currentSession?.sessionToken;
+    return this.token;
   }
 
   async logout(): Promise<void> {
-    const token = this.currentSession?.sessionToken;
-    this.currentSession = undefined;
-    localStorage.removeItem(sessionLSKey);
+    const token = this.token;
+    this.token = undefined;
+    localStorage.removeItem(tokenLSKey);
     if (token !== undefined) {
       // we tell the backend that it should close the session, but we don't need to await for the response
       this.httpClient.post(
@@ -78,26 +78,11 @@ export class SessionService {
     }
   }
 
-  private saveSession(session: LoginResponse): void {
+  private saveToken(token: string): void {
     try {
-      localStorage.setItem(sessionLSKey, JSON.stringify(session));
+      localStorage.setItem(tokenLSKey, token);
     } catch (err) {
       console.error(err);
     }
-  }
-
-  private retrieveSession(): LoginResponse | undefined {
-    try {
-      const saved = localStorage.getItem(sessionLSKey);
-      if (saved !== null) {
-        const session: unknown = JSON.parse(saved);
-        if (isLoginResponse(session)) {
-          return session;
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    }
-    return undefined;
   }
 }
