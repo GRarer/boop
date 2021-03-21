@@ -21,5 +21,4 @@ subscriptionRouter.post('/addSubscription', handleAsync(async (req, res) => {
 
 subscriptionRouter.get('/vapid_public_key', handleAsync(async (req, res) => {
   res.send(config.vapidKeys.publicKey);
-  console.log(res.getHeaders());
 }));

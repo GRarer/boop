@@ -59,7 +59,10 @@ export async function notificationIteration(): Promise<void> {
     console.log("send notification", pair);
     sendReminders(pair).catch(err => {
       console.error("unhandled exception while sending reminder notifications");
-      console.log(pair);
+      console.log(pair.friends
+        ? `pair ${pair.userA.fullName} with ${pair.userB.fullName}`
+        : `pair ${pair.userA.fullName} with ${pair.userB.fullName} (mutual friend: ${pair.mutualFriend.fullName})`
+      );
       console.error(err);
     });
   }
