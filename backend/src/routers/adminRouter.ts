@@ -32,11 +32,13 @@ adminRouter.post('/push', handleAsync(async (req, res) => {
     "notification": {
       "title": "Boop!",
       "body": "This is an example notification",
-      "data": {},
+      "data": {
+        "defaultAction": "show_app"
+      },
       "silent": false,
       "actions": [{
         "action": "show_app",
-        "title": "Show the placeholder page"
+        "title": "Open Boop"
       }]
     }
   };

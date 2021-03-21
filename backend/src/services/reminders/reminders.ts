@@ -25,7 +25,8 @@ function boopNotificationPayload(message: string, token: string): {notification:
       "body": message,
       // TODO add an icon that works even when the app is closed
       "data": {
-        "pushIdentityToken": token
+        "pushIdentityToken": token,
+        "defaultAction": "show_start_chat"
       },
       "silent": false,
       "actions": [{
