@@ -14,9 +14,9 @@ export type CreateAccountRequest = {
   privacyLevel: PrivacyLevel;
   profileShowAge: boolean;
   profileShowGender: boolean;
-  profileBio: string;
+  profileBio?: string;
   pushSubscription?: PushSubscriptionJSON;
-  contactMethods: ContactMethod[];
+  contactMethods?: ContactMethod[];
 };
 
 export type UpdateAccountRequest = {

@@ -22,7 +22,7 @@ export async function createAccount(user: CreateAccountRequest): Promise<void> {
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`;
       const accountParams = [
         accountUUID, user.username, passwordHash, user.fullName, user.friendlyName, user.gender, user.emailAddress,
-        user.birthDate, user.privacyLevel, user.profileShowAge, user.profileShowGender, user.profileBio
+        user.birthDate, user.privacyLevel, user.profileShowAge, user.profileShowGender, user.profileBio ?? ""
       ];
       await client.query(accountCreationQuery, accountParams);
       // set push subscription if present
@@ -35,10 +35,12 @@ export async function createAccount(user: CreateAccountRequest): Promise<void> {
         );
       }
       // set contact methods
-      await client.query(pgFormat(
-        'INSERT INTO contact_methods (user_uuid, platform, contact_id) VALUES %L;',
-        user.contactMethods.map(method => [accountUUID, method.platform, method.contactID])
-      ));
+      if (user.contactMethods !== undefined && user.contactMethods.length > 0) {
+        await client.query(pgFormat(
+          'INSERT INTO contact_methods (user_uuid, platform, contact_id) VALUES %L;',
+          user.contactMethods.map(method => [accountUUID, method.platform, method.contactID])
+        ));
+      }
     });
   } catch (err) {
     if (typeof err === "object" && err["code"] === "23505" && err["constraint"] === "users_username_key") {
