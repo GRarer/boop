@@ -25,6 +25,24 @@ export async function getIncomingFriendRequests(uuid: string): Promise<ProfileSu
   );
 }
 
+export async function getOutgoingFriendRequests(uuid: string): Promise<ProfileSummary[]> {
+  const query =
+    `select distinct user_uuid, username, full_name, status_message, email
+    from users join friend_requests on user_uuid = to_user where from_user = $1;`;
+  type ResultRow
+    = {user_uuid: string; username: string; full_name: string; status_message: string | null; email: string;};
+  const results: ResultRow[] = await database.query(query, [uuid]);
+  return results.map(r =>
+    ({
+      uuid: r.user_uuid,
+      username: r.username,
+      fullName: r.full_name,
+      statusMessage: r.status_message ?? "",
+      avatarUrl: emailToGravatarURL(r.email)
+    })
+  );
+}
+
 export async function getFriends(uuid: string): Promise<ProfileSummary[]> {
   const query =
     `select distinct user_uuid, username, full_name, status_message, email
