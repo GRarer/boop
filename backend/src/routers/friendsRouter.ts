@@ -1,6 +1,8 @@
 import { AnswerFriendRequest, GetFriendsResult } from "boop-core";
 import express from "express";
-import { deleteFriendRequestQueryString, getFriends, getIncomingFriendRequests } from "../queries/friendsQueries";
+import {
+  deleteFriendRequestQueryString, getFriends, getIncomingFriendRequests, getOutgoingFriendRequests
+} from "../queries/friendsQueries";
 import { getPushByUUID } from "../queries/pushQueries";
 import { authenticateUUID } from "../services/auth";
 import { database } from "../services/database";
@@ -9,6 +11,14 @@ import { sendNotificationToUser } from "../services/pushManager";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
 
 export const friendsRouter = express.Router();
+
+async function lookupFriendsInfo(userUUID: string): Promise<GetFriendsResult> {
+  return {
+    currentFriends: (await getFriends(userUUID)),
+    pendingFriendRequestsToUser: (await getIncomingFriendRequests(userUUID)),
+    pendingFriendRequestsFromUser: (await getOutgoingFriendRequests(userUUID)),
+  };
+}
 
 async function createFriendRequest(fromUUID: string, toUUID: string): Promise<void> {
   // verify that request can be sent
@@ -47,7 +57,8 @@ friendsRouter.post('/send_request', handleAsync(async (req, res) => {
   const toUUID = (matchingUsers[0] ?? throwBoopError(`User not found: ${friend_username}`, 404)).user_uuid;
 
   await createFriendRequest(userUUID, toUUID);
-  res.send();
+  const result: GetFriendsResult = await lookupFriendsInfo(userUUID);
+  res.send(result);
 }));
 
 // send a friend request to a user specified by uuid
@@ -55,15 +66,13 @@ friendsRouter.post('/send_request_to_uuid', handleAsync(async (req, res) => {
   const fromUUID = await authenticateUUID(req);
   const toUUID: string = req.body;
   await createFriendRequest(fromUUID, toUUID);
-  res.send();
+  const result: GetFriendsResult = await lookupFriendsInfo(fromUUID);
+  res.send(result);
 }));
 
 friendsRouter.get('/my_friends', handleAsync(async (req, res) => {
   const userUUID = await authenticateUUID(req);
-  const result: GetFriendsResult = ({
-    currentFriends: (await getFriends(userUUID)),
-    pendingFriendRequestsToUser: (await getIncomingFriendRequests(userUUID))
-  });
+  const result: GetFriendsResult = await lookupFriendsInfo(userUUID);
   res.send(result);
 }));
 
@@ -93,7 +102,16 @@ friendsRouter.post('/answer_request', handleAsync(async (req, res) => {
     // just remove friend request
     await database.query(deleteFriendRequestQueryString, [userUUID, body.friendUUID]);
   }
-  res.send();
+  const result: GetFriendsResult = await lookupFriendsInfo(userUUID);
+  res.send(result);
+}));
+
+friendsRouter.post('/cancel_request', handleAsync(async (req, res) => {
+  const userUUID = await authenticateUUID(req);
+  const targetUUID: string = req.body;
+  await database.query(deleteFriendRequestQueryString, [userUUID, targetUUID]);
+  const result: GetFriendsResult = await lookupFriendsInfo(userUUID);
+  res.send(result);
 }));
 
 friendsRouter.post('/unfriend', handleAsync(async (req, res) => {
@@ -104,7 +122,8 @@ friendsRouter.post('/unfriend', handleAsync(async (req, res) => {
     where (((user_a = $1) and (user_b = $2)) or ((user_a = $2) and (user_b = $1)))`,
     [userUUID, friendUUID]
   );
-  res.send();
+  const result: GetFriendsResult = await lookupFriendsInfo(userUUID);
+  res.send(result);
 }));
 
 

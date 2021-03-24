@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AnswerFriendRequest, GetFriendsResult, ProfileSummary } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
@@ -12,6 +13,10 @@ import { DialogService } from '../common/dialog/dialog.service';
 export class FriendsComponent implements OnInit {
 
   info: GetFriendsResult | undefined;
+
+  friendRequestForm: FormGroup = new FormGroup({
+    username: new FormControl('', [Validators.required]),
+  });
 
   constructor(
     private apiService: ApiService,
@@ -31,12 +36,38 @@ export class FriendsComponent implements OnInit {
       });
   }
 
+  sendFriendRequest(): void {
+    const friendUsername: unknown = this.friendRequestForm.value.username;
+    if (typeof friendUsername !== "string" || friendUsername === "") {
+      return;
+    }
+    this.friendRequestForm.reset();
+    this.apiService.postJSON<string, GetFriendsResult>("friends/send_request", friendUsername)
+      .then((info) => {
+        this.info = info;
+      })
+      .catch((err) => {
+        this.apiService.showErrorPopup(err);
+      });
+  }
+
   answerFriendRequest(friend: ProfileSummary, accept: boolean): void {
-    this.apiService.postJSON<AnswerFriendRequest, void>(
+    this.apiService.postJSON<AnswerFriendRequest, GetFriendsResult>(
       "friends/answer_request",
       { friendUUID: friend.uuid, accept }
-    ).then(() => {
-      this.loadInfo();
+    ).then((info) => {
+      this.info = info;
+    })
+      .catch((err) => {
+        this.apiService.showErrorPopup(err);
+      });
+  }
+
+  cancelFriendRequest(friend: ProfileSummary): void {
+    this.apiService.postJSON<string, GetFriendsResult>(
+      "friends/cancel_request", friend.uuid
+    ).then((info) => {
+      this.info = info;
     })
       .catch((err) => {
         this.apiService.showErrorPopup(err);
@@ -51,8 +82,7 @@ export class FriendsComponent implements OnInit {
       cancelText: "Cancel"
     });
     if (confirmed) {
-      await this.apiService.postJSON<string, void>("friends/unfriend", friend.uuid);
-      this.loadInfo();
+      this.info = await this.apiService.postJSON<string, GetFriendsResult>("friends/unfriend", friend.uuid);
     }
   }
 

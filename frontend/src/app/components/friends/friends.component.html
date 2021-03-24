@@ -1,7 +1,21 @@
 <app-loading-bar *ngIf="info === undefined"></app-loading-bar>
 <div *ngIf="info !== undefined" style="padding-bottom: 10px;">
   <h2 class="section-header">Add Friends</h2>
-  <app-friend-request></app-friend-request>
+  <mat-card style="margin-left: 20px; margin-right: 20px;">
+    <mat-card-content style="margin-bottom: -30px;">
+      <form [formGroup]="friendRequestForm" (submit)="sendFriendRequest(); requestForm.resetForm();"
+			#requestForm="ngForm">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Friend's Username</mat-label>
+          <input matInput formControlName="username">
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button [disabled]="!friendRequestForm.valid" mat-button color="primary" (click)="sendFriendRequest()">SEND FRIEND
+        REQUEST</button>
+    </mat-card-actions>
+  </mat-card>
   <ng-container *ngIf="info!.pendingFriendRequestsToUser.length > 0">
     <h2 class="section-header">Pending Friend Requests</h2>
     <mat-card *ngFor="let request of info!.pendingFriendRequestsToUser" style="margin-bottom: 10px;">
@@ -14,6 +28,20 @@
         <button mat-button (click)="showProfile(request)">PROFILE</button>
         <button mat-button (click)="answerFriendRequest(request, true)" color="primary">ACCEPT</button>
         <button mat-button (click)="answerFriendRequest(request, false)" color="warn">REJECT</button>
+      </mat-card-actions>
+    </mat-card>
+  </ng-container>
+  <ng-container *ngIf="info!.pendingFriendRequestsFromUser.length > 0">
+    <h2 class="section-header">Sent Friend Requests</h2>
+    <mat-card *ngFor="let request of info!.pendingFriendRequestsFromUser" style="margin-bottom: 10px;">
+      <mat-card-header>
+        <img mat-card-avatar [src]="request.avatarUrl">
+        <mat-card-title>{{request.fullName}}</mat-card-title>
+        <mat-card-subtitle style="margin-bottom: 0;">{{request.username}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions style="padding-top: 0;">
+        <button mat-button (click)="showProfile(request)">PROFILE</button>
+        <button mat-button (click)="cancelFriendRequest(request)" color="warn">CANCEL</button>
       </mat-card-actions>
     </mat-card>
   </ng-container>

@@ -12,6 +12,7 @@ export type ProfileSummary = {
 export type GetFriendsResult = {
   currentFriends: ProfileSummary[];
   pendingFriendRequestsToUser: ProfileSummary[];
+  pendingFriendRequestsFromUser: ProfileSummary[];
 };
 
 export type AnswerFriendRequest = {
