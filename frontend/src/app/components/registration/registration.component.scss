@@ -3,10 +3,6 @@ mat-form-field {
     margin-bottom: -20px;
 }
 
-:host ::ng-deep mat-form-field-outline-start {
-    background-color: red;
-}
-
 :host ::ng-deep .mat-stepper-vertical {
     background-color: #FAFAFA;
 }

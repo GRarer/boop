@@ -21,18 +21,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     }
 }
 
-// make the inside of outline mat-form-field be true white
-::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
-    background-color: white;
-    border-radius: 5px;
-}
-
-.horizontal-center {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
 .close-stacked-input {
     margin-bottom: -15px;
 }
