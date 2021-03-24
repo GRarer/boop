@@ -4,19 +4,19 @@
 
 <div>
     <form [formGroup]="startRegistrationForm" (submit)="startRegistration()">
-        <div class="horizontal-center close-stacked-input">
+        <div class="close-stacked-input">
             <mat-form-field appearance="outline">
                 <mat-label>Username</mat-label>
                 <input matInput formControlName="username">
             </mat-form-field>
         </div>
-        <div class="horizontal-center close-stacked-input">
+        <div class="close-stacked-input">
             <mat-form-field appearance="outline">
                 <mat-label>Password</mat-label>
                 <input matInput formControlName="password" type="password" (keyup)="checkConfirmPassword()">
             </mat-form-field>
         </div>
-        <div class="horizontal-center close-stacked-input">
+        <div class="close-stacked-input">
             <mat-form-field appearance="outline">
                 <mat-label>Confirm Password</mat-label>
                 <input matInput formControlName="confirmPassword" type="password" (keyup)="checkConfirmPassword()">
@@ -27,20 +27,22 @@
                 Up</button>
         </div>
     </form>
-    <hr
-        style="max-width: 60%; margin-top:30px; height:2px; border-width:0; color:rgba(0,0,0, 0.25);; background-color:rgba(0,0,0, 0.25);">
-    <h2 style="text-align: center; margin: auto; margin-top: -25px; color: rgba(0,0,0, 0.25); width: 40px;"
-        class="mat-app-background">
-        OR</h2>
+
+    <div style="display: flex; flex-direction: row; max-width: 60%; margin: auto;">
+        <span class="half-divider"><hr></span>
+        <h2 class="divider-label">OR</h2>
+        <span class="half-divider"><hr></span>
+    </div>
+
     <h2 style="text-align: center; margin-bottom: 0;">Log In</h2>
     <form [formGroup]="loginForm" (submit)="login()">
-        <div class="horizontal-center close-stacked-input">
+        <div class="close-stacked-input">
             <mat-form-field appearance="outline">
                 <mat-label>Username</mat-label>
                 <input matInput formControlName="username">
             </mat-form-field>
         </div>
-        <div class="horizontal-center close-stacked-input">
+        <div class="close-stacked-input">
             <mat-form-field appearance="outline">
                 <mat-label>Password</mat-label>
                 <input matInput formControlName="password" type="password">
