@@ -1,4 +1,24 @@
+.toolbar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .heading-logo {
     cursor: pointer;
     outline: none;
+}
+
+.home-button {
+    height: 50px;
+    width: 50px;
+
+    mat-icon {
+        color: white;
+        width: 40px;
+        height: 40px;
+        font-size: 40px;
+        line-height: 40px;
+    }
 }
