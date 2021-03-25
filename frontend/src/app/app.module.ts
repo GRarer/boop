@@ -33,6 +33,7 @@ import { RegistrationComponent } from './components/registration/registration.co
 import {
   EditableContactCardsComponent
 } from './components/edit-contact-info/editable-contact-cards/editable-contact-cards.component';
+import { FaqDialogComponent } from './components/common/faq-dialog/faq-dialog.component';
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 @NgModule({
@@ -56,6 +57,7 @@ import {
     ProfileEditorComponent,
     RegistrationComponent,
     EditableContactCardsComponent,
+    FaqDialogComponent,
   ],
   imports: [
     BrowserModule,

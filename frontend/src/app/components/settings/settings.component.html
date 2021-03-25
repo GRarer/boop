@@ -1,5 +1,12 @@
+
 <app-loading-bar *ngIf="info === undefined"></app-loading-bar>
 <div *ngIf="info !== undefined" style="padding-bottom: 10px;">
+	<mat-card>
+		<mat-card-header>
+			<mat-card-title>Information</mat-card-title>
+		</mat-card-header>
+		<button mat-button color="primary" class="info-link" (click)="showFAQ()"><mat-icon>help</mat-icon>Frequently Asked Questions</button>
+	</mat-card>
 	<mat-card>
 		<mat-card-header>
 			<mat-card-title>User Info</mat-card-title>
