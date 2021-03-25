@@ -72,8 +72,8 @@ accountsRouter.get('/current_settings', handleAsync(async (req, res) => {
 
 accountsRouter.get('/data', handleAsync(async (req, res) => {
   const uuid = await authenticateUUID(req);
-  const result: AccountDataResponse = await getAccountData(uuid)
-  res.send(result)
+  const result: AccountDataResponse = await getAccountData(uuid);
+  res.send(result);
 }));
 
 accountsRouter.delete('/delete', handleAsync(async (req, res) => {

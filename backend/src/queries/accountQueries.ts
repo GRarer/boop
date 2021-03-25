@@ -1,5 +1,5 @@
 import { CreateAccountRequest, Gender, genderValues, UpdateAccountRequest,
-  CurrentSettingsResponse, PrivacyLevel, ContactMethod, AccountDataResponse } from "boop-core";
+  CurrentSettingsResponse, PrivacyLevel, AccountDataResponse } from "boop-core";
 import { database } from "../services/database";
 import { v4 as uuidv4 } from 'uuid';
 import { hashPassword } from "../services/auth";
@@ -139,10 +139,10 @@ export async function getAccountData(uuid: string): Promise<AccountDataResponse>
     `SELECT platform, contact_id FROM contact_methods WHERE user_uuid=$1`, [uuid]
   );
 
-  const friendsQuery = 
+  const friendsQuery =
     `SELECT DISTINCT username, full_name FROM friends JOIN users on user_a=user_uuid
     WHERE user_b=$1;`;
-  const friendRows = await database.query<{username: string; full_name:string;}>(friendsQuery, [uuid]);
+  const friendRows = await database.query<{username: string; full_name: string;}>(friendsQuery, [uuid]);
 
   return {
     username: account.username,
@@ -156,7 +156,7 @@ export async function getAccountData(uuid: string): Promise<AccountDataResponse>
     profileShowGender: account.profile_show_gender,
     profileBio: account.profile_bio,
     avatarUrl: emailToGravatarURL(account.email),
-    contactMethods: contactRows.map(row => ({ platform: row.platform, contactID: row.contact_id})),
+    contactMethods: contactRows.map(row => ({ platform: row.platform, contactID: row.contact_id })),
     friends: friendRows.map(row => ({ username: row.username, fullName: row.full_name }))
   };
 }

@@ -161,10 +161,10 @@ export class SettingsComponent implements OnInit {
   downloadAccountData(): void {
     this.downloadProgressVisible = true;
     this.apiService.getJSON<AccountDataResponse>("account/data", undefined).then((response) => {
-      let name = response.username + '-data';
-      let beautified = JSON.stringify(response, null, "\t");
+      const name = response.username + '-data';
+      const beautified = JSON.stringify(response, null, "\t");
       downloadJson(beautified, name);
-    }).catch((error) => { 
+    }).catch((error) => {
       this.apiService.showErrorPopup(error);
     }).finally(() => {
       this.downloadProgressVisible = false;
