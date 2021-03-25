@@ -25,7 +25,7 @@
                 <mat-icon *ngSwitchCase="'Male'">male</mat-icon>
                 <mat-icon *ngSwitchCase="'Nonbinary'">transgender</mat-icon>
             </span>
-            <span *ngIf="profile!.birthDate" class="profile-demographic">{{profile!.birthDate}}</span>
+            <span *ngIf="profile!.birthDate" class="profile-demographic age-label">{{profile!.birthDate}}</span>
         </div>
         <ng-container *ngIf="profile!.statusMessage !== ''">
             <mat-divider></mat-divider>
