@@ -1,7 +1,7 @@
 import express from "express";
 import {
   failsPasswordRequirement, failsUsernameRequirement, LoginRequest, LoginResponse, sessionTokenHeaderName,
-  UpdatePasswordRequest, UpdateAccountRequest, CurrentSettingsResponse, UpdatePrivacyRequest
+  UpdatePasswordRequest, UpdateAccountRequest, CurrentSettingsResponse, UpdatePrivacyRequest, AccountDataResponse
 } from "boop-core";
 import { authenticateUUID, login, userUuidFromReq } from "../services/auth";
 import { CreateAccountRequest, minYearsAgo, isGender } from "boop-core";
@@ -9,7 +9,7 @@ import { handleAsync, throwBoopError } from "../util/handleAsync";
 import { getAuthInfoByUsername, getPasswordHashByUuid, removeSession } from "../queries/authQueries";
 import bcrypt from "bcrypt";
 import {
-  createAccount, getCurrentSettings, updateAccount, updatePassword, deleteAccount
+  createAccount, getCurrentSettings, updateAccount, updatePassword, deleteAccount, getAccountData
 } from "../queries/accountQueries";
 import { database } from "../services/database";
 import { DateTime } from "luxon";
@@ -68,6 +68,12 @@ accountsRouter.get('/current_settings', handleAsync(async (req, res) => {
   const uuid = await authenticateUUID(req);
   const result: CurrentSettingsResponse = await getCurrentSettings(uuid);
   res.send(result);
+}));
+
+accountsRouter.get('/data', handleAsync(async (req, res) => {
+  const uuid = await authenticateUUID(req);
+  const result: AccountDataResponse = await getAccountData(uuid)
+  res.send(result)
 }));
 
 accountsRouter.delete('/delete', handleAsync(async (req, res) => {

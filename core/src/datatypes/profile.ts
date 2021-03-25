@@ -9,6 +9,11 @@ export type ProfileSummary = {
   avatarUrl: string;
 };
 
+export type ExportedProfileSummary = {
+  username: string;
+  fullName: string;
+};
+
 export type GetFriendsResult = {
   currentFriends: ProfileSummary[];
   pendingFriendRequestsToUser: ProfileSummary[];
