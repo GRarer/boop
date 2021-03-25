@@ -41,7 +41,7 @@ async function createFriendRequest(fromUUID: string, toUUID: string): Promise<vo
   );
   // send notification to recipient of friend request
   const subs = await getPushByUUID(toUUID);
-  sendNotificationToUser(subs, await friendRequestNotification(fromUUID))
+  sendNotificationToUser(subs, await friendRequestNotification(fromUUID), toUUID)
     .catch(err => { console.error(err); });
 }
 
@@ -96,7 +96,7 @@ friendsRouter.post('/answer_request', handleAsync(async (req, res) => {
 
     // Send notification to the sender of the request
     const subs = await getPushByUUID(body.friendUUID);
-    sendNotificationToUser(subs, await friendAcceptNotification(userUUID))
+    sendNotificationToUser(subs, await friendAcceptNotification(userUUID), body.friendUUID)
       .catch(err => { console.error(err); });
   } else {
     // just remove friend request

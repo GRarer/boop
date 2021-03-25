@@ -2,7 +2,6 @@ import express from "express";
 import { authenticateAdmin, userUuidFromReq, } from "../services/auth";
 import webpush from "web-push";
 import { handleAsync, throwBoopError } from "../util/handleAsync";
-import { getPushByUsername } from "../queries/pushQueries";
 import { sendNotificationToUser } from "../services/pushManager";
 import { NotificationIdentity, Pairing, sendReminders } from "../services/reminders/reminders";
 import { Gender } from "boop-core";
@@ -45,8 +44,11 @@ adminRouter.post('/push', handleAsync(async (req, res) => {
     }
   };
 
-  const subscriptions: webpush.PushSubscription[] = await getPushByUsername(username);
-  await sendNotificationToUser(subscriptions, testNotificationPayload);
+  const userInfo = (await database.query<{vapid_subs: webpush.PushSubscription[]; user_uuid: string;}>(
+    `select vapid_subs, user_uuid from users where username = $1`,
+    [username]))[0] ?? throwBoopError("user not found", 404);
+
+  await sendNotificationToUser(userInfo.vapid_subs, testNotificationPayload, userInfo.user_uuid);
   res.send();
 }));
 
