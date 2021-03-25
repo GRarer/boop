@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { failsPasswordRequirement, failsUsernameRequirement } from 'boop-core';
@@ -7,6 +8,7 @@ import { RegistrationService } from 'src/app/registration.service';
 import { ApiService } from 'src/app/services/api.service';
 import { SessionService } from 'src/app/services/session.service';
 import { equalToSiblingValidator } from 'src/app/util/ngUtils';
+import { FaqDialogComponent } from '../common/faq-dialog/faq-dialog.component';
 
 @Component({
   selector: 'app-landing',
@@ -20,6 +22,7 @@ export class LandingComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private registrationService: RegistrationService,
+    public dialog: MatDialog,
   ) { }
 
   startRegistrationForm: FormGroup = new FormGroup({
@@ -42,6 +45,10 @@ export class LandingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  showFAQ(): void {
+    this.dialog.open(FaqDialogComponent);
   }
 
   startRegistration(): void {

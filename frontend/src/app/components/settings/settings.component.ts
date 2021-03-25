@@ -11,6 +11,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { equalToSiblingValidator } from 'src/app/util/ngUtils';
 import { DialogService } from 'src/app/components/common/dialog/dialog.service';
 import { DateTime } from 'luxon';
+import { FaqDialogComponent } from '../common/faq-dialog/faq-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -26,6 +28,7 @@ export class SettingsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialogService: DialogService,
     private sessionService: SessionService,
+    public dialog: MatDialog,
   ) {}
 
   genderOptions: Gender[] = genderValues;
@@ -188,5 +191,9 @@ export class SettingsComponent implements OnInit {
     confirmNewPassword.updateValueAndValidity();
     confirmNewPassword.markAsDirty();
     confirmNewPassword.markAsTouched();
+  }
+
+  showFAQ(): void {
+    this.dialog.open(FaqDialogComponent);
   }
 }
