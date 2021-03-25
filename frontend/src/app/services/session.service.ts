@@ -72,7 +72,7 @@ export class SessionService {
         { headers: new HttpHeaders({ [sessionTokenHeaderName]: token }) }
       ).toPromise()
         .catch((err) => {
-          console.error("Failed to close session with backend");
+          console.warn("Failed to close session with backend");
           console.log(err);
         });
     }

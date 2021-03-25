@@ -1,5 +1,5 @@
 // custom service worker
-console.log("boop custom service worker version 7");
+console.log("boop custom service worker version 7.2");
 
 const host = `${self.registration.scope}`;
 
@@ -8,7 +8,6 @@ try {
   importScripts('./ngsw-worker.js');
   // listen for push notification clicks
   self.addEventListener('notificationclick', (event) => {
-    console.log(event);
     const action = event.action || event.notification.data.defaultAction;
     event.notification.close();
     if (action === "show_start_chat") {
