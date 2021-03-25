@@ -48,8 +48,8 @@ export async function sendReminders(pair: Pairing): Promise<void> {
   const tokens = await createNotificationTokens(pair);
 
   await Promise.all([
-    sendNotificationToUser(pair.userA.vapidSubs, boopNotificationPayload(messageToA, tokens.tokenToA)),
-    sendNotificationToUser(pair.userB.vapidSubs, boopNotificationPayload(messageToB, tokens.tokenToB))
+    sendNotificationToUser(pair.userA.vapidSubs, boopNotificationPayload(messageToA, tokens.tokenToA), pair.userA.uuid),
+    sendNotificationToUser(pair.userB.vapidSubs, boopNotificationPayload(messageToB, tokens.tokenToB), pair.userB.uuid)
   ]);
 }
 
