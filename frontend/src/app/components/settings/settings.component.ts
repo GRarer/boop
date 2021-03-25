@@ -67,7 +67,6 @@ export class SettingsComponent implements OnInit {
     this.info = undefined;
     this.apiService.getJSON<CurrentSettingsResponse>("account/current_settings", undefined)
       .then((response) => {
-        console.log(response);
         this.updateUserForm.setValue(
           {
             username: response.username,
@@ -88,14 +87,7 @@ export class SettingsComponent implements OnInit {
         });
         this.privacyForm.markAsPristine();
         this.info = response;
-      }).catch((error) => {
-        console.error(error);
-        this.snackBar.open(
-          "Something went wrong when trying to load your information.",
-          "Dismiss",
-          { "duration": 5000 }
-        );
-      });
+      }).catch(err => this.apiService.showErrorPopup(err));
   }
 
   updatePassword(): void {
@@ -144,7 +136,6 @@ export class SettingsComponent implements OnInit {
       // form value for gender is empty string if user chose "prefer not so say", and we have to replace that with null
       gender: value.gender || null
     };
-    console.log(request);
     this.apiService.putJSON("account/edit", request).then(() => {
       this.snackBar.open("Account Updated.", "Dismiss", { "duration": 5000 });
       this.refresh();

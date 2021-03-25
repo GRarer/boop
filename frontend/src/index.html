@@ -17,7 +17,6 @@
     (function () {
       let redirect = sessionStorage.getItem('spa_redirect');
       sessionStorage.removeItem('spa_redirect');
-      console.log('redirect', redirect);
       if (redirect && redirect != location.href) {
         history.replaceState(null, null, redirect);
       }

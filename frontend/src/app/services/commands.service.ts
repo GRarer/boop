@@ -23,11 +23,9 @@ export class CommandsService {
       }
     });
     (window as any).admin = commands;
-    console.log("Boop admin commands enabled");
   }
 
   private sendExampleCommand(): void {
-    console.log("sending example admin command");
     this.apiService.postJSON("admin/check", undefined)
       .then(()=>{
         console.log("Current user is admin");

@@ -120,7 +120,6 @@ export class RegistrationComponent implements OnInit {
         pushSubscription: sub
       });
       this.stepper?.next();
-      console.log(this.pushForm.value);
     }).catch(reason => {
       if (reason instanceof DOMException && reason.name === "NotAllowedError") {
         this.apiService.showErrorPopup("You (or your web browser) blocked permission for push notifications.");
@@ -136,7 +135,6 @@ export class RegistrationComponent implements OnInit {
     }
     const publicKey = await this.apiService.getText("push/vapid_public_key");
     const subscription = await this.swPush.requestSubscription({ serverPublicKey: publicKey });
-    console.log(subscription);
     return subscription;
   }
 
@@ -167,8 +165,6 @@ export class RegistrationComponent implements OnInit {
   }
 
   register(): void {
-    console.log([this.identityForm.value, this.profileForm.value, this.contactsForm.value, this.pushForm.value]);
-
     const credentials = this.credentials;
     if (credentials === undefined) {
       this.apiService.showErrorPopup("Username and password was not specified");
