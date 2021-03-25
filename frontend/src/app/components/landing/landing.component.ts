@@ -48,7 +48,7 @@ export class LandingComponent implements OnInit {
   }
 
   showFAQ(): void {
-    this.dialog.open(FaqDialogComponent);
+    this.dialog.open(FaqDialogComponent, { autoFocus: false, maxWidth: "8in" });
   }
 
   startRegistration(): void {

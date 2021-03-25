@@ -157,11 +157,11 @@ export class RegistrationComponent implements OnInit {
   }
 
   showTermsAndConditions(): void {
-    this.dialog.open(TermsDialogComponent);
+    this.dialog.open(TermsDialogComponent, { autoFocus: false, maxWidth: "8in" });
   }
 
   showPrivacyPolicy(): void {
-    this.dialog.open(PrivacyPolicyDialogComponent);
+    this.dialog.open(PrivacyPolicyDialogComponent, { autoFocus: false, maxWidth: "8in" });
   }
 
   register(): void {
