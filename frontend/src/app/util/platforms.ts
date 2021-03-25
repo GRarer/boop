@@ -5,6 +5,10 @@ type PlatformInfo = {
 };
 
 export const commonPlatforms: {[platformName: string]: PlatformInfo | undefined;} = {
+  "Phone": {
+    iconUrl: "assets/platform_icons/material_icon_phone.png",
+    contactIdHint: "The phone number that you use for text messages"
+  },
   "WhatsApp": {
     iconUrl: "assets/platform_icons/whatsapp.png",
     contactIdHint:
@@ -42,8 +46,4 @@ export const commonPlatforms: {[platformName: string]: PlatformInfo | undefined;
     iconUrl: "assets/platform_icons/kakao_talk.png",
     contactIdHint: "Your Kakao Talk phone number",
   },
-  "Phone": {
-    iconUrl: "assets/platform_icons/material_icon_phone.png",
-    contactIdHint: "The phone number that you use for text messages"
-  }
 };
