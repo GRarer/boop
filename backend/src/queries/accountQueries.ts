@@ -117,8 +117,8 @@ export async function getCurrentSettings(uuid: string): Promise<CurrentSettingsR
 export async function getAccountData(uuid: string): Promise<AccountDataResponse> {
   const accountDataQuery =
   `SELECT "username", "full_name", "friendly_name", "gender", "email",
-    "birth_date", "profile_privacy_level", "profile_show_age", "profile_show_gender", "profile_bio"
-    FROM users WHERE user_uuid=$1;`;
+    "birth_date", "profile_privacy_level", "profile_show_age", "profile_show_gender", "profile_bio",
+    "do_not_disturb", "status_message" FROM users WHERE user_uuid=$1;`;
   type AccountRow = {
     username: string;
     full_name: string;
@@ -130,6 +130,8 @@ export async function getAccountData(uuid: string): Promise<AccountDataResponse>
     profile_show_age: boolean;
     profile_show_gender: boolean;
     profile_bio: string;
+    do_not_disturb: boolean;
+    status_message: string;
   };
 
   const accountRows: AccountRow[] = await database.query(accountDataQuery, [uuid]);
@@ -144,6 +146,19 @@ export async function getAccountData(uuid: string): Promise<AccountDataResponse>
     WHERE user_b=$1;`;
   const friendRows = await database.query<{username: string; full_name: string;}>(friendsQuery, [uuid]);
 
+  const incomingQuery =
+    `SELECT DISTINCT username, full_name FROM users JOIN friend_requests 
+    ON user_uuid = from_user WHERE to_user = $1;`;
+  const incomingRows =
+    await database.query<{username: string; full_name: string; status_message: string;}>(incomingQuery, [uuid]);
+
+  const outgoingQuery =
+    `SELECT DISTINCT username, full_name FROM users JOIN friend_requests 
+    ON user_uuid = to_user WHERE from_user = $1;`;
+  const outgoingRows =
+    await database.query<{username: string; full_name: string; status_message: string;}>(outgoingQuery, [uuid]);
+
+
   return {
     username: account.username,
     fullName: account.full_name,
@@ -155,9 +170,13 @@ export async function getAccountData(uuid: string): Promise<AccountDataResponse>
     profileShowAge: account.profile_show_age,
     profileShowGender: account.profile_show_gender,
     profileBio: account.profile_bio,
+    doNotDisturb: account.do_not_disturb,
+    statusMessage: account.status_message,
     avatarUrl: emailToGravatarURL(account.email),
     contactMethods: contactRows.map(row => ({ platform: row.platform, contactID: row.contact_id })),
-    friends: friendRows.map(row => ({ username: row.username, fullName: row.full_name }))
+    friends: friendRows.map(row => ({ username: row.username, fullName: row.full_name })),
+    incomingRequests: incomingRows.map(row => ({ username: row.username, fullName: row.full_name })),
+    outgoingRequests: outgoingRows.map(row => ({ username: row.username, fullName: row.full_name })),
   };
 }
 

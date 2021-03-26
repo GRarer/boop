@@ -29,10 +29,14 @@ export type AccountDataResponse = {
   privacyLevel: PrivacyLevel;
   profileShowAge: boolean;
   profileShowGender: boolean;
+  statusMessage: string;
+  doNotDisturb: boolean;
   profileBio?: string;
   avatarUrl: string;
   contactMethods?: ContactMethod[];
   friends?: ExportedProfileSummary[];
+  incomingRequests?: ExportedProfileSummary[];
+  outgoingRequests?: ExportedProfileSummary[];
 };
 
 export type UpdateAccountRequest = {
