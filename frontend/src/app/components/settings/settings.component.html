@@ -98,10 +98,11 @@
 	<mat-card>
 		<mat-card-header>
 			<mat-card-title>Export Personal Data</mat-card-title>
+			<mat-card-subtitle>Boop is transparent with the data we collect, feel free to take a look</mat-card-subtitle>
 		</mat-card-header>
-		<p>The ability to automatically download your account data is coming soon. In the meantime, you can send a
-			request to boopsocialapp@gmail.com
-		</p>
+		<button *ngIf="!downloadProgressVisible" mat-flat-button color="primary" class="update-button" 
+		(click)="downloadAccountData()">Download</button>
+		<app-loading-bar *ngIf="downloadProgressVisible" class="button-loading"></app-loading-bar>
 	</mat-card>
 	<mat-card style="border: 2px solid #f44336; margin-bottom: 0;">
 		<mat-card-header>

@@ -1,7 +1,7 @@
 // data for account creation
 
 import { Gender } from "./gender";
-import { ContactMethod, PrivacyLevel } from "./profile";
+import { ContactMethod, PrivacyLevel, ExportedProfileSummary } from "./profile";
 
 export type CreateAccountRequest = {
   username: string;
@@ -17,6 +17,26 @@ export type CreateAccountRequest = {
   profileBio?: string;
   pushSubscription?: PushSubscriptionJSON;
   contactMethods?: ContactMethod[];
+};
+
+export type AccountDataResponse = {
+  username: string;
+  fullName: string;
+  friendlyName: string;
+  emailAddress: string;
+  birthDate: string;
+  gender: Gender;
+  privacyLevel: PrivacyLevel;
+  profileShowAge: boolean;
+  profileShowGender: boolean;
+  statusMessage: string;
+  doNotDisturb: boolean;
+  profileBio?: string;
+  avatarUrl: string;
+  contactMethods?: ContactMethod[];
+  friends?: ExportedProfileSummary[];
+  incomingRequests?: ExportedProfileSummary[];
+  outgoingRequests?: ExportedProfileSummary[];
 };
 
 export type UpdateAccountRequest = {

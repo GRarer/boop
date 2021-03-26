@@ -1,5 +1,5 @@
 import { CreateAccountRequest, Gender, genderValues, UpdateAccountRequest,
-  CurrentSettingsResponse, PrivacyLevel } from "boop-core";
+  CurrentSettingsResponse, PrivacyLevel, AccountDataResponse } from "boop-core";
 import { database } from "../services/database";
 import { v4 as uuidv4 } from 'uuid';
 import { hashPassword } from "../services/auth";
@@ -111,6 +111,72 @@ export async function getCurrentSettings(uuid: string): Promise<CurrentSettingsR
     privacyLevel: result.profile_privacy_level,
     profileShowAge: result.profile_show_age,
     profileShowGender: result.profile_show_gender
+  };
+}
+
+export async function getAccountData(uuid: string): Promise<AccountDataResponse> {
+  const accountDataQuery =
+  `SELECT "username", "full_name", "friendly_name", "gender", "email",
+    "birth_date", "profile_privacy_level", "profile_show_age", "profile_show_gender", "profile_bio",
+    "do_not_disturb", "status_message" FROM users WHERE user_uuid=$1;`;
+  type AccountRow = {
+    username: string;
+    full_name: string;
+    friendly_name: string;
+    gender: Gender;
+    email: string;
+    birth_date: string;
+    profile_privacy_level: PrivacyLevel;
+    profile_show_age: boolean;
+    profile_show_gender: boolean;
+    profile_bio: string;
+    do_not_disturb: boolean;
+    status_message: string;
+  };
+
+  const accountRows: AccountRow[] = await database.query(accountDataQuery, [uuid]);
+  const account = accountRows[0] ?? throwBoopError("Account Not Found", 404);
+
+  const contactRows = await database.query<{platform: string; contact_id: string;}>(
+    `SELECT platform, contact_id FROM contact_methods WHERE user_uuid=$1`, [uuid]
+  );
+
+  const friendsQuery =
+    `SELECT DISTINCT username, full_name FROM friends JOIN users on user_a=user_uuid
+    WHERE user_b=$1;`;
+  const friendRows = await database.query<{username: string; full_name: string;}>(friendsQuery, [uuid]);
+
+  const incomingQuery =
+    `SELECT DISTINCT username, full_name FROM users JOIN friend_requests 
+    ON user_uuid = from_user WHERE to_user = $1;`;
+  const incomingRows =
+    await database.query<{username: string; full_name: string; status_message: string;}>(incomingQuery, [uuid]);
+
+  const outgoingQuery =
+    `SELECT DISTINCT username, full_name FROM users JOIN friend_requests 
+    ON user_uuid = to_user WHERE from_user = $1;`;
+  const outgoingRows =
+    await database.query<{username: string; full_name: string; status_message: string;}>(outgoingQuery, [uuid]);
+
+
+  return {
+    username: account.username,
+    fullName: account.full_name,
+    friendlyName: account.friendly_name,
+    emailAddress: account.email,
+    birthDate: account.birth_date,
+    gender: account.gender,
+    privacyLevel: account.profile_privacy_level,
+    profileShowAge: account.profile_show_age,
+    profileShowGender: account.profile_show_gender,
+    profileBio: account.profile_bio,
+    doNotDisturb: account.do_not_disturb,
+    statusMessage: account.status_message,
+    avatarUrl: emailToGravatarURL(account.email),
+    contactMethods: contactRows.map(row => ({ platform: row.platform, contactID: row.contact_id })),
+    friends: friendRows.map(row => ({ username: row.username, fullName: row.full_name })),
+    incomingRequests: incomingRows.map(row => ({ username: row.username, fullName: row.full_name })),
+    outgoingRequests: outgoingRows.map(row => ({ username: row.username, fullName: row.full_name })),
   };
 }
 

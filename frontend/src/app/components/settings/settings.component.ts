@@ -4,7 +4,7 @@ import { SessionService } from 'src/app/services/session.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   UpdatePasswordRequest, CurrentSettingsResponse, UpdateAccountRequest, genderValues, Gender, UpdatePrivacyRequest,
-  minYearsAgo
+  minYearsAgo, AccountDataResponse
 } from 'boop-core';
 import { ApiService } from 'src/app/services/api.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -13,6 +13,7 @@ import { DialogService } from 'src/app/components/common/dialog/dialog.service';
 import { DateTime } from 'luxon';
 import { FaqDialogComponent } from '../common/faq-dialog/faq-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { downloadJson } from '../../util/downloads';
 
 
 @Component({
@@ -55,6 +56,8 @@ export class SettingsComponent implements OnInit {
   });
 
   info?: CurrentSettingsResponse;
+
+  downloadProgressVisible: Boolean = false;
 
   ngOnInit(): void {
     // update privacy settings every time the privacy form is changed
@@ -153,6 +156,19 @@ export class SettingsComponent implements OnInit {
     };
     this.apiService.putJSON("account/privacy", request)
       .catch(err => { this.apiService.showErrorPopup(err); });
+  }
+
+  downloadAccountData(): void {
+    this.downloadProgressVisible = true;
+    this.apiService.getJSON<AccountDataResponse>("account/data", undefined).then((response) => {
+      const name = response.username + '-data';
+      const beautified = JSON.stringify(response, null, "\t");
+      downloadJson(beautified, name);
+    }).catch((error) => {
+      this.apiService.showErrorPopup(error);
+    }).finally(() => {
+      this.downloadProgressVisible = false;
+    });
   }
 
   startDelete(): void {
