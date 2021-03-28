@@ -14,6 +14,8 @@ import { DateTime } from 'luxon';
 import { FaqDialogComponent } from '../common/faq-dialog/faq-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { downloadJson } from '../../util/downloads';
+import { TermsDialogComponent } from '../common/terms-dialog/terms-dialog.component';
+import { PrivacyPolicyDialogComponent } from '../common/privacy-policy-dialog/privacy-policy-dialog.component';
 
 
 @Component({
@@ -202,5 +204,13 @@ export class SettingsComponent implements OnInit {
 
   showFAQ(): void {
     this.dialog.open(FaqDialogComponent, { autoFocus: false, maxWidth: "8in" });
+  }
+
+  showToS(): void {
+    this.dialog.open(TermsDialogComponent, { autoFocus: false, maxWidth: "8in"});
+  }
+
+  showPrivacyPolicy(): void {
+    this.dialog.open(PrivacyPolicyDialogComponent, { autoFocus: false, maxWidth: "8in"});
   }
 }
