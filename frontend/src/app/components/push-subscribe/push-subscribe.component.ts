@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { SwPush } from '@angular/service-worker';
 import { ApiService } from 'src/app/services/api.service';
+import { SubscriptionService } from 'src/app/services/subscription.service';
 
 @Component({
   selector: 'app-push-subscribe',
@@ -16,18 +16,19 @@ export class PushSubscribeComponent implements OnInit {
   @Output() done = new EventEmitter<void>();
 
   constructor(
-    private swPush: SwPush,
     private apiService: ApiService,
     private router: Router,
     private snackBar: MatSnackBar,
+    private subscriptionService: SubscriptionService
   ) { }
 
   ngOnInit(): void {
+    this.subscriptionService.preFetchVapidPublicKey();
   }
 
   activateNotifications(): void {
-    if (!this.swPush.isEnabled) {
-      this.snackBar.open("Your platform does not support Web Push Notifications.", "Dismiss", { duration: 5000 });
+    if (!this.subscriptionService.webPushSupported()) {
+      this.subscriptionService.showNotEnabledMessage();
       return;
     }
     this.subscribe()
@@ -36,23 +37,14 @@ export class PushSubscribeComponent implements OnInit {
         this.navigateToNext();
       })
       .catch((reason) => {
-        if (reason instanceof DOMException && reason.name === "NotAllowedError") {
-          this.snackBar.open(
-            "You (or your web browser) blocked permission for push notifications.",
-            "Dismiss", { duration: 5000 }
-          );
-        } else {
-          this.apiService.showErrorPopup(reason);
-        }
-      }
-      );
+        this.apiService.showErrorPopup(reason);
+      });
   }
 
   private async subscribe(): Promise<void> {
-    const publicKey = await this.apiService.getText("push/vapid_public_key");
-    const subscription = await this.swPush.requestSubscription({ serverPublicKey: publicKey });
+    const subscriptionJSON = await this.subscriptionService.createSubscription();
     await this.apiService.postJSON<PushSubscriptionJSON, void>(
-      "push/addSubscription", subscription.toJSON()
+      "push/addSubscription", subscriptionJSON
     );
   }
 

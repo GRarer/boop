@@ -4,13 +4,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
-import { SwPush } from '@angular/service-worker';
 import { ContactMethod, CreateAccountRequest, Gender, genderValues, LoginResponse, PrivacyLevel } from 'boop-core';
 import { url as gravatarURL } from 'gravatar';
 import { DateTime } from 'luxon';
 import { RegistrationService } from 'src/app/registration.service';
 import { ApiService } from 'src/app/services/api.service';
 import { SessionService } from 'src/app/services/session.service';
+import { SubscriptionService } from 'src/app/services/subscription.service';
 import {
   PrivacyPolicyDialogComponent
 } from '../common/privacy-policy-dialog/privacy-policy-dialog.component';
@@ -31,7 +31,7 @@ export class RegistrationComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private sessionService: SessionService,
-    private swPush: SwPush,
+    private subscriptionService: SubscriptionService,
     public dialog: MatDialog,
     private registrationService: RegistrationService,
     private router: Router
@@ -81,6 +81,7 @@ export class RegistrationComponent implements OnInit {
       this.apiService.showErrorPopup("Username and password not specified");
       void this.router.navigate(["welcome"]);
     }
+    this.subscriptionService.preFetchVapidPublicKey();
   }
 
   storeContacts(methods: ContactMethod[]): void {
@@ -114,30 +115,18 @@ export class RegistrationComponent implements OnInit {
   }
 
   activateNotifications(): void {
-    this.subscribeToNotifications().then(sub => {
+
+
+    this.subscriptionService.createSubscription().then(subJSON => {
       this.pushForm.setValue({
         confirmed: true,
-        pushSubscription: sub
+        pushSubscription: subJSON
       });
       this.stepper?.next();
     }).catch(reason => {
-      if (reason instanceof DOMException && reason.name === "NotAllowedError") {
-        this.apiService.showErrorPopup("You (or your web browser) blocked permission for push notifications.");
-      } else {
-        this.apiService.showErrorPopup(reason);
-      }
+      this.apiService.showErrorPopup(reason);
     });
   }
-
-  async subscribeToNotifications(): Promise<PushSubscription> {
-    if (!this.swPush.isEnabled) {
-      throw "Your platform does not support Web Push Notifications.";
-    }
-    const publicKey = await this.apiService.getText("push/vapid_public_key");
-    const subscription = await this.swPush.requestSubscription({ serverPublicKey: publicKey });
-    return subscription;
-  }
-
 
   skipNotifications(): void {
     this.pushForm.setValue({
@@ -190,7 +179,7 @@ export class RegistrationComponent implements OnInit {
 
     const contactMethods: ContactMethod[] = this.contactsForm.value["contactMethods"];
     // set to a placeholder value if user skips notifications
-    const subscription: unknown = this.pushForm.value["pushSubscription"];
+    const subscription: PushSubscriptionJSON | undefined = this.pushForm.value["pushSubscription"];
 
     const request: CreateAccountRequest = {
       username: credentials.username,
@@ -205,7 +194,7 @@ export class RegistrationComponent implements OnInit {
       profileShowGender: profile.showGender,
       profileBio: profile.bio,
       contactMethods: contactMethods,
-      pushSubscription: subscription instanceof PushSubscription ? subscription.toJSON() : undefined
+      pushSubscription: subscription
     };
 
     this.apiService.postJSON<CreateAccountRequest, LoginResponse>("account/register", request).then(response => {

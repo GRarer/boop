@@ -34,6 +34,9 @@ import {
   EditableContactCardsComponent
 } from './components/edit-contact-info/editable-contact-cards/editable-contact-cards.component';
 import { FaqDialogComponent } from './components/common/faq-dialog/faq-dialog.component';
+import {
+  IncompatibilityDialogComponent
+} from './components/common/incompatibility-dialog/incompatibility-dialog.component';
 
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 @NgModule({
@@ -58,6 +61,7 @@ import { FaqDialogComponent } from './components/common/faq-dialog/faq-dialog.co
     RegistrationComponent,
     EditableContactCardsComponent,
     FaqDialogComponent,
+    IncompatibilityDialogComponent,
   ],
   imports: [
     BrowserModule,

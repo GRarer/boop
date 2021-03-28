@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Your web browser does not support web push notifications</h1>
+<div mat-dialog-content>
+    <p>Boop uses push notifications to remind you to talk with your friends. Unfortunately, it seems that
+        your current web browser or device does not support web-push notifications. You can still use this browser
+        to create an account, edit your profile profile, and connect with your friends, but to make use of Boop
+        notifications you will need to sign in with a different web browser. </p>
+    <p>Web push notifications are supported on Chrome, Firefox, and Edge browsers for Android, Windows, Linux,
+        and MacOS.
+    </p>
+    <p>Unfortunately, Apple does not currently allow web-push notifications on iOS devices and some versions of Safari
+        for Mac. If you exclusively use Apple devices, we encourage you to use Boop via <a
+            href="//google.com/chrome">Google Chrome</a>
+        or <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a> on your Mac.
+    </p>
+</div>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+    <button mat-button mat-dialog-close (click)="dontShowAgain()">Don't Show Again</button>
+</div>
