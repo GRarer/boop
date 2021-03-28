@@ -207,10 +207,10 @@ export class SettingsComponent implements OnInit {
   }
 
   showToS(): void {
-    this.dialog.open(TermsDialogComponent, { autoFocus: false, maxWidth: "8in"});
+    this.dialog.open(TermsDialogComponent, { autoFocus: false, maxWidth: "8in" });
   }
 
   showPrivacyPolicy(): void {
-    this.dialog.open(PrivacyPolicyDialogComponent, { autoFocus: false, maxWidth: "8in"});
+    this.dialog.open(PrivacyPolicyDialogComponent, { autoFocus: false, maxWidth: "8in" });
   }
 }
