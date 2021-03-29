@@ -21,7 +21,16 @@
             </div>
             <div>
                 <mat-form-field appearance="outline">
-                    <mat-label>Gender</mat-label>
+                    <mat-label>Birth Date</mat-label>
+                    <input readonly matInput [matDatepicker]="picker" [max]="birthdayMax" [min]="birthdayMin"
+                        formControlName="birthDate" (click)="picker.open()">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker startView="multi-year"></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Gender (optional)</mat-label>
                     <mat-select formControlName="gender">
                         <mat-option *ngFor="let gender of genderOptions" [value]="gender">
                             {{gender}}
@@ -32,26 +41,26 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div>
-                <mat-form-field appearance="outline">
-                    <mat-label>Birth Date</mat-label>
-                    <input readonly matInput [matDatepicker]="picker" [max]="birthdayMax" [min]="birthdayMin"
-                        formControlName="birthDate" (click)="picker.open()">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker startView="multi-year"></mat-datepicker>
-                </mat-form-field>
-            </div>
         </form>
+        <button mat-raised-button color="primary" style="width: 100%; margin-top: 10px;" (click)="confirmIdentity()" [disabled]="!identityForm.valid">Continue</button>
     </mat-step>
     <mat-step [stepControl]="profileForm" label="Profile" state="contact_page">
         <form [formGroup]="profileForm">
-            <mat-form-field appearance="outline" style="margin-bottom: 0px;">
-                <mat-label>Profile Description (bio)</mat-label>
-                <textarea formControlName="bio" matInput placeholder="Introduce yourself"
-                    style=" min-height: 3em;"></textarea>
-            </mat-form-field>
+            <mat-card style="padding-bottom: 0px;">
+                <mat-card-header>
+                    <mat-card-title>Profile Text</mat-card-title>
+                </mat-card-header>
+                <mat-form-field appearance="outline" style="margin-bottom: 0px;">
+                    <mat-label>Bio / Profile Description (optional)</mat-label>
+                    <mat-card-content style="margin-bottom: 0;">
+                        <textarea formControlName="bio" matInput placeholder="Introduce yourself"
+                        style="min-height: 3em; margin-bottom: 0;"></textarea>
+                    </mat-card-content>
+                </mat-form-field>
+            </mat-card>
             <app-privacy-controls [formGroup]="profileForm"></app-privacy-controls>
         </form>
+        <button mat-raised-button color="primary" style="width: 100%; margin-top: 10px;" (click)="confirmProfile()" [disabled]="!identityForm.valid">Continue</button>
     </mat-step>
     <mat-step [stepControl]="contactsForm" label="Social Messaging Contact Info" state="alternate_email">
         <app-editable-contact-cards (confirmChanges)="storeContacts($event)"></app-editable-contact-cards>
