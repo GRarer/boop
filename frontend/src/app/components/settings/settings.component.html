@@ -1,9 +1,9 @@
 
 <app-loading-bar *ngIf="info === undefined"></app-loading-bar>
 <div *ngIf="info !== undefined" style="padding-bottom: 10px;">
-	<mat-card>
+	<mat-card style="padding-bottom: 5px;">
 		<mat-card-header>
-			<mat-card-title>Information</mat-card-title>
+			<mat-card-title style="margin-bottom: 5px;">Information</mat-card-title>
 		</mat-card-header>
 		<button mat-button color="primary" class="info-link" (click)="showFAQ()"><mat-icon>help</mat-icon>Frequently Asked Questions</button>
 		<button mat-button color="primary" class="info-link" (click)="showToS()"><mat-icon>gavel</mat-icon>Terms of Service</button>
@@ -102,7 +102,7 @@
 			<mat-card-title>Export Personal Data</mat-card-title>
 			<mat-card-subtitle>Boop is transparent with the data we collect, feel free to take a look</mat-card-subtitle>
 		</mat-card-header>
-		<button *ngIf="!downloadProgressVisible" mat-flat-button color="primary" class="update-button" 
+		<button *ngIf="!downloadProgressVisible" mat-flat-button color="primary" class="update-button"
 		(click)="downloadAccountData()">Download</button>
 		<app-loading-bar *ngIf="downloadProgressVisible" class="button-loading"></app-loading-bar>
 	</mat-card>
