@@ -109,14 +109,28 @@ export class RegistrationComponent implements OnInit {
     );
   }
 
+  confirmIdentity(): void {
+    if (this.identityForm.valid) {
+      this.stepper?.next();
+    } else {
+      this.apiService.showErrorPopup("Missing Required Information");
+    }
+  }
+
+  confirmProfile(): void {
+    if (this.profileForm.valid) {
+      this.stepper?.next();
+    } else {
+      this.apiService.showErrorPopup("Missing Required Information");
+    }
+  }
+
   confirmAvatar(): void {
     this.avatarForm.setValue({ confirmed: true });
     this.stepper?.next();
   }
 
   activateNotifications(): void {
-
-
     this.subscriptionService.createSubscription().then(subJSON => {
       this.pushForm.setValue({
         confirmed: true,
