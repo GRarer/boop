@@ -18,6 +18,10 @@ export const commonPlatforms: {[platformName: string]: PlatformInfo | undefined;
     iconUrl: "assets/platform_icons/messenger.png",
     contactIdHint: "Use your Messenger username"
   },
+  "Instagram": {
+    iconUrl: "assets/platform_icons/instagram.png",
+    contactIdHint: "Use your Instagram username"
+  },
   "Snapchat": {
     iconUrl: "assets/platform_icons/snapchat_ghost_light.png",
     contactIdHint: "Your Snapchat username",
@@ -26,9 +30,17 @@ export const commonPlatforms: {[platformName: string]: PlatformInfo | undefined;
     iconUrl: "assets/platform_icons/discord.png",
     contactIdHint: "Your Discord username, including your tag number",
   },
+  "Skype": {
+    iconUrl: "assets/platform_icons/skype.png",
+    contactIdHint: "Your Skype username",
+  },
   "Telegram": {
     iconUrl: "assets/platform_icons/telegram.png",
     contactIdHint: "Your Telegram username",
+  },
+  "Google Hangouts": {
+    iconUrl: "assets/platform_icons/google_hangouts.png",
+    contactIdHint: "Your Google Hangouts username"
   },
   "Signal": {
     iconUrl: "assets/platform_icons/signal.png",
