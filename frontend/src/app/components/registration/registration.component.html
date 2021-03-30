@@ -25,7 +25,7 @@
                     <input readonly matInput [matDatepicker]="picker" [max]="birthdayMax" [min]="birthdayMin"
                         formControlName="birthDate" (click)="picker.open()">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker startView="multi-year"></mat-datepicker>
+                    <mat-datepicker #picker startView="multi-year" aria-hidden="false" aria-label="Open Birthday Date Picker"></mat-datepicker>
                 </mat-form-field>
             </div>
             <div>
@@ -73,8 +73,8 @@
             and sign in or create an account using the same email address that you use for Boop ({{getEmail()}}).
         </p>
         <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px;">
-            <img *ngIf="showAvatar" [src]='getAvatarUrl()' style="width: 90px; height: 90px; border-radius: 50%;">
-            <button (click)="refreshAvatar()" mat-icon-button><mat-icon>refresh</mat-icon></button>
+            <img *ngIf="showAvatar" [src]='getAvatarUrl()' style="width: 90px; height: 90px; border-radius: 50%;" aria-hidden="false" aria-label="Gravatar User Profile Image">
+            <button (click)="refreshAvatar()" mat-icon-button aria-hidden="false" aria-label="Refresh Gravatar"><mat-icon>refresh</mat-icon></button>
         </div>
         <p>It might take around one minute for Gravatar changes to be applied.</p>
         <button mat-raised-button color="primary" style="width: 100%;" (click)="confirmAvatar()">Continue</button>

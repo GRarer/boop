@@ -2,7 +2,7 @@
 <ng-container *ngIf="info !== undefined">
     <div style="text-align: center;">
         <h1 class="mat-headline">Start a chat with {{info!.friendlyName}}</h1>
-        <img [src]='info!.avatarUrl' class = 'profile-image' (click)="goToProfile()">
+        <img [src]='info!.avatarUrl' class = 'profile-image' (click)="goToProfile()" aria-hidden="false" aria-label="User Profile Image">
         <button mat-raised-button class="profile-button" (click)="goToProfile()"><mat-icon>contact_page</mat-icon> Profile</button>
     </div>
     <div style="display: flex; flex-direction: column; align-items: center; padding-bottom: 10px;">
@@ -24,7 +24,7 @@
                     </span>
                     <span style="width: 24px;">
                         <button mat-icon-button style="position: relative; bottom: 8px;" (click)="copyMethod(method)">
-                            <mat-icon>content_copy</mat-icon>
+                            <mat-icon aria-hidden="false" aria-label="Copy Contact ID">content_copy</mat-icon>
                         </button>
                     </span>
                 </div>

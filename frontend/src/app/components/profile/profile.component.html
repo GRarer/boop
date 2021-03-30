@@ -21,9 +21,9 @@
 
         <div style="text-align: center;">
             <span *ngIf="profile!.gender" class="profile-demographic" [ngSwitch]="profile!.gender">
-                <mat-icon *ngSwitchCase="'Female'">female</mat-icon>
-                <mat-icon *ngSwitchCase="'Male'">male</mat-icon>
-                <mat-icon *ngSwitchCase="'Nonbinary'">transgender</mat-icon>
+                <mat-icon *ngSwitchCase="'Female'" aria-hidden="false" aria-label="Female">female</mat-icon>
+                <mat-icon *ngSwitchCase="'Male'" aria-hidden="false" aria-label="Male">male</mat-icon>
+                <mat-icon *ngSwitchCase="'Nonbinary'" aria-hidden="false" aria-label="Nonbinary">transgender</mat-icon>
             </span>
             <span *ngIf="profile!.birthDate" class="profile-demographic age-label">{{profile!.birthDate}}</span>
         </div>
@@ -83,7 +83,7 @@
                       </span>
                       <span style="width: 24px;">
                           <button mat-icon-button style="position: relative; bottom: 8px;" (click)="copyMethod(method)">
-                              <mat-icon>content_copy</mat-icon>
+                              <mat-icon aria-hidden="false" aria-label="Copy Contact ID">content_copy</mat-icon>
                           </button>
                       </span>
                   </div>
