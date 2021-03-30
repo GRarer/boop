@@ -20,7 +20,7 @@
     <h2 class="section-header">Pending Friend Requests</h2>
     <mat-card *ngFor="let request of info!.pendingFriendRequestsToUser" style="margin-bottom: 10px;">
       <mat-card-header>
-        <img mat-card-avatar [src]="request.avatarUrl">
+        <img mat-card-avatar [src]="request.avatarUrl" aria-hidden="false" aria-label="User Profile Image">
         <mat-card-title>{{request.fullName}}</mat-card-title>
         <mat-card-subtitle style="margin-bottom: 0;">{{request.username}}</mat-card-subtitle>
       </mat-card-header>
@@ -35,7 +35,7 @@
     <h2 class="section-header">Sent Friend Requests</h2>
     <mat-card *ngFor="let request of info!.pendingFriendRequestsFromUser" style="margin-bottom: 10px;">
       <mat-card-header>
-        <img mat-card-avatar [src]="request.avatarUrl">
+        <img mat-card-avatar [src]="request.avatarUrl" aria-hidden="false" aria-label="User Profile Image">
         <mat-card-title>{{request.fullName}}</mat-card-title>
         <mat-card-subtitle style="margin-bottom: 0;">{{request.username}}</mat-card-subtitle>
       </mat-card-header>
@@ -49,7 +49,7 @@
     <h2 class="section-header">Your Friends</h2>
     <mat-card *ngFor="let friend of info!.currentFriends" style="margin-bottom: 10px;">
       <mat-card-header>
-        <img mat-card-avatar [src]="friend.avatarUrl">
+        <img mat-card-avatar [src]="friend.avatarUrl" aria-hidden="false" aria-label="User Profile Image">
         <mat-card-title>{{friend.fullName}}</mat-card-title>
         <mat-card-subtitle style="margin-bottom: 0;">{{friend.username}}</mat-card-subtitle>
       </mat-card-header>
