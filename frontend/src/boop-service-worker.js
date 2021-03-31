@@ -1,5 +1,7 @@
 // custom service worker
-console.log("boop custom service worker version 7.2");
+
+// please increment this version number whenever major changes are made to the service worker (it helps with debugging)
+const version = "8";
 
 const host = `${self.registration.scope}`;
 
@@ -24,6 +26,8 @@ try {
       event.waitUntil(clients.openWindow(`${host}`));
     }
   });
+
+  console.log(`Boop service worker version ${version} enabled`);
 } catch (err) {
   if (
     err instanceof DOMException

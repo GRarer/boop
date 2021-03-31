@@ -41,10 +41,8 @@ export class SubscriptionService {
     }
     // verify that the PushSubscription class is part of the global browser namespace
     try {
-      console.log("trying compatibility check");
       // on nonsupporting browsers, this causes an error because the PushSubscription class is undefined
       const neverTrue: boolean = {} instanceof PushSubscription;
-      console.log("instance check passed");
       if (neverTrue) {
         // this should never happen
         console.error("empty object found to be an instance of PushSubscription class");
