@@ -7,14 +7,13 @@ social interactions that happen when you cross paths with a friend at the dining
 walking to class. Boop is designed to replicate the social benefits of these spontaneous moments by prompting users
 to reach out to their friends and start a conversation when they wouldn't otherwise.
 
-You can visit https://boopboop.app to try Boop for yourself. You can also view our
-[video demo on YouTube](https://www.youtube.com/watch?v=Wm0xUE4BuX0).
+We used an AWS free trial, so unfortunately we have had to close down the web-app after the end of the project.
+You can still view [a video demo of the application](https://www.youtube.com/watch?v=Wm0xUE4BuX0) or read
+[our design document and UI screenshots](https://github.com/GRarer/boop/blob/main/docs/boop_design_documentation.pdf).
 
 
 ## Installation Guide for Developers and Contributors
 
-If you just want to try Boop and see what it's like, you can visit https://boopboop.app; if you want to contribute code
-for Boop or create your own fork, this guide is for you.
 
 You can clone or fork the Boop source code from https://github.com/GRarer/boop/
 
@@ -124,7 +123,7 @@ for details.
 
 ## Installation Guide for Deploying Boop to Production
 
-We have deployed Boop at https://boopboop.app using GitHub pages and AWS. If you want to deploy your own
+We deployed the Boop prototype at https://boopboop.app using GitHub pages and AWS. If you want to deploy your own
 instance of Boop, you will first want to make a few changes to the code.
 - update the FAQ, Terms of Service, and Privacy Policy to refer to your organization and your Boop instance's URL.
 - update the backend base url in `/frontend/environment.prod.ts` to point to your instance's backend server.
